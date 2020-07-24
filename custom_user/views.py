@@ -8,7 +8,7 @@ def signup(request):
         name = request.POST['name']
         email = request.POST['email']
         username = generate_username(email)
-        return HttpResponse('name-'+name+' email- '+email+'username generated from generate_usertname method-'+str(username))
+        return HttpResponse('name-'+name+'  email- '+email+'  username generated from generate_username method-'+str(username))
     page_info = {'title':'Sign Up'}
     form = SignUp()
     otp = generate_otp()
