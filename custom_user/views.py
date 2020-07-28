@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponse
 from django.contrib.auth.models import User
 from .forms import SignUp
+import random
 
 
 def signup(request):
@@ -32,7 +33,5 @@ def generate_username(email):
 
 
 def generate_otp():
-    response = 0
-    # author: abhishek
-    # your function should return 6 digit random number starting from 100000 to 999999
+    response = random.randrange(100000,999999)
     return response
