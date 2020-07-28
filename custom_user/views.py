@@ -1,5 +1,6 @@
 from django.shortcuts import render,HttpResponse
 from django.contrib.auth.models import User
+from .models import Custom_User
 from .forms import SignUp
 import random
 
@@ -8,7 +9,11 @@ def signup(request):
     if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']
+        password = request.POST['password']
+
         username = generate_username(email)
+        user = User.objects.create_user(username=username,password=password,first_name = name,email=email)
+        Custom_User.objects.create(user=user,is_organization=True).save()
         return HttpResponse('name-'+name+'  email- '+email+'  username generated from generate_username method-'+str(username))
     page_info = {'title':'Sign Up'}
     form = SignUp()
@@ -22,7 +27,6 @@ def signup(request):
 
 
 def generate_username(email):
-    response = ''
     # you are given a str email you need return username from that email
     # eg: atul@email.com, so you have to return 'atul' through response variable
     atIndex = email.index('@')
