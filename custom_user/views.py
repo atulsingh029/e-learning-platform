@@ -1,27 +1,37 @@
-from django.shortcuts import render,HttpResponse
+from django.core.mail import send_mail
+from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from .models import Custom_User
-from .forms import SignUp
+from .forms import SignUp,OTPForm
 import random
 
+datatransfer = []
 
 def signup(request):
+    global datatransfer
     if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']
-        password = request.POST['password']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
 
-        username = generate_username(email)
-        user = User.objects.create_user(username=username,password=password,first_name = name,email=email)
-        Custom_User.objects.create(user=user,is_organization=True).save()
-        return HttpResponse('name-'+name+'  email- '+email+'  username generated from generate_username method-'+str(username))
+        if password1 == password2 and len(User.objects.filter(email=email)) == 0:
+            password = password1
+            otp = generate_otp()
+            message = 'Your One Time Password is ' + str(otp)
+            datatransfer = [otp, name, email, password]
+
+            send_mail('Verify Your Account', message, 'atul.auth@gmail.com', [email, ], fail_silently=False)
+            return redirect('/verify')
+        else:
+            return redirect('/signup?q=passwdVDFailed')
     page_info = {'title':'Sign Up'}
     form = SignUp()
-    otp = generate_otp()
+
     context={
         'signup_form':form,
         'page_info':page_info,
-        'otp':otp
+
     }
     return render(request,template_name='custom_user/forms.html',context=context)
 
@@ -43,3 +53,20 @@ def generate_username(email):
 def generate_otp():
     response = random.randrange(100000,999999)
     return response
+
+def verify_otp(request):
+    if request.method == 'POST':
+        user_otp = request.POST['otp']
+        if int(datatransfer[0]) == int(user_otp):
+            username = generate_username(datatransfer[2])
+            user = User.objects.create_user(username=username, password=datatransfer[3], first_name=datatransfer[1], email=datatransfer[2])
+            Custom_User.objects.create(user=user, is_organization=True).save()
+            return HttpResponse('success!')
+        else:
+            return HttpResponse('failed, retry!')
+    otp_form = OTPForm()
+    context = {
+        'title':'confirm otp',
+        'otp_form':otp_form
+    }
+    return render(request,template_name='custom_user/otp_form.html', context=context)

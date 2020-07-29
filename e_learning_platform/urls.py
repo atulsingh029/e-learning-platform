@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
     path('signup/', user_views.signup),
+    path('verify/', user_views.verify_otp),
 
 ]

@@ -10,8 +10,11 @@ class Custom_User(models.Model):
 
 
 class Room(models.Model):
+    title = models.CharField(max_length=512, default='room', blank=False, null=False)
+    description = models.CharField(max_length=1024, default='room description here', blank=False, null=False)
     organization = models.ForeignKey(Custom_User,on_delete=models.CASCADE)
     room_number = models.IntegerField(unique=True)
+    display_pic = models.ImageField(blank=True, default=None, null=True)
 
 
 
