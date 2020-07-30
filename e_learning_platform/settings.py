@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'home',
     'custom_user',
     'management',
+    'elibrary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
