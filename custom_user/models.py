@@ -15,7 +15,15 @@ class Room(models.Model):
     organization = models.ForeignKey(Custom_User,on_delete=models.CASCADE)
     room_number = models.IntegerField(unique=True)
     display_pic = models.ImageField(blank=True, default=None, null=True)
+    room_stream_details = models.CharField(max_length=1024, default='free', blank=False, null=False)
 
 
+class Student(models.Model):
+    user = models.OneToOneField(Custom_User, on_delete=models.CASCADE)
+    from_room = models.ForeignKey(Room, blank=True, default=None, null=True, on_delete=models.SET("Doesn't belong to any room"))
 
+
+class Teacher(models.Model):
+    user = models.OneToOneField(Custom_User, on_delete=models.CASCADE)
+    manages_room = models.ForeignKey(Room, blank=True, default=None, null=True, on_delete=models.SET("Doesn't belong to any room"))
 
