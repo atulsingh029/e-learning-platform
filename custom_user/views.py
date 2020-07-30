@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from .models import Custom_User
 from .forms import SignUp,OTPForm
 import random
+from django.contrib.auth import login
+
 
 datatransfer = []
 
@@ -60,10 +62,12 @@ def verify_otp(request):
         if int(datatransfer[0]) == int(user_otp):
             username = generate_username(datatransfer[2])
             user = User.objects.create_user(username=username, password=datatransfer[3], first_name=datatransfer[1], email=datatransfer[2])
-            Custom_User.objects.create(user=user, is_organization=True).save()
-            return HttpResponse('success!')
+            temp_user = Custom_User.objects.create(user=user, is_organization=True)
+            temp_user.save()
+            login(request,user)
+            return redirect('/dashboard')
         else:
-            return HttpResponse('failed, retry!')
+            return redirect('/verify?q=failed')
     otp_form = OTPForm()
     context = {
         'title':'confirm otp',
