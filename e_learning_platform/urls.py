@@ -22,5 +22,6 @@ urlpatterns = [
     path('', include('home.urls')),
     path('signup/', user_views.signup),
     path('verify/', user_views.verify_otp),
+    path('dashboard/', include('management.urls') ),
 
 ]
