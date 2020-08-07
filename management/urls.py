@@ -4,6 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.dashboard ),
-    path('addroom/',views.addroom),
+
 
 ]
