@@ -17,12 +17,18 @@ from django.contrib import admin
 from django.urls import path,include
 from custom_user import views as user_views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
     path('signup/', user_views.signup),
+    path('signin/', user_views.signin),
+    path('signout/', user_views.signout),
     path('verify/', user_views.verify_otp),
     path('dashboard/', include('management.urls')),
     path('elibrary/',include('elibrary.urls')),
+    path('r/<str:id>', user_views.RegisterStudent),
+    path('api/', include('api.urls') ),
+    path('testing/',user_views.testing),
 
 ]

@@ -25,7 +25,7 @@ SECRET_KEY = 'demokey-django-app-dev'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'custom_user',
     'management',
     'elibrary',
+    'api',
+    'rest_framework',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
