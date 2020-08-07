@@ -2,7 +2,8 @@
 {% block body %}
     <form method="post">
         {% csrf_token %}
-        {{ signup_form }}
+        {% block fields %}
+        {% endblock %}
         <button type="submit">submit</button>
     </form>
 {% endblock %}
