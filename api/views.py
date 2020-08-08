@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from management.views import listapplications, addroom, listallrooms
 
-
+# organization level apis
 @api_view(['GET'])
 def list_applications(request):
     data = listapplications(request)
@@ -37,3 +37,10 @@ def list_all_rooms(request):
         return Response(response.data)
     else:
         return Response({'status': 'not allowed'})
+
+
+# Teacher level apis
+
+
+# Student level apis
+
