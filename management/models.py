@@ -25,3 +25,18 @@ class Lecture(models.Model):
         return self.l_name
 
 
+class LectureResource(models.Model):
+    lr_name = models.CharField(max_length=512)
+    lr_description = models.CharField(max_length=1024)
+    for_lecture = models.ForeignKey(Lecture,on_delete=models.CASCADE)
+    lr_url = models.URLField(blank=True, null=True)
+    file = models.FileField(blank=True, null=True)
+
+
+class CourseResource(models.Model):
+    cr_name = models.CharField(max_length=512)
+    cr_description = models.CharField(max_length=1024)
+    for_course = models.ForeignKey(Course,on_delete=models.CASCADE)
+    cr_url = models.URLField(blank=True, null=True)
+    file = models.FileField(blank=True, null=True)
+

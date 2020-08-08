@@ -13,6 +13,9 @@ def dashboard(request):
             context = {
                 'pagetitle': '',
                 'user': user_model.first_name.capitalize(),
+                'navButtons' : [{'link':'/signout', 'label':'Sign Out'},{'link':'/settings', 'label':'Settings'}],
+                'owner':{'coverpic':"https://atulsingh029.github.io/images/prime1.gif",'title':'Source not configured', 'lead1':'Source not configured', 'lead2': 'Source not configured'
+                         , 'link':'#','label':'About'}
             }
             return render(request, template_name='dashboard/odash.html', context=context)
         if user.is_student:
