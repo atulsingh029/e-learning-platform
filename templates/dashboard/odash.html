@@ -3,44 +3,76 @@
 
 {% block body %}
 
-    {{ user }}
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" id="roomform">
+                {% csrf_token %}
+                <input name="title" type="text">
+                <input name="description" type="text">
 
-    <button id="listallrooms" name="button" class="btn btn-sm btn-info p-1 ml-3 mt-2">list all rooms</button>
-  <!--  <button id="addroom" name="button" class="btn btn-sm btn-info p-1 ml-3 mt-2">add room</button>  -->
-
-    <!-- Button trigger modal -->
-<button type="button" class="btn btn-sm btn-info p-1 ml-3 mt-2" data-toggle="modal" data-target="#exampleModal">
-  Add Room
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" id="roomform">
-            {% csrf_token %}
-            <input name="title" type="text">
-            <input name="description" type="text">
-
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button id="addroom" type="button" class="btn btn-primary">add</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="addroom" type="button" class="btn btn-primary">add</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-    <div id="canvas" class="m-1 p-1">
-    <!-- code injection by JS //do not touch this div -->
+
+    <!-- Container for dashboard -->
+    <div class="container-fluid ">
+        <div class="row mt-5">
+            <div class="col-md-3 col-xl-2 mr-0" style="min-height: 800px;">
+                <div class="card border-secondary mb-3 mt-3" style="min-height: 800px" >
+                      <div class="card-body text-dark">
+                        <div class="btn-group-vertical m-2 p-1">
+                            <!-- sidebar content goes here -->
+                            <button id="listallrooms" name="button" class="btn btn-info p-1">list all rooms</button>
+                            <button type="button" class="btn btn-info p-1" data-toggle="modal" data-target="#exampleModal">Add Room</button>
+                        </div>
+                      </div>
+                </div>
+
+            </div>
+            <div class="col-md-9 col-xl-10 ml-0" style="min-height: 800px;">
+                <div class="row mt-3" style="min-height: 200px;">
+                    <div class="col rounded-lg" style='background-image: url("{{ owner.coverpic }}");background-repeat: no-repeat;min-height: 200px; max-width: 1450px'>
+                     <!-- Organization Banner Goes Here -->
+                            {{ owner.title }}
+                            {{ owner.lead1 }}
+                            {{ owner.lead2 }}
+                            {{ owner.link }} {{ owner.label }}
+                    </div>
+                </div>
+                <div class="row" style="min-height: 600px;">
+                    <div class="card border-secondary mb-3 mt-1" style="min-height:597px;width: 100em;max-width: 1450px">
+                      <div class="card-header text-center">OPTION</div>
+                      <div class="card-body text-dark">
+                        <div id="canvas" class="p-1">
+                            <!-- code injection by JS //do not touch this div -->
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+<!-- Container for footer section -->
+
+
+
     <script src="{% static 'js/omanage.js' %}"></script>
 {% endblock %}
