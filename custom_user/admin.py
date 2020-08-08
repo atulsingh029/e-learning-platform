@@ -1,8 +1,27 @@
 from django.contrib import admin
-from .models import Custom_User,Room,ApplyForStudent
+from .models import Custom_User,Room,ApplyForStudent, Student, Teacher
 
-admin.site.register(Custom_User)
 
-admin.site.register(Room)
+@admin.register(Custom_User)
+class CACustomUser(admin.ModelAdmin):
+    list_display = ('user', 'is_organization', 'is_teacher', 'is_student')
 
-admin.site.register(ApplyForStudent)
+
+@admin.register(Room)
+class CARoom(admin.ModelAdmin):
+    pass
+
+
+@admin.register(ApplyForStudent)
+class CAApplyForStudent(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Student)
+class CAStudent(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Teacher)
+class CATeacher(admin.ModelAdmin):
+    pass

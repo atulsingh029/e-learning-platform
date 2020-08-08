@@ -19,6 +19,7 @@ class Room(models.Model):
     room_number = models.IntegerField(unique=True)
     display_pic = models.ImageField(blank=True, default=None, null=True)
     room_stream_details = models.CharField(max_length=1024, default='free', blank=False, null=False)
+    room_status = models.BooleanField(default=False,null=False,blank=False)
 
     def __str__(self):
         return self.title
