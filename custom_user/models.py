@@ -27,12 +27,12 @@ class Room(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(Custom_User, on_delete=models.CASCADE)
-    from_room = models.ForeignKey(Room, blank=True, default=None, null=True, on_delete=models.SET("Doesn't belong to any room"))
+    from_room = models.ForeignKey(Room, blank=True, default=None, null=True, on_delete=models.SET(1))
 
 
 class Teacher(models.Model):
     user = models.OneToOneField(Custom_User, on_delete=models.CASCADE)
-    manages_room = models.ForeignKey(Room, blank=True, default=None, null=True, on_delete=models.SET("Doesn't belong to any room"))
+    manages_room = models.ForeignKey(Room, blank=True, default=None, null=True, on_delete=models.SET(1))
 
 
 class ApplyForStudent(models.Model):
@@ -47,3 +47,17 @@ class ApplyForStudent(models.Model):
 
     def __str__(self):
         return self.reference
+
+
+choices = [('male','male'),('female','female'),('organization','organization')]
+
+
+class ExtraProfileInfo(models.Model):
+    user = models.OneToOneField(Custom_User, on_delete=models.CASCADE)
+    bio1 = models.CharField(max_length=1024,null=True,blank=True)
+    bio2 = models.CharField(max_length=1024,null=True,blank=True)
+    sex = models.CharField(max_length=15,choices = choices)
+    url = models.URLField(null=True,blank=True)
+    dob = models.DateField(null=True,blank=True)
+    address = models.CharField(max_length=1024, null=True,blank=True)
+    profile_pic = models.ImageField()

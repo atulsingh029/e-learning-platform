@@ -116,6 +116,7 @@ def RegisterStudent(request,id):
     return render(request, template_name='custom_user/forms.html',context=context)
 
 
+# This function is used for completing the registration once request is received at any respective view function
 def Reg(request,mode,otp,dtk):
         if mode == 'organization':
             if int(DATA_TRANSFER[dtk][0]) == int(otp):
@@ -174,3 +175,7 @@ def signout(request):
         return redirect('/')
     else:
         return redirect('/')
+
+
+def testing(request):
+    HttpResponse('test : not configured')
