@@ -3,3 +3,17 @@ venv
 __pycache__
 db.sqlite3
 *.pyc
+custom_user/migrations/0001_initial.py
+custom_user/migrations/0002_remove_room_room_status.py
+custom_user/migrations/0003_room_room_status.py
+custom_user/migrations/0004_auto_20200808_1853.py
+custom_user/migrations/0005_auto_20200809_1348.py
+custom_user/migrations/0006_auto_20200809_1355.py
+custom_user/migrations/0007_applyforstudent_for_room.py
+custom_user/migrations/0008_auto_20200809_1654.py
+management/migrations/0001_initial.py
+management/migrations/0002_auto_20200808_1004.py
+management/migrations/0003_courseresource_lectureresource.py
+management/migrations/0004_auto_20200808_1210.py
+management/migrations/0005_auto_20200808_1214.py
+management/migrations/0006_auto_20200808_1215.py

@@ -86,7 +86,6 @@ def RegisterStudent(request,id):
     if len(user_temp) == 0:
         return HttpResponse('bad url')
     user_temp = Custom_User.objects.filter(user=user_temp[0])
-    print(user_temp)
     if len(user_temp) == 0 or user_temp[0].is_organization == False:
         return HttpResponse('bad url')
 

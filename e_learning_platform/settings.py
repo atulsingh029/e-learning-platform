@@ -135,13 +135,13 @@ EMAIL_USE_TLS = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'static')           # This dir containers all files after running collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR,'static/static_dirs'),
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'assets'),
 
                     ]
 
-MEDIA_URL = '/filestatic/media/'                          # this is the url from where data is fetched
-MEDIA_ROOT = os.path.join(BASE_DIR, 'filestatic/media')   # this is the url where data is uploaded
+MEDIA_URL = '/filestatic/'                                     # this is the url from where data is fetched
+MEDIA_ROOT = os.path.join(BASE_DIR, 'filestatic/media')             # this is the url where data is uploaded
 

@@ -45,17 +45,22 @@ def listapplications(request):
 def acceptapplication(request,data):
     reference = data['reference']
     applicant = ApplyForStudent.objects.get(reference=reference)
+    if applicant.status:
+        return 'duplicate_request'
     application_owner = applicant.for_organization
-    if request.user.custom_user is application_owner:
+    if str(request.user.custom_user.user.username) == str(application_owner):
         username = student_username_generator(applicant.email)
         user = User(username=username, first_name=applicant.first_name,
                     last_name=applicant.last_name, password=applicant.password, email=applicant.email,
                     is_active=True, is_staff=False, is_superuser=False)
         user.save()
-        c_user = Custom_User(user=user, is_student=True).save()
-        epi = ExtraProfileInfo(Custom_User=c_user).save()
-        student = Student(user=c_user,from_room=applicant.for_room).save()
+        c_user = Custom_User(user=user, is_student=True)
+        c_user.save()
+        ExtraProfileInfo(user=c_user,).save()
+        Student(user=c_user,from_room=applicant.for_room).save()
         send_confirmation_mail_to_student(username=username, institute=application_owner.user.first_name, reference=applicant.reference)
+        applicant.status = True
+        applicant.save()
         return 'success'
     else:
         return 'failed'
