@@ -62,7 +62,7 @@ def acceptapplication(request,data):
         c_user.save()
         ExtraProfileInfo(user=c_user,).save()
         Student(user=c_user,from_room=applicant.for_room).save()
-        send_confirmation_mail_to_student(username=username, institute=application_owner.user.first_name, reference=applicant.reference)
+        send_confirmation_mail_to_student(email=applicant.email,username=username, institute=application_owner.user.first_name, reference=applicant.reference)
         applicant.status = True
         applicant.save()
         return 'success'

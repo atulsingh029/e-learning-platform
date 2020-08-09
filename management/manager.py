@@ -14,5 +14,6 @@ def student_username_generator(email):
 
 
 
-def send_confirmation_mail_to_student(username,institute,reference):
+
+def send_confirmation_mail_to_student(email,username,institute,reference):
     pass
