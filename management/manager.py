@@ -15,5 +15,5 @@ def student_username_generator(email):
 
 
 
-def send_confirmation_mail_to_student(email,username,institute,reference):
-    pass
+def send_confirmation_mail_to_student(email, username, institute, reference):
+    send_mail('Hi, ', username, 'your application with reference no. ', reference, 'is accepted in ', institute, [email, ])
