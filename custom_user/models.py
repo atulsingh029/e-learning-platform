@@ -44,7 +44,7 @@ class ApplyForStudent(models.Model):
     password = models.CharField(max_length=512)
     reference = models.CharField(max_length=100,default=0)
     submissionstamp = models.DateTimeField(auto_now=True)
-    for_room = models.ForeignKey(Room,on_delete=models.SET(1),default=1)
+    for_room = models.ForeignKey(Room,on_delete=models.SET(1),default=Room.objects.get(id=1))
     status = models.BooleanField(default=False)
 
     def __str__(self):
