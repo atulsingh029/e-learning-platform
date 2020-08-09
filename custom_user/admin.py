@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Custom_User,Room,ApplyForStudent, Student, Teacher
+from .models import Custom_User,Room,ApplyForStudent, Student, Teacher, ExtraProfileInfo
 
 
 @admin.register(Custom_User)
@@ -24,4 +24,8 @@ class CAStudent(admin.ModelAdmin):
 
 @admin.register(Teacher)
 class CATeacher(admin.ModelAdmin):
+    pass
+
+@admin.register(ExtraProfileInfo)
+class CAExtraProfileInfo(admin.ModelAdmin):
     pass

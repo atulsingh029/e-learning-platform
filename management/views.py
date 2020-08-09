@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, HttpResponse, redirect
-from custom_user.models import Room, Custom_User, ApplyForStudent
+from custom_user.models import Room, Custom_User, ApplyForStudent,ExtraProfileInfo, Student
 import random
 from api.serializers import ApplicationSerializer, RoomSerializer
+from .manager import *
 
 
 def dashboard(request):
@@ -10,12 +11,14 @@ def dashboard(request):
         user_model = request.user
         user = Custom_User.objects.get(user=user_model)
         if user.is_organization:
+            profile_info = ExtraProfileInfo.objects.get(user = user)
             context = {
                 'pagetitle': '',
                 'user': user_model.first_name.capitalize(),
                 'navButtons' : [{'link':'/signout', 'label':'Sign Out'},{'link':'/settings', 'label':'Settings'}],
-                'owner':{'coverpic':"https://atulsingh029.github.io/images/prime1.gif",'title':'Source not configured', 'lead1':'Source not configured', 'lead2': 'Source not configured'
-                         , 'link':'#','label':'About'}
+                'owner':{'coverpic':"https://atulsingh029.github.io/images/banner2.gif",'title':profile_info.user.user.first_name,
+                         'lead1':profile_info.bio1, 'lead2': profile_info.bio2
+                         , 'link':profile_info.url,'label':'Advertisement Page', 'profile_pic':profile_info.profile_pic.url}
             }
             return render(request, template_name='dashboard/odash.html', context=context)
         if user.is_student:
@@ -37,6 +40,26 @@ def listapplications(request):
         return serial_data
     else:
         return {"status": "forbidden"}
+
+
+def acceptapplication(request,data):
+    reference = data['reference']
+    applicant = ApplyForStudent.objects.get(reference=reference)
+    application_owner = applicant.for_organization
+    if request.user.custom_user is application_owner:
+        username = student_username_generator(applicant.email)
+        user = User(username=username, first_name=applicant.first_name,
+                    last_name=applicant.last_name, password=applicant.password, email=applicant.email,
+                    is_active=True, is_staff=False, is_superuser=False)
+        user.save()
+        c_user = Custom_User(user=user, is_student=True).save()
+        epi = ExtraProfileInfo(Custom_User=c_user).save()
+        student = Student(user=c_user,from_room=applicant.for_room).save()
+        send_confirmation_mail_to_student(username=username, institute=application_owner.user.first_name, reference=applicant.reference)
+        return 'success'
+    else:
+        return 'failed'
+
 
 
 def addroom(request, user, data):

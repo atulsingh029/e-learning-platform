@@ -8,7 +8,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Add Room</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -24,7 +24,7 @@
                   <div class="form-group">
                     <label for="exampleInputPassword1">Description</label>
                     <input type="text" class="form-control" aria-describedby="desHelp" name="description">
-                      <small id="desHelp" class="form-text text-muted">Write short description of your room.</small>
+                    <small id="desHelp" class="form-text text-muted">Write short description of your room.</small>
                   </div>
             </form>
           </div>
@@ -41,11 +41,20 @@
     <div class="container-fluid ">
         <div class="row mt-5">
             <div class="col-md-3 col-xl-2 mr-0" style="min-height: 800px;">
-                <div class="card border-secondary mb-3 mt-3" style="min-height: 800px" >
+                <div class="text-center mt-3 rounded border border-secondary" style="background-image: url('https://atulsingh029.github.io/images/proback.png');min-height: 150px">
+                    <img src="{{ owner.profile_pic }}" class="img-responsive p-1" style="max-width: 3000px;max-height: 150px" alt="Picture Not Uploaded">
+                </div>
+                <div class="card border-secondary mb-3 mt-1" style="min-height: 800px" >
                       <div class="card-body text-dark">
-
                             <!-- sidebar content goes here -->
-                            <button id="listallrooms" name="button" class="btn btn-info p-1">list all rooms</button>
+
+                            <button id="listallrooms" name="button" class="btn btn-info  m-1 btn-block">Rooms</button>
+                            <button id="applications" name="button" class="btn btn-info  m-1 btn-block">Applications</button>
+                            <button id="courses" name="button" class="btn btn-info m-1 btn-block">Courses</button>
+                            <button id="teachers" name="button" class="btn btn-info m-1 btn-block">Teachers</button>
+                            <button id="students" name="button" class="btn btn-info  m-1 btn-block">Students</button>
+                            <button id="elibrary" name="button" class="btn btn-info  m-1 btn-block">eLibrary</button>
+
 
 
                       </div>
@@ -56,14 +65,16 @@
                 <div class="row mt-3" style="min-height: 200px;">
                     <div class="col rounded-lg" style='background-image: url("{{ owner.coverpic }}");background-repeat: no-repeat;min-height: 200px; max-width: 1450px'>
                      <!-- Organization Banner Goes Here -->
-                            {{ owner.title }}
-                            {{ owner.lead1 }}
-                            {{ owner.lead2 }}
-                            {{ owner.link }} {{ owner.label }}
+                        <div class="alert mt-2 mb-1">
+                            <h5 class="p-1 text-center text-capitalize text-primary"><b>{{ owner.title }}</b></h5>
+                        </div>
+                        <p class="text-center text-capitalize text-muted">{{ owner.lead1 }}</p>
+                        <p class="text-center">{{ owner.lead2 }}</p>
+                        <div class="text-center"><button class="btn btn-sm btn-primary " type="button" href="{{ owner.link }}">{{ owner.label }}</button></div>
                     </div>
                 </div>
                 <div class="row" style="min-height: 600px;">
-                        <div class="card border-secondary mb-3 mt-1" style="min-height:597px;width: 100em;max-width: 1450px">
+                        <div class="card border-secondary mb-3 mt-1" style="min-height:754px;width: 100em;max-width: 1450px">
                           <div class="card-header text-center">OPTION</div>
                           <div class="card-body text-dark">
                             <div  class="p-1">

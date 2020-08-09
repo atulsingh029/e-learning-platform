@@ -8,7 +8,7 @@ function listallrooms() {
             type : 'GET',
             url : '/api/listallrooms/',
             dataType : 'json',
-            success : function (data) {
+            success  : function (data) {
                 let val = `
                 <button type="button" class="btn btn-primary btn-sm p-1" data-toggle="modal" data-target="#exampleModal">Add Room</button>
                 <div class="row row-cols-1 row-cols-md-3">

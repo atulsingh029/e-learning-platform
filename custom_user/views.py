@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import Custom_User,ApplyForStudent
+from .models import Custom_User, ApplyForStudent, ExtraProfileInfo
 from .forms import SignUp,OTPForm,StudentRegister,SignIn
 import random
 from django.contrib.auth import login,logout
@@ -76,7 +76,7 @@ def verify_otp(request):
         'title':'confirm otp',
         'form':otp_form,
         'formname': 'Verify OTP',
-        'text': 'An one time password was sent to your email, please enter to verify your account.'
+        'text': 'One time password was sent to your email, please enter to verify your account.'
     }
     return render(request,template_name='custom_user/forms.html', context=context)
 
@@ -125,6 +125,9 @@ def Reg(request,mode,otp,dtk):
                                                 email=DATA_TRANSFER[dtk][2])
                 temp_user = Custom_User.objects.create(user=user, is_organization=True)
                 temp_user.save()
+                epi = ExtraProfileInfo()
+                epi.user = temp_user
+                epi.save()
                 DATA_TRANSFER.pop(dtk)
                 login(request, user)
                 return '/dashboard'

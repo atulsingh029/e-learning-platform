@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from management.views import listapplications, addroom, listallrooms
+from management.views import listapplications, addroom, listallrooms, acceptapplication
 
 # organization level apis
 @api_view(['GET'])
@@ -14,8 +14,13 @@ def list_applications(request):
 
 
 @api_view(['POST'])
-def accept_applications(request,reference):
-    pass
+def accept_application(request):
+    if request.user.is_authenticated and request.user.custom_user.is_organization:
+        data = request.data
+        response = acceptapplication(request,data)
+        return Response({'status':response})
+    else:
+        return Response({'status':'forbidden'})
 
 
 @api_view(['POST'])

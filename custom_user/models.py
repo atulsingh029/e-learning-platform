@@ -44,6 +44,7 @@ class ApplyForStudent(models.Model):
     password = models.CharField(max_length=512)
     reference = models.CharField(max_length=100,default=0)
     submissionstamp = models.DateTimeField(auto_now=True)
+    for_room = models.ForeignKey(Room,on_delete=models.SET(1),default=1)
 
     def __str__(self):
         return self.reference
@@ -56,8 +57,8 @@ class ExtraProfileInfo(models.Model):
     user = models.OneToOneField(Custom_User, on_delete=models.CASCADE)
     bio1 = models.CharField(max_length=1024,null=True,blank=True)
     bio2 = models.CharField(max_length=1024,null=True,blank=True)
-    sex = models.CharField(max_length=15,choices = choices)
+    sex = models.CharField(max_length=15,choices = choices,null=True,blank=True)
     url = models.URLField(null=True,blank=True)
     dob = models.DateField(null=True,blank=True)
     address = models.CharField(max_length=1024, null=True,blank=True)
-    profile_pic = models.ImageField()
+    profile_pic = models.ImageField(null=True,blank=True)

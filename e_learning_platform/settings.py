@@ -124,11 +124,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-
-]
 
 # SMTP setup
 EMAIL_HOST = 'smtp.gmail.com'
@@ -137,3 +132,16 @@ EMAIL_HOST_PASSWORD ='jBNzLZZ3bcTeEPM'
 EMAIL_PORT=587
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
+
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'static')           # This dir containers all files after running collectstatic
+
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'static/static_dirs'),
+
+                    ]
+
+MEDIA_URL = '/filestatic/media/'                          # this is the url from where data is fetched
+MEDIA_ROOT = os.path.join(BASE_DIR, 'filestatic/media')   # this is the url where data is uploaded
+
