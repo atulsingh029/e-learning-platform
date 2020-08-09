@@ -9,23 +9,23 @@ class CACustomUser(admin.ModelAdmin):
 
 @admin.register(Room)
 class CARoom(admin.ModelAdmin):
-    pass
+    list_display = ('title', 'description', 'organisation', 'room_number', 'display_pic', 'room_stream_details', 'room_status')
 
 
 @admin.register(ApplyForStudent)
 class CAApplyForStudent(admin.ModelAdmin):
-    pass
+    list_display = ('first_name', 'last_name', 'email', 'phone', 'for_organization', 'password', 'reference', 'submissionstamp', 'for_room', 'status')
 
 
 @admin.register(Student)
 class CAStudent(admin.ModelAdmin):
-    pass
+    list_display = ('user','from_room')
 
 
 @admin.register(Teacher)
 class CATeacher(admin.ModelAdmin):
-    pass
+    list_display = ('user', 'manages_room')
 
 @admin.register(ExtraProfileInfo)
 class CAExtraProfileInfo(admin.ModelAdmin):
-    pass
+    list_display = ('user', 'bio1', 'bio2', 'sex', 'url','dob', 'address', 'profile_pic')
