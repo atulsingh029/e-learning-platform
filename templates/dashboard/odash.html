@@ -16,9 +16,16 @@
           <div class="modal-body">
             <form method="post" id="roomform">
                 {% csrf_token %}
-                <input name="title" type="text">
-                <input name="description" type="text">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Room Title</label>
+                    <input type="text" class="form-control" name="title">
 
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Description</label>
+                    <input type="text" class="form-control" aria-describedby="desHelp" name="description">
+                      <small id="desHelp" class="form-text text-muted">Write short description of your room.</small>
+                  </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -36,11 +43,11 @@
             <div class="col-md-3 col-xl-2 mr-0" style="min-height: 800px;">
                 <div class="card border-secondary mb-3 mt-3" style="min-height: 800px" >
                       <div class="card-body text-dark">
-                        <div class="btn-group-vertical m-2 p-1">
+
                             <!-- sidebar content goes here -->
                             <button id="listallrooms" name="button" class="btn btn-info p-1">list all rooms</button>
-                            <button type="button" class="btn btn-info p-1" data-toggle="modal" data-target="#exampleModal">Add Room</button>
-                        </div>
+
+
                       </div>
                 </div>
 
@@ -56,15 +63,16 @@
                     </div>
                 </div>
                 <div class="row" style="min-height: 600px;">
-                    <div class="card border-secondary mb-3 mt-1" style="min-height:597px;width: 100em;max-width: 1450px">
-                      <div class="card-header text-center">OPTION</div>
-                      <div class="card-body text-dark">
-                        <div id="canvas" class="p-1">
-                            <!-- code injection by JS //do not touch this div -->
+                        <div class="card border-secondary mb-3 mt-1" style="min-height:597px;width: 100em;max-width: 1450px">
+                          <div class="card-header text-center">OPTION</div>
+                          <div class="card-body text-dark">
+                            <div  class="p-1">
+                                <div id="canvas">
+                                    <!-- code injection by JS //do not touch this div -->
+                                </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-
                 </div>
             </div>
         </div>

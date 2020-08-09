@@ -1,26 +1,4 @@
 {%  extends 'base.html' %}
 {% block body %}
-<button id="button" name="button">button</button>
-    <script
-			  src="https://code.jquery.com/jquery-3.5.1.js"
-			  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-			  crossorigin="anonymous"></script>
 
-    <script>
-        const btn = document.getElementById('button');
-        btn.addEventListener('click',fun);
-        function fun(e) {
-            $.ajax(
-                {
-                    type:'GET',
-                    url : 'http://127.0.0.1:8000/dashboard/api/applications',
-                    dataType:'json',
-                    success: function (data) {
-                        alert(data.response);
-                    }
-                }
-            )
-
-        }
-    </script>
 {% endblock %}

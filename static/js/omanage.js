@@ -9,33 +9,36 @@ function listallrooms() {
             url : '/api/listallrooms/',
             dataType : 'json',
             success : function (data) {
-                 document.getElementById("canvas").innerHTML=
-                `
+                let val = `
+                <button type="button" class="btn btn-primary btn-sm p-1" data-toggle="modal" data-target="#exampleModal">Add Room</button>
+                <div class="row row-cols-1 row-cols-md-3">
                 ${data.map(function(obj) {
                     return `
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Room : ${obj.title}</h5>
-                                 <h6 class="card-subtitle mb-2 text-muted">Status :  ${obj.room_stream_details}</h6>
-                                 <p class="card-text">Description : ${obj.description}</p>
-                            </div>
-                        <div>
+                    <div class="card m-3" style="max-width: 20em;min-width: 20em;max-height: 20em;min-height: 20em;">
+                        <img src="${obj.profile_pic}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${obj.title}</h5>
+                            <p class="card-text text-muted">${obj.room_stream_details}</p>
+                            <p class="card-text ">${obj.description}</p>
+                        </div>
+                    </div>
                     `;
                 }).join('')}
-                `
+                </div>`;
+                 document.getElementById("canvas").innerHTML= val;
+
             }
         }
     );
 }
 
 function addroom(input,token) {
-    let data = input;
     $.ajax(
         {
             type : 'POST',
             url : '/api/addroom/',
             contentType :'application/json',
-            data : data,
+            data : input,
             headers: { "X-CSRFToken": token },
             success:function () {
                 alert("success");
