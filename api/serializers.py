@@ -6,7 +6,7 @@ from django.contrib.auth.admin import User
 class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplyForStudent
-        fields = ['first_name','last_name','email','phone','reference','submissionstamp']
+        fields = ['first_name','last_name','email','phone','reference','submissionstamp','status']
 
 
 class RoomSerializer(serializers.ModelSerializer):

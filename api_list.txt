@@ -1,12 +1,23 @@
 READY API LIST :
 
-1. List all applications
+1. List all rooms
+	type : GET
+	use  : list all rooms for the logged in organization
+	url  : /api/listallrooms
+
+2. Create room
+	type : POST
+	data : title, description
+	use  : add a new room under logged in organization
+	url  : /api/addroom/
+
+3. List all applications
 	type : GET
 	use  : list all applications for the logged in organization
-	url  : /api/listallapplications
+	url  : /api/listapplications
 
-2. Accept application 
+4. Accept application
 	type : POST
-	data : reference of application
+	data : reference
 	use  : accept application from student
 	url  : /api/acceptapplications/
