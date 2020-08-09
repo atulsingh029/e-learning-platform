@@ -12,13 +12,17 @@ def dashboard(request):
         user = Custom_User.objects.get(user=user_model)
         if user.is_organization:
             profile_info = ExtraProfileInfo.objects.get(user = user)
+            try:
+                p_url = profile_info.profile_pic.url
+            except:
+                p_url = '#'
             context = {
                 'pagetitle': '',
                 'user': user_model.first_name.capitalize(),
                 'navButtons' : [{'link':'/signout', 'label':'Sign Out'},{'link':'/settings', 'label':'Settings'}],
                 'owner':{'coverpic':"https://atulsingh029.github.io/images/banner2.gif",'title':profile_info.user.user.first_name,
                          'lead1':profile_info.bio1, 'lead2': profile_info.bio2
-                         , 'link':profile_info.url,'label':'Advertisement Page', 'profile_pic':profile_info.profile_pic.url}
+                         , 'link':profile_info.url,'label':'Advertisement Page', 'profile_pic':p_url}
             }
             return render(request, template_name='dashboard/odash.html', context=context)
         if user.is_student:
