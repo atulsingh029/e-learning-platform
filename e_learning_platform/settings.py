@@ -145,3 +145,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,'assets'),
 MEDIA_URL = '/filestatic/'                                     # this is the url from where data is fetched
 MEDIA_ROOT = os.path.join(BASE_DIR, 'filestatic/media')             # this is the url where data is uploaded
 
+
+# Auth Model
+AUTH_USER_MODEL = 'custom_user.Account'

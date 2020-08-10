@@ -1,5 +1,5 @@
 from django.urls import path
-from api.views import add_room,list_all_rooms,list_applications,accept_application
+from api.views import *
 
 
 urlpatterns = [
@@ -7,4 +7,8 @@ urlpatterns = [
     path('listallrooms/',list_all_rooms),
     path('listapplications/', list_applications),
     path('acceptapplications/', accept_application),
+    path('deleteroom/',delete_room),
+    path('listallstudents/', list_students),
+    path('listroomstudents/<int:room_id>/', list_room_students)
+
 ]

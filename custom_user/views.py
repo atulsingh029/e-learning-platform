@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import Custom_User, ApplyForStudent, ExtraProfileInfo
+from .models import ApplyForStudent, Account, Organization
 from .forms import SignUp,OTPForm,StudentRegister,SignIn
 import random
 from django.contrib.auth import login,logout
@@ -19,7 +19,7 @@ def signup(request):
         password1 = request.POST['password1']
         password2 = request.POST['password2']
 
-        if password1 == password2 and len(User.objects.filter(email=email)) == 0:
+        if password1 == password2 and len(Account.objects.filter(email=email)) == 0:
             password = password1
             otp = generate_otp()
             message = 'Your One Time Password is ' + str(otp)
@@ -46,11 +46,11 @@ def generate_username(email):
     # eg: atul@email.com, so you have to return 'atul' through response variable
     atIndex = email.index('@')
     response = email[0:atIndex]
-    checker = User.objects.filter(username=response)
+    checker = Account.objects.filter(username=response)
     count = 1
     while(len(checker) != 0):
         response = response + str(count)
-        checker = User.objects.filter(username=response)
+        checker = Account.objects.filter(username=response)
         count = count + 1
     return response
 
@@ -82,13 +82,9 @@ def verify_otp(request):
 
 
 def RegisterStudent(request,id):
-    user_temp = User.objects.filter(username=id)
-    if len(user_temp) == 0:
-        return HttpResponse('bad url')
-    user_temp = Custom_User.objects.filter(user=user_temp[0])
+    user_temp = Account.objects.filter(username=id)
     if len(user_temp) == 0 or user_temp[0].is_organization == False:
         return HttpResponse('bad url')
-
     if request.method == 'POST':
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
@@ -98,13 +94,13 @@ def RegisterStudent(request,id):
         password1 = request.POST['password1']
         password2 = request.POST['password2']
         # fix required : within the same organization don't allow duplicate emails but if a user wants to signup for a different organization with email that already exists in our user model allow him/her.
-        if password1 == password2 and len(User.objects.filter(email=email)) == 0 and len(ApplyForStudent.objects.filter(email=email)) == 0:
+        if password1 == password2 and len(Account.objects.filter(email=email)) == 0 and len(ApplyForStudent.objects.filter(email=email)) == 0:
             password = password1
             otp = generate_otp()
             message = 'Your One Time Password for registration @'+id+' is ' + str(otp)
             student_transfer_key = email[0:4]+str(random.randrange(1000000,9999999))
             STUDENT_APPLICATION[student_transfer_key] = [otp, first_name, last_name, email, password, phone, for_organization]
-            send_mail('Verify Your Account', message, 'atul.auth@gmail.com', [email, ], fail_silently=False)
+            #send_mail('Verify Your Account', message, 'atul.auth@gmail.com', [email, ], fail_silently=True)
             return redirect('/verify?q=student&dtk='+student_transfer_key)
         else:
             return redirect('/r/'+id)
@@ -120,13 +116,11 @@ def Reg(request,mode,otp,dtk):
         if mode == 'organization':
             if int(DATA_TRANSFER[dtk][0]) == int(otp):
                 username = generate_username(DATA_TRANSFER[dtk][2])
-                user = User.objects.create_user(username=username, password=DATA_TRANSFER[dtk][3], first_name=DATA_TRANSFER[dtk][1],
-                                                email=DATA_TRANSFER[dtk][2])
-                temp_user = Custom_User.objects.create(user=user, is_organization=True)
-                temp_user.save()
-                epi = ExtraProfileInfo()
-                epi.user = temp_user
-                epi.save()
+                user = Account.objects.create_user(username=username, password=DATA_TRANSFER[dtk][3], first_name=DATA_TRANSFER[dtk][1],
+                                                email=DATA_TRANSFER[dtk][2], is_organization=True)
+                organization = Organization(account=user)
+                organization.save()
+
                 DATA_TRANSFER.pop(dtk)
                 login(request, user)
                 return '/dashboard'
@@ -144,8 +138,8 @@ def Reg(request,mode,otp,dtk):
                 student.reference = STUDENT_APPLICATION[dtk][3][0:4]+str(random.randrange(100000,999999))
                 student.save()
                 subject = "Application Submission Successful"
-                message = "Hey " + STUDENT_APPLICATION[dtk][1] + ", \nYour application for registration @" + STUDENT_APPLICATION[dtk][6].user.username + ' is successful, you will be informed as soon as it is accepted by the organization.\nYour application reference number is ' + student.reference +'.\nThank You'
-                send_mail(subject,message,'atul.auth@gmail.com',[STUDENT_APPLICATION[dtk][3], ], fail_silently=False)
+                message = "Hey " + STUDENT_APPLICATION[dtk][1] + ", \nYour application for registration @" + STUDENT_APPLICATION[dtk][6].username + ' is successful, you will be informed as soon as it is accepted by the organization.\nYour application reference number is ' + student.reference +'.\nThank You'
+                #send_mail(subject,message,'atul.auth@gmail.com',[STUDENT_APPLICATION[dtk][3], ], fail_silently=True)
                 STUDENT_APPLICATION.pop(dtk)
                 return 200
             else:
@@ -159,13 +153,16 @@ def signin(request):
         if request.method == 'POST':
             email = request.POST['email']
             password = request.POST['password']
-            username = User.objects.get(email=email)
-            response = authenticate(request,username=username,password=password)
+            try:
+                user = Account.objects.get(email=email)
+            except:
+                return redirect('/signin?r=nosuchuser')
+            response = authenticate(request,username=user.username,password=password)
             if response is not None:
                 login(request,response)
                 return redirect('/dashboard')
             else:
-                return redirect('/signin')
+                return redirect('/signin?r=emailorpasswordincorrect')
 
         form = SignIn()
         context = {'form':form,'formname': 'Sign In',}
@@ -180,4 +177,6 @@ def signout(request):
 
 
 def testing(request):
-    HttpResponse('test : not configured')
+    student = STUDENT_APPLICATION
+    organization = DATA_TRANSFER
+    return HttpResponse('Student Reg :'+str(student)+'<br> Organization : '+str(organization))

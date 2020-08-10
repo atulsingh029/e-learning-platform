@@ -1,15 +1,30 @@
 from django.contrib import admin
-from .models import Custom_User,Room,ApplyForStudent, Student, Teacher, ExtraProfileInfo
+from django.contrib.auth.admin import UserAdmin
+from .models import Account,Room,ApplyForStudent, Student, Teacher, Organization
 
 
-@admin.register(Custom_User)
-class CACustomUser(admin.ModelAdmin):
-    list_display = ('user', 'is_organization', 'is_teacher', 'is_student')
+@admin.register(Account)
+class Account(UserAdmin):
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        (('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        (('User Type'), {'fields': ('is_organization', 'is_teacher','is_student')}),
+        (('Extra Profile Builder'), {'fields': ('bio1', 'bio2', 'sex','url','dob','profile_pic')}),
+        (('Permissions'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+        }),
+        (('Important dates'), {'fields': ('last_login', 'date_joined')}),
+
+    )
+
+@admin.register(Organization)
+class CARoom(admin.ModelAdmin):
+    list_display = ('account',)
 
 
 @admin.register(Room)
 class CARoom(admin.ModelAdmin):
-    list_display = ('title', 'description', 'organisation', 'room_number', 'display_pic', 'room_stream_details', 'room_status')
+    list_display = ('title', 'id', 'description', 'organization', 'room_stream_details', 'room_status')
 
 
 @admin.register(ApplyForStudent)
@@ -25,7 +40,3 @@ class CAStudent(admin.ModelAdmin):
 @admin.register(Teacher)
 class CATeacher(admin.ModelAdmin):
     list_display = ('user', 'manages_room')
-
-@admin.register(ExtraProfileInfo)
-class CAExtraProfileInfo(admin.ModelAdmin):
-    list_display = ('user', 'bio1', 'bio2', 'sex', 'url','dob', 'address', 'profile_pic')

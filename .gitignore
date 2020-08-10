@@ -17,3 +17,15 @@ management/migrations/0003_courseresource_lectureresource.py
 management/migrations/0004_auto_20200808_1210.py
 management/migrations/0005_auto_20200808_1214.py
 management/migrations/0006_auto_20200808_1215.py
+custom_user/migrations/0002_auto_20200810_0127.py
+custom_user/migrations/0003_auto_20200810_0218.py
+custom_user/migrations/0004_auto_20200810_0221.py
+custom_user/migrations/0005_auto_20200810_0227.py
+custom_user/migrations/0006_room_deleted.py
+custom_user/migrations/0007_auto_20200810_1123.py
+custom_user/migrations/0008_auto_20200810_1125.py
+custom_user/migrations/0009_auto_20200810_1156.py
+custom_user/migrations/0010_auto_20200810_1202.py
+custom_user/migrations/0011_remove_room_room_number.py
+filestatic/
+management/migrations/0002_auto_20200810_0218.py
