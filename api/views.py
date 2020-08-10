@@ -1,7 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from management.views import *
-from custom_user.models import Account, Room
+from custom_user.models import Account, Room, Organization
+from management.models import Course, Lecture, CourseResource, LectureResource
 
 
 # organization level apis
@@ -11,7 +12,7 @@ def list_students(request):
         user = Account.objects.get(username=request.user)
         if request.user.is_authenticated and user.is_organization:
             response = listallstudents(user)
-            return Response({'status': response})
+            return Response(response.data)
         else:
             raise Exception
     except:
@@ -30,9 +31,10 @@ def list_room_students(request,room_id):
                 print(user.organization)
                 if room_owner == user.organization:
                     response = listroomstudents(room_id=number)
+                    return Response(response.data)
                 else:
                     response = 'unauthorized'
-                return Response({'status': response})
+                    return Response({'status': response})
             else:
                 raise Exception
         else:
@@ -84,6 +86,27 @@ def list_all_rooms(request):
         return Response(response.data)
     else:
         return Response({'status': 'not allowed'})
+
+
+# this api call returns all the courses inside specified room id for authenticated user
+@api_view(['GET'])
+def view_room(request,room_id):
+    try:
+        if request.user.is_authenticated:
+            user = request.user
+            organization = Account.objects.get(username=user).organization
+            room = Room.objects.get(id=room_id)
+            if organization == room.organization:
+                response = viewroom(room)
+                return Response(response.data)
+            else:
+                return Response({'status': 'not allowed'})
+        else:
+            return Response({'status': 'not allowed'})
+    except:
+        return Response({'status': 'not allowed'})
+
+
 
 
 @api_view(['POST'])

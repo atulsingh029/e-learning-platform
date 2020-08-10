@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from custom_user.models import Room, ApplyForStudent, Student, Account
-import random
+from management.models import Course, Lecture, CourseResource, LectureResource
 from api.serializers import ApplicationSerializer, RoomSerializer
 from .manager import *
 
@@ -85,6 +85,11 @@ def addroom(request, user, data):
         return 'success'
     except:
         return 'failed'
+
+
+def viewroom(room):
+    # you are given room object as argument, query all courses under this room and return it
+    return 'pass'
 
 
 def listallrooms(request):
