@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from custom_user.models import Room, ApplyForStudent, Student, Account
-from management.models import Course, Lecture, CourseResource, LectureResource
-from api.serializers import ApplicationSerializer, RoomSerializer
+from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
+from api.serializers import ApplicationSerializer, RoomSerializer, DashOptionSerializer
 from .manager import *
 
 
@@ -16,10 +16,19 @@ def dashboard(request):
             except:
                 p_url = '#'
 
-            options_available = [{'link':'','method':'','label':'Dashboard', 'icon':'dashboard'},
+            default_options = [{'link':'','method':'','label':'Dashboard', 'icon':'dashboard'},
+                               {'link': '#', 'method': 'listapplications()', 'label': 'Applications',
+                                'icon': 'group_add'},
                                 {'link':'#','method':'listallrooms()','label':'Rooms', 'icon':'class'},
-                                 {'link': '#', 'method': 'listapplications()', 'label': 'Applications','icon':'description'}
+                                {'link': '#', 'method': '', 'label': 'Courses', 'icon': 'school'},
+                                {'link': '#', 'method': '', 'label': 'Teachers', 'icon': 'recent_actors'},
+                                {'link': '#', 'method': 'listallrooms()', 'label': 'Students', 'icon': 'groups'},
+                                {'link': '#', 'method': '', 'label': 'eLibrary','icon': 'local_library'},
+
                                  ]
+            options_available = DashOption.objects.filter(account=user)
+            extra_options = DashOptionSerializer(options_available,many=True).data
+            options_available = extra_options+default_options
             nav_btns = [{'link':'/signout', 'label':'Sign Out'},{'link':'/settings', 'label':'Settings'}]
 
             context = {

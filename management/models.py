@@ -2,6 +2,17 @@ from django.db import models
 from custom_user.models import Room, Account
 
 
+class DashOption(models.Model):
+    account = models.ForeignKey(Account,on_delete=models.CASCADE)
+    link = models.CharField(max_length=512,null=True,blank=True,default="#")
+    label = models.CharField(max_length=512)
+    method = models.CharField(max_length=512,null=True,blank=True)
+    icon = models.CharField(max_length=512,null=True,blank=True,default="insert_emoticon")
+
+    def __str__(self):
+        return self.account.first_name
+
+
 class Course(models.Model):
     c_id = models.CharField(max_length=128, primary_key=True)
     c_name = models.CharField(max_length=255)

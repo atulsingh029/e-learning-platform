@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, Lecture, LectureResource, CourseResource
+from .models import *
 
 
 @admin.register(Course)
@@ -20,3 +20,8 @@ class CALectureResource(admin.ModelAdmin):
 @admin.register(CourseResource)
 class CACourseResource(admin.ModelAdmin):
     list_display = ('cr_name', 'cr_description', 'for_course', 'cr_url')
+
+
+@admin.register(DashOption)
+class CACourseResource(admin.ModelAdmin):
+    list_display = ('label','account')

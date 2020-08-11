@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from custom_user.models import ApplyForStudent, Room, Account
-from management.models import Course, Lecture, CourseResource, LectureResource
+from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -43,6 +43,13 @@ class LectureResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = LectureResource
         fields = ['lr_name', 'lr_description', 'for_lecture', 'lr_url']
+
+
+class DashOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DashOption
+        fields = ['link', 'label', 'icon', 'method']
+        
 
 # @abhishek
 # write serializers for following models :
