@@ -15,10 +15,18 @@ def dashboard(request):
                 p_url = profile_info.profile_pic.url
             except:
                 p_url = '#'
+
+            options_available = [{'link':'','method':'','label':'Dashboard', 'icon':'dashboard'},
+                                {'link':'#','method':'listallrooms()','label':'Rooms', 'icon':'class'},
+                                 {'link': '#', 'method': 'listapplications()', 'label': 'Applications','icon':'description'}
+                                 ]
+            nav_btns = [{'link':'/signout', 'label':'Sign Out'},{'link':'/settings', 'label':'Settings'}]
+
             context = {
-                'pagetitle': '',
+                'pagetitle': 'PrimeStudies : Dashboard',
                 'user': user_model.first_name.capitalize(),
-                'navButtons' : [{'link':'/signout', 'label':'Sign Out'},{'link':'/settings', 'label':'Settings'}],
+                'navButtons' : nav_btns,
+                'options' : options_available,
                 'owner':{'coverpic':"https://atulsingh029.github.io/images/banner2.gif",'title':profile_info.first_name,
                          'lead1':profile_info.bio1, 'lead2': profile_info.bio2
                          , 'link':profile_info.url,'label':'Advertisement Page', 'profile_pic':p_url}
@@ -79,6 +87,7 @@ def addroom(request, user, data):
         room = Room()
         room.title = data['title']
         room.description = data['description']
+        room.display_pic = request.FILES.get('display_pic')
         temp = Account.objects.filter(username=user)
         room.organization = temp[0].organization
         room.save()
