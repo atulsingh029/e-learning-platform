@@ -140,7 +140,14 @@ def addroom(request, user, data):
 
 def viewroom(room):
     # you are given room object as argument, query all courses under this room and return it
-    return 'pass'
+    try:
+        user_temp = Account.objects.get(username=room.user)
+    except:
+        return {"status": "forbidden test"}
+    data = Room.objects.filter(course=user_temp.course, deleted=False)
+    serial_data = RoomSerializer(data.all(), many=True)
+
+    return serial_data
 
 
 def listallrooms(request):
@@ -156,16 +163,35 @@ def listallrooms(request):
 
 def deleteroom(room):
     # you are given room object as argument, this room object has property deleted, you have to set that attribute to true and it to database
-    return 'pass'
+    try:
+        user_temp = Account.objects.get(username=room.user)
+    except:
+        return {"status": "forbidden test"}
+    data = Room.objects.filter(room=user_temp.room, deleted=True)
+    serial_data = RoomSerializer(data.all(), many=True)
+
+    return serial_data
 
 
 def listallstudents(current_loggin_account):
     # you have currently logged in organization as argument(Account object), query the database and return the list of all students under this organization
-    return 'pass'
+    try:
+        user_temp = Account.objects.get(username=current_loggin_account.user)
+    except:
+        return{"status": "forbidden test"}
+    data = Student.objects.filter(student=user_temp.student, deleted=True)
+
+    return data
 
 
 def listroomstudents(room_id):
     # you have room_id as argument(Room object attribute), query the database and return the list of all students in this room
-    return 'pass'
+    try:
+        user_temp = Account.objects.get(username=room_id.user)
+    except:
+        return {"status": "forbidden test"}
+    data = Room.objects.filter(student=user_temp.student, deleted=True)
+
+    return data
 
 
