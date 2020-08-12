@@ -30,3 +30,4 @@ custom_user/migrations/0011_remove_room_room_number.py
 filestatic/
 management/migrations/0002_auto_20200810_0218.py
 management/migrations/0002_dashoption.py
+custom_user/migrations/0002_auto_20200812_0106.py

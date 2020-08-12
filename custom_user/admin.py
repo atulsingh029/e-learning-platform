@@ -39,4 +39,4 @@ class CAStudent(admin.ModelAdmin):
 
 @admin.register(Teacher)
 class CATeacher(admin.ModelAdmin):
-    list_display = ('user', 'manages_room')
+    list_display = ('user',)

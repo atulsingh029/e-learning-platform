@@ -27,7 +27,7 @@ class Room(models.Model):
     title = models.CharField(max_length=512, default='room', blank=False, null=False)
     description = models.CharField(max_length=1024, default='room description here', blank=False, null=False)
     organization = models.ForeignKey(Organization,on_delete=models.SET_NULL,null=True,blank=True,default=None)
-    display_pic = models.ImageField(blank=True, default=None, null=True)
+    display_pic = models.ImageField(blank=True, default=None, null=True,upload_to="Room/")
     room_stream_details = models.CharField(max_length=1024, default='free', blank=False, null=False)
     room_status = models.BooleanField(default=False,null=False,blank=False)
     deleted = models.BooleanField(default=False)
@@ -46,7 +46,7 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE)
-    manages_room = models.ForeignKey(Room, blank=True, default=None, null=True, on_delete=models.SET_NULL)
+    manages_room = models.ManyToManyField(Room, blank=True)
 
 
 class ApplyForStudent(models.Model):

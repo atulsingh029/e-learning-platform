@@ -10,6 +10,7 @@ urlpatterns = [
     path('deleteroom/',delete_room),
     path('listallstudents/', list_students),
     path('listroomstudents/<int:room_id>/', list_room_students),
-    path('viewroom/<int:room_id>', view_room)
+    path('viewroom/<int:room_id>', view_room),
+    path('editroom/<int:room_id>', edit_room),
 
 ]

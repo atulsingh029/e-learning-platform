@@ -3,6 +3,9 @@
     margin-left: 402px;
 }
 
+#canvas{
+        padding: 30px;
+    }
 
 #sidebar {
     position: fixed;
@@ -49,11 +52,11 @@
 
 #sm-sidebar ul li{
     color: antiquewhite;
-    border-bottom: antiquewhite solid 1px;
     padding: 10px;
     list-style: none;
     display: inline;
     text-decoration: none;
+    border: none;
 }
 
 .vertical-align-middle {
@@ -68,5 +71,8 @@
     #c_container{
         margin: 75px 0px 0px 0px;
     /*if user goes from large screen to mid or small with sidebar collapsed, there is ui problem*/
+    }
+    #canvas{
+        padding: 30px;
     }
 }

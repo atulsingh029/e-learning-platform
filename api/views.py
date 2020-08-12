@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from management.views import *
 from custom_user.models import Account, Room, Organization
 from management.models import Course, Lecture, CourseResource, LectureResource
+from management.forms import EditRoom
 
 
 # organization level apis
@@ -124,6 +125,27 @@ def delete_room(request):           # takes room id  as data
             raise Exception
     except:
         return Response({"status": "forbidden"})
+
+
+@api_view(['GET'])
+def edit_room(request,room_id):
+    try:
+        if request.user.is_authenticated:
+            user = request.user
+            organization = Account.objects.get(username=user).organization
+            room = Room.objects.get(id=room_id)
+
+            if organization == room.organization:
+                form = EditRoom(initial={'title':room.title,'description':room.description})
+                return HttpResponse(str(form.as_ul()),content_type='text/plain')
+            else:
+                return Response({'status': 'not allowed'})
+        else:
+            return Response({'status': 'not allowed'})
+    except:
+        return Response({'status': 'not allowed'})
+
+
 
 # Teacher level apis
 

@@ -1,11 +1,16 @@
 from django.shortcuts import render, HttpResponse, redirect
-from custom_user.models import Room, ApplyForStudent, Student, Account
+from custom_user.models import Room, ApplyForStudent, Student, Account, Teacher
 from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
 from api.serializers import ApplicationSerializer, RoomSerializer, DashOptionSerializer
 from .manager import *
+from .forms import EditRoom
 
 
 def dashboard(request):
+    try:
+        message = request.GET['q']
+    except:
+        message =""
     if request.user.is_authenticated:
         user_model = request.user
         user = Account.objects.get(username=user_model)
@@ -28,7 +33,7 @@ def dashboard(request):
                                  ]
             options_available = DashOption.objects.filter(account=user)
             extra_options = DashOptionSerializer(options_available,many=True).data
-            options_available = extra_options+default_options
+            options_available = default_options+extra_options
             nav_btns = [{'link':'/signout', 'label':'Sign Out'},{'link':'/settings', 'label':'Settings'}]
 
             context = {
@@ -49,6 +54,34 @@ def dashboard(request):
             return render(request, template_name='dashboard/tdash.html', context=context)
     else:
         return redirect('/signin')
+
+
+def edit_room(request,id):
+        try:
+            if request.user.is_authenticated:
+                user = request.user
+                organization = Account.objects.get(username=user).organization
+                room = Room.objects.get(id=id)
+                if organization == room.organization:
+                    if request.method == 'POST':
+                        f=EditRoom(request.POST,request.FILES)
+                        if f.is_valid():
+                            r=Room.objects.get(id=id)
+                            pic =f.files.get('picture')
+                            if pic is not None:
+                                r.display_pic=pic
+                            r.title = request.POST['title']
+                            r.description = request.POST['description']
+                            r.save()
+                        return redirect('/dashboard?q=roomedited')
+                else:
+                    return HttpResponse({'status: not allowed'})
+            else:
+                return HttpResponse({'status: not allowed'})
+
+        except:
+            return HttpResponse({'status: not allowed'})
+
 
 
 # management api views :
@@ -117,6 +150,7 @@ def listallrooms(request):
         return {"status": "forbidden test"}
     data = Room.objects.filter(organization=user_temp.organization, deleted=False)
     serial_data = RoomSerializer(data.all(), many=True)
+
     return serial_data
 
 
@@ -133,3 +167,5 @@ def listallstudents(current_loggin_account):
 def listroomstudents(room_id):
     # you have room_id as argument(Room object attribute), query the database and return the list of all students in this room
     return 'pass'
+
+
