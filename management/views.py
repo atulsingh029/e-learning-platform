@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from custom_user.models import Room, ApplyForStudent, Student, Account, Teacher
 from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
-from api.serializers import ApplicationSerializer, RoomSerializer, DashOptionSerializer
+from api.serializers import ApplicationSerializer, RoomSerializer, DashOptionSerializer, CourseSerializer
 from .manager import *
 from .forms import EditRoom
 
@@ -140,13 +140,17 @@ def addroom(request, user, data):
 
 def viewroom(room):
     # you are given room object as argument, query all courses under this room and return it
-    try:
+    '''try:
         user_temp = Account.objects.get(username=room.user)
     except:
         return {"status": "forbidden test"}
     data = Room.objects.filter(course=user_temp.course, deleted=False)
     serial_data = RoomSerializer(data.all(), many=True)
 
+    return serial_data'''
+
+    data = Course.objects.filter(for_room=room)
+    serial_data = CourseSerializer(data.all(), many=True)
     return serial_data
 
 
@@ -163,14 +167,15 @@ def listallrooms(request):
 
 def deleteroom(room):
     # you are given room object as argument, this room object has property deleted, you have to set that attribute to true and it to database
-    try:
+    '''try:
         user_temp = Account.objects.get(username=room.user)
     except:
         return {"status": "forbidden test"}
     data = Room.objects.filter(room=user_temp.room, deleted=True)
-    serial_data = RoomSerializer(data.all(), many=True)
-
-    return serial_data
+    serial_data = RoomSerializer(data.all(), many=True)'''
+    room.deleted = True
+    room.save()
+    return 'success'
 
 
 def listallstudents(current_loggin_account):

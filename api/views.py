@@ -116,7 +116,7 @@ def delete_room(request):           # takes room id  as data
         user = Account.objects.get(username=request.user)
         if request.user.is_authenticated and user.is_organization:
             data = request.data
-            room = Room.objects.filter(organization=user.organization, id=data['room'])
+            room = Room.objects.filter(organization=user.organization, id=data['id'])
             if len(room) == 0:
                 return Response({'status':'no such room'})
             response = deleteroom(room[0])

@@ -1,3 +1,4 @@
+const csrftoken = $("[name=csrfmiddlewaretoken]").val();
 function listallrooms() {
     $.ajax(
         {
@@ -14,7 +15,7 @@ function listallrooms() {
                     let btn_status;
                     let label = "free";
                     if(obj.room_stream_details !== "free"){
-                        btn_status = "btn-danger";
+                        btn_status = "btn-success";
                         label="live";
                     }
                     else {
@@ -29,7 +30,6 @@ function listallrooms() {
                               <p class="card-text">${obj.description}</p>
                               <a href="${obj.room_stream_details}" target="_blank" class="btn btn-secondary btn-sm  mt-5 ${btn_status}">${label}</a>
                               <a href="#" onclick="openroom(${room_id})" class="btn btn-sm btn-primary mt-5">Go To Room</a>
-                              <a href="#" onclick="editroomredirect(${room_id})" class="btn btn-sm  btn-primary mt-5">Edit Room</a>
                             </div>
                         </div>
                     </div>
@@ -70,20 +70,72 @@ function addroom(form_id) {
 function listapplications(){
     $.ajax(
         {
-            type : 'GET',
-            url : '/api/listapplications/',
-            contentType :'application/json',
+            type: 'GET',
+            url: '/api/listapplications/',
+            contentType: 'application/json',
             success : function (data) {
+                let label ="Accept"
+                let val = `
+            <style> 
+                  table tr th{
+                      padding: 2rem;
+                  }
+                  thead{
+                   background-color: black;
+                   background-size: cover;
+               }
+               .row1{
+                   background-color: white;
+                   background-size: cover;
+               }
+               
+             </style>
+             <h5 class="text-center text-sm-center">New Admission Requests</h5>
+            <table class="table table-striped">
+                <thead class="text-light">
+                    <tr class="text-center">
+                        <th >Ref_No.</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+            ${data.map(function(obj) {
+                    return `
+            <tr class="text-center row1">
+                <td>${obj.reference}</td>
+                <td>${obj.first_name} ${obj.last_name}</td>
+                <td>${obj.phone}</td>
+                <td>${obj.email}</td>
+                <td><a class="btn btn-outline-success d-inline" onclick="acceptapplication(${obj.id})">${label}</a><a class="btn btn-outline-danger d-inline m-1" onclick="rejectapplication(${obj.id})">Reject</a></td>
+            </tr>`;
+                }).join('')}
+            </tbody>`;
                 let element = document.getElementById('canvas');
-                element.innerHTML = "pending";  /* write your template here */
+                element.innerHTML = val;
             }
+
 
         }
     );
 }
 
 
-function openroom(room_id) {
+function openroom(room_id) {   /*Teacher name feature pending*/
+
+    let element = document.getElementById('canvas');
+    let trigers = ` <div>
+                    <button onclick='addcourse(${room_id})' class='btn btn-sm btn-success d-inline mr-1'>Add Course</button> 
+                    <button onclick='addstudent(${room_id})' class="btn btn-sm  btn-success mr-1 d-inline">Add Student</button>
+                    <button onclick='deleteroom(${room_id})' class="btn btn-sm  btn-danger mr-1 d-inline">Delete Room</button>
+                    </div> `;
+                element.innerHTML = trigers+
+                    "<div id='subcan1'></div>" +
+                    "<div id='subcan2'></div>" +
+                    "<div id='subcan3'></div>";
+    editroom(room_id);
     $.ajax(
         {
             type : 'GET',
@@ -92,64 +144,84 @@ function openroom(room_id) {
             success : function (data) {
                 let label ="teacher"
                 let val = `
-                <button type="button" class="btn btn-primary btn-sm p-1" data-toggle="modal" data-target="#exampleModal">Add Room</button>
                 <div class="row row-cols-1 row-cols-md-3">
                 ${data.map(function(obj) {
                     return `
-                     
                     <div class="card m-2 " style='max-width: 20em;min-width: 20em;max-height: 16em;min-height: 16em;'>
                         <div class="card-body" >
                             <div class="card-body">
                               <h1 class=" card-title">${obj.c_name}</h1>
                               <p class="card-text">${obj.c_description}</p>
-                              <a  class="btn btn-secondary btn-sm  mt-5 disabled">${label}</a>
+                              <a  class="btn btn-secondary btn-sm  mt-5 disabled">${label}</a> 
                             </div>
                         </div>
                     </div>
                     `;
                 }).join('')}
-                </div>`;
-                let element = document.getElementById('canvas');
-                element.innerHTML = val;
+                </div><h5>Students In This Room</h5>`;
+                let elemen = document.getElementById('subcan2');
+                elemen.innerHTML = val;
+                roomstudents(room_id);
             }
 
         }
     );
 }
 
-function editroomredirect(room_id) {
-    const csrftoken = $("[name=csrfmiddlewaretoken]").val();
+function editroom(room_id) {
     $.ajax(
         {
             type : 'GET',
             url : '/api/editroom/'+room_id,
             contentType :'text/plain',
             success : function (data) {
-                let element = document.getElementById('canvas');
-                element.innerHTML = `
-                     <div class="container">
+                let eleme = document.getElementById('subcan1');
+                eleme.innerHTML = `
                         <div class="row m-1 p-1 mt-5">
-                            <div class="col-xs-12 col-md-6 m-auto">
-                                <div class="card mt-3">
-                                  <div class="card-header">
-                                    Edit Room
-                                  </div>
-                                  <div class="card-body">
-                                      <form method="post" action="/dashboard/editroom/${room_id}/" enctype="multipart/form-data">
+                            <div class="col-xs-12 col-md-6 ">
+                                <form method="post" action="/dashboard/editroom/${room_id}/" enctype="multipart/form-data">
                                       <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
                                       ${data}
                                       <button type="submit" class="btn btn-sm btn-info mt-1">submit</button>
-                                    </form>
-                                  </div>
-                                </div>
+                                 </form>
                             </div>
-                        </div>
-                    </div>
-                `;
-
+                        </div><h5>Courses In This Room</h5>`;
             }
-
         }
     );
 }
 
+function acceptapplication(id){
+console.log("accept"+id);
+}
+
+function rejectapplication(id){
+console.log("reject"+id);
+}
+
+function deleteroom(id){
+     $.ajax(
+        {
+            type : 'POST',
+            url : '/api/deleteroom/',
+            contentType :'application/json',
+            data : JSON.stringify({"id":id}),
+            headers: { "X-CSRFToken": csrftoken },
+            success:function () {
+                listallrooms();
+            }
+        }
+    );
+}
+
+function addstudent(id) {
+console.log("add"+id);
+}
+
+function roomstudents(id) {
+console.log("in room students list"+id);
+}
+
+function addcourse(id) {
+console.log("add course"+id);
+}
