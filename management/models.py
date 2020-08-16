@@ -1,5 +1,5 @@
 from django.db import models
-from custom_user.models import Room, Account
+from custom_user.models import Room, Account, Teacher
 
 
 class DashOption(models.Model):
@@ -20,6 +20,7 @@ class Course(models.Model):
     for_organization = models.ForeignKey(Account,on_delete=models.CASCADE)
     for_room = models.ManyToManyField(Room)
     c_status = models.BooleanField(default=False)
+    instructor = models.ForeignKey(Teacher,on_delete=models.SET_NULL,null=True,blank=True)
 
     def __str__(self):
         return self.c_name

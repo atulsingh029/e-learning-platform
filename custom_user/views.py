@@ -6,6 +6,7 @@ from .models import ApplyForStudent, Account, Organization
 from .forms import SignUp,OTPForm,StudentRegister,SignIn
 import random
 from django.contrib.auth import login,logout
+from management.models import Room
 
 
 DATA_TRANSFER = {}
@@ -81,11 +82,15 @@ def verify_otp(request):
     return render(request,template_name='custom_user/forms.html', context=context)
 
 
-def RegisterStudent(request,id):
-    user_temp = Account.objects.filter(username=id)
+def RegisterStudent(request,id,reference):
+    user_temp = Account.objects.filter(id=id)
     if len(user_temp) == 0 or user_temp[0].is_organization == False:
         return HttpResponse('bad url')
     if request.method == 'POST':
+        try:
+            room = Room.objects.get(reference=reference,deleted=False)
+        except:
+            return HttpResponse("Invalid Room : Room was deleted by owner")
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
@@ -94,12 +99,12 @@ def RegisterStudent(request,id):
         password1 = request.POST['password1']
         password2 = request.POST['password2']
         # fix required : within the same organization don't allow duplicate emails but if a user wants to signup for a different organization with email that already exists in our user model allow him/her.
-        if password1 == password2 and len(Account.objects.filter(email=email)) == 0 and len(ApplyForStudent.objects.filter(email=email)) == 0:
+        if password1 == password2 and len(Account.objects.filter(email=email)) == 0 and len(ApplyForStudent.objects.filter(email=email,for_organization=user_temp[0])) == 0:
             password = password1
             otp = generate_otp()
             message = 'Your One Time Password for registration @'+id+' is ' + str(otp)
             student_transfer_key = email[0:4]+str(random.randrange(1000000,9999999))
-            STUDENT_APPLICATION[student_transfer_key] = [otp, first_name, last_name, email, password, phone, for_organization]
+            STUDENT_APPLICATION[student_transfer_key] = [otp, first_name, last_name, email, password, phone, for_organization ,room]
             #send_mail('Verify Your Account', message, 'atul.auth@gmail.com', [email, ], fail_silently=True)
             return redirect('/verify?q=student&dtk='+student_transfer_key)
         else:
@@ -108,7 +113,7 @@ def RegisterStudent(request,id):
     student_form = StudentRegister()
     context = {'form':student_form,
                'formname': 'Register With '+id,}
-    return render(request, template_name='custom_user/forms.html',context=context)
+    return render(request, template_name='advertisement.html',context=context)
 
 
 # This function is used for completing the registration once request is received at any respective view function
@@ -135,7 +140,8 @@ def Reg(request,mode,otp,dtk):
                 student.password = STUDENT_APPLICATION[dtk][4]
                 student.phone = STUDENT_APPLICATION[dtk][5]
                 student.for_organization = STUDENT_APPLICATION[dtk][6]
-                student.reference = STUDENT_APPLICATION[dtk][3][0:4]+str(random.randrange(100000,999999))
+                student.for_room = STUDENT_APPLICATION[dtk][7]
+                student.reference = STUDENT_APPLICATION[dtk][3][0:4] + str(random.randrange(100000, 999999))
                 student.save()
                 subject = "Application Submission Successful"
                 message = "Hey " + STUDENT_APPLICATION[dtk][1] + ", \nYour application for registration @" + STUDENT_APPLICATION[dtk][6].username + ' is successful, you will be informed as soon as it is accepted by the organization.\nYour application reference number is ' + student.reference +'.\nThank You'

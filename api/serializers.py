@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from custom_user.models import ApplyForStudent, Room, Account
+from custom_user.models import ApplyForStudent, Room, Account, Student
 from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
 
 
@@ -12,13 +12,21 @@ class ApplicationSerializer(serializers.ModelSerializer):
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = ['id', 'title', 'description', 'display_pic', 'room_stream_details', 'organization']
+        fields = ['id', 'title', 'description', 'display_pic', 'room_stream_details', 'organization', 'reference']
+        depth = 1
 
 
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name','phone']
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['id', 'from_room', 'from_organization','user']
+
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -49,15 +57,24 @@ class DashOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = DashOption
         fields = ['link', 'label', 'icon', 'method']
-        
+
+
+class CustomStudentSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    username = serializers.CharField(max_length=1024)
+    email = serializers.EmailField()
+    first_name = serializers.CharField(max_length=1024)
+    last_name = serializers.CharField(max_length=1024)
+    room = serializers.CharField(max_length=1024)
+    phone = serializers.IntegerField()
 
 # @abhishek
 # write serializers for following models :
-        '''
-        NamingConvention for class name --> ClassNameThatYouAreSerializingSerializer
-        
-        custom_user --> Account (some important ones are already added, add other fields)
-        management --> Course, CourseResources, Lecture, LectureResources
-        
-        note: add only those fields that are relevant to show on front end, don't add sensitive fields like password
-        '''
+'''
+       NamingConvention for class name --> ClassNameThatYouAreSerializingSerializer
+
+       custom_user --> Account (some important ones are already added, add other fields)
+       management --> Course, CourseResources, Lecture, LectureResources
+
+       note: add only those fields that are relevant to show on front end, don't add sensitive fields like password
+       '''

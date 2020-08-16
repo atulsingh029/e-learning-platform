@@ -1,4 +1,34 @@
 {%  extends 'base.html' %}
+{% load static %}
+{% block head %}
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+       <link rel="stylesheet" href={% static 'stylesheet/dashboard/sdash.css' %}>
+{% endblock %}
 {% block body %}
+ <!-- Container for dashboard -->
+    <div class="row">
+        <div class="col d-none d-lg-block" id="sidebar">
+            <ul>
+                {% for li in options %}
+                    <li><a href="{{ li.link }}" onclick="{{ li.method }} "><span class="material-icons vertical-align-middle padding-bottom-3">{{ li.icon }}</span>&nbsp;&nbsp; {{ li.label }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col  d-lg-none" id="sm-sidebar">
+            <ul>
+                {% for li in options %}
+                    <li><a href="{{ li.link }}" onclick="{{ li.method }}">{{ li.label }}</a></li>
+                {% endfor %}
+            </ul>
+        <hr>
+        </div>
 
+
+        <div class="col" id="c_container">
+            <div id="canvas" >
+                      <!-- code injection by JS //do not touch this div -->
+            </div>
+        </div>
+    </div>
 {% endblock %}

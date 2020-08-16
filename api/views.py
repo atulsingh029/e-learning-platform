@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from management.views import *
 from custom_user.models import Account, Room, Organization
 from management.models import Course, Lecture, CourseResource, LectureResource
-from management.forms import EditRoom
 
 
 # organization level apis
@@ -13,7 +12,7 @@ def list_students(request):
         user = Account.objects.get(username=request.user)
         if request.user.is_authenticated and user.is_organization:
             response = listallstudents(user)
-            return Response(response.data)
+            return Response(response)
         else:
             raise Exception
     except:
@@ -28,8 +27,6 @@ def list_room_students(request,room_id):
             if user.is_organization or user.is_teacher:
                 number=int(room_id)
                 room_owner = Room.objects.get(id=number).organization
-                print(room_owner)
-                print(user.organization)
                 if room_owner == user.organization:
                     response = listroomstudents(room_id=number)
                     return Response(response.data)
@@ -67,6 +64,19 @@ def accept_application(request):
     else:
         return Response({'status':'forbidden'})
 
+@api_view(['POST'])
+def reject_application(request):
+    try:
+        user = Account.objects.get(username=request.user)
+    except:
+        return Response({"status": "forbidden"})
+    if request.user.is_authenticated and user.is_organization:
+        data = request.data
+        response = rejectapplication(request,data)
+        return Response({'status':response})
+    else:
+        return Response({'status':'forbidden'})
+
 
 @api_view(['POST'])
 def add_room(request):
@@ -99,7 +109,7 @@ def view_room(request,room_id):
             room = Room.objects.get(id=room_id)
             if organization == room.organization:
                 response = viewroom(room)
-                return Response(response.data)
+                return Response({"data":response.data,"title":room.title})
             else:
                 return Response({'status': 'not allowed'})
         else:
@@ -127,25 +137,87 @@ def delete_room(request):           # takes room id  as data
         return Response({"status": "forbidden"})
 
 
-@api_view(['GET'])
+@api_view(["POST","GET"])
 def edit_room(request,room_id):
-    try:
-        if request.user.is_authenticated:
-            user = request.user
-            organization = Account.objects.get(username=user).organization
-            room = Room.objects.get(id=room_id)
-
-            if organization == room.organization:
-                form = EditRoom(initial={'title':room.title,'description':room.description})
-                return HttpResponse(str(form.as_ul()),content_type='text/plain')
+    if request.method == "POST":
+        try:
+            if request.user.is_authenticated:
+                user = request.user
+                organization = Account.objects.get(username=user).organization
+                room = Room.objects.get(id=room_id)
+                if organization == room.organization:
+                    try:
+                        pic = request.FILES['image']
+                    except:
+                        pic = None
+                    if pic is not None:
+                        room.display_pic = pic
+                    room.title = request.POST['title']
+                    room.description = request.POST['description']
+                    room.save()
+                    return Response({'o_id': organization.account.id,'reference':room.reference })
+                else:
+                    return Response({'status: not allowed'})
             else:
-                return Response({'status': 'not allowed'})
-        else:
-            return Response({'status': 'not allowed'})
-    except:
+                return Response({'status: not allowed'})
+
+        except:
+            return Response({'status: not allowed'})
+
+    else:
+        try:
+            if request.user.is_authenticated:
+                user = request.user
+                organization = Account.objects.get(username=user).organization
+                room = Room.objects.get(id=room_id)
+                if organization == room.organization:
+                    response = RoomSerializer(room)
+                    return Response (response.data)
+        except:
+            return Response({'status: not allowed'})
+
+@api_view(["GET"])
+def get_account(request,id):
+    user = request.user
+    u = Account.objects.get(username=user)
+    getacc = Account.objects.get(id=id)
+    if user.is_authenticated and u.is_organization and getacc.student.from_room.organization == u.organization:
+        response = getaccount(id)
+        return Response(response.data)
+    else:
         return Response({'status': 'not allowed'})
 
 
+@api_view(['get'])
+def remove_student_from_current_room(request,id):
+    user = request.user
+    u = Account.objects.get(username=user)
+    getacc = Account.objects.get(id=id)
+    if user.is_authenticated and u.is_organization and getacc.student.from_room.organization == u.organization:
+        response = removestudentfromroom(id)
+        return Response({"room_id":response})
+    else:
+        return Response({'status': 'not allowed'})
+
+
+@api_view(['POST'])
+def change_student_room(request):
+    user = request.user
+    u = Account.objects.get(username=user)
+    s_id = request.POST['student_id']
+    getacc = Account.objects.get(id=s_id)
+    r_id = request.POST['room_id']
+    if user.is_authenticated and u.is_organization and getacc.student.from_room.organization == u.organization:
+        response = changestudentroom(student_id=s_id,room_id=r_id)
+        return Response({"room_id": response})
+    else:
+        return Response({'status': 'not allowed'})
+
+
+
+@api_view(['POST'])
+def add_course(request):
+    return HttpResponse("work in progress")
 
 # Teacher level apis
 

@@ -1,0 +1,78 @@
+#c_container{
+    margin-left: 330px;
+}
+
+#canvas{
+    padding: 30px;
+    padding-left: 0;
+    }
+
+#sidebar {
+    position: fixed;
+    background-color: black;
+    height: 100%;
+    max-width: 300px;
+}
+
+
+#sidebar ul{
+    padding: 10px;
+    margin: 20px;
+    list-style: none;
+}
+
+#sidebar ul li {
+    border-bottom: antiquewhite solid 1px;
+    padding: 10px;
+    margin: 5px;
+}
+
+#sidebar ul li a{
+    color: lavender;
+    text-decoration: none;
+    margin: 0;
+
+}
+
+
+#sidebar ul li a:hover {
+    color: white;
+    text-decoration: none;
+
+}
+
+#sm-sidebar{
+    position: fixed;
+}
+
+#sm-sidebar ul{
+    padding: 10px;
+    margin: 20px;
+}
+
+#sm-sidebar ul li{
+    color: antiquewhite;
+    padding: 10px;
+    list-style: none;
+    display: inline;
+    text-decoration: none;
+    border: none;
+}
+
+.vertical-align-middle {
+    vertical-align: middle;
+}
+
+.padding-bottom-3 {
+    padding-bottom: 3px;
+}
+
+@media (max-width: 991px) {
+    #c_container{
+        margin: 75px 0px 0px 0px;
+    /*if user goes from large screen to mid or small with sidebar collapsed, there is ui problem*/
+    }
+    #canvas{
+        padding: 10px;
+    }
+}

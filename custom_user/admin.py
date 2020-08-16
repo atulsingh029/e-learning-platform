@@ -5,11 +5,12 @@ from .models import Account,Room,ApplyForStudent, Student, Teacher, Organization
 
 @admin.register(Account)
 class Account(UserAdmin):
+    list_display = ['username','id','email','is_staff','first_name']
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (('User Type'), {'fields': ('is_organization', 'is_teacher','is_student')}),
-        (('Extra Profile Builder'), {'fields': ('bio1', 'bio2', 'sex','url','dob','profile_pic')}),
+        (('Extra Profile Builder'), {'fields': ('bio1', 'bio2', 'sex','url','dob','profile_pic','phone')}),
         (('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),

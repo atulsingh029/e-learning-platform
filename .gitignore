@@ -31,3 +31,9 @@ filestatic/
 management/migrations/0002_auto_20200810_0218.py
 management/migrations/0002_dashoption.py
 custom_user/migrations/0002_auto_20200812_0106.py
+custom_user/migrations/0008_account_phone.py
+custom_user/migrations/0007_room_reference.py
+custom_user/migrations/0006_remove_room_reference.py
+custom_user/migrations/0003_auto_20200813_1813.py
+custom_user/migrations/0004_room_reference.py
+custom_user/migrations/0005_auto_20200814_1333.py

@@ -31,7 +31,7 @@ urlpatterns = [
     path('verify/', user_views.verify_otp),
     path('dashboard/', include('management.urls')),
     path('elibrary/',include('elibrary.urls')),
-    path('r/<str:id>', user_views.RegisterStudent),
+    path('r/<str:id>/<str:reference>', user_views.RegisterStudent),
     path('api/', include('api.urls') ),
     path('testing/',user_views.testing),
 

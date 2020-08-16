@@ -24,12 +24,12 @@
                 {% csrf_token %}
                 <div class="form-group">
                     <label >Room Title</label>
-                    <input type="text" class="form-control" name="title">
+                    <input type="text" maxlength=20 required class="form-control" name="title">
 
                   </div>
                   <div class="form-group">
                     <label>Description</label>
-                    <input type="text" class="form-control" aria-describedby="desHelp" name="description">
+                    <input type="text" maxlength="150" class="form-control" aria-describedby="desHelp" name="description">
                     <small id="desHelp" class="form-text text-muted">Write short description of your room.</small>
                   </div>
 

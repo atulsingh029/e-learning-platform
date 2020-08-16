@@ -13,6 +13,7 @@ class Account(AbstractUser):
     dob = models.DateField(null=True, blank=True)
     address = models.CharField(max_length=1024, null=True, blank=True)
     profile_pic = models.ImageField(null=True, blank=True)
+    phone = models.IntegerField(null=True,blank=True)
     is_organization = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
@@ -31,6 +32,7 @@ class Room(models.Model):
     room_stream_details = models.CharField(max_length=1024, default='free', blank=False, null=False)
     room_status = models.BooleanField(default=False,null=False,blank=False)
     deleted = models.BooleanField(default=False)
+    reference = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.title
@@ -60,6 +62,7 @@ class ApplyForStudent(models.Model):
     submissionstamp = models.DateTimeField(auto_now=True)
     for_room = models.ForeignKey(Room,on_delete=models.SET_NULL, null=True,default=None,blank=True)
     status = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False)
 
     def __str__(self):
         return self.reference
