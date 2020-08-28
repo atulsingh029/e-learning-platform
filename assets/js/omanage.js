@@ -1,4 +1,22 @@
 const csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
+function all_c(){
+    let c = $.ajax({
+    type : 'GET',
+            url : '/api/listallcourses/',
+            dataType : 'json',
+            success  : function (data) {
+                handleData(data);
+            }
+    });
+    return c;
+}
+all_c();
+let allcourses;
+function handleData(data){
+     allcourses= data;
+}
+
 /*completed*/
 function listallrooms() {
     $.ajax(
@@ -356,32 +374,36 @@ function addnewcourse(id) {
             data : JSON.stringify({}),
             headers: { "X-CSRFToken": csrftoken },
             success:function (data) {
-                editroom(id,data.o_id,data.reference)
+                openroom(id,data.o_id,data.reference)
             }
         }
     );
 }
 
 function addexistingcourse(id) {
-    let form = $("addcoursef");
-    console.log(form);
-    $.ajax(
-        {
-            type : 'POST',
-            url : '/api/addcourse/',
-            contentType :'application/json',
-            data : JSON.stringify({}),
-            headers: { "X-CSRFToken": csrftoken },
-            success:function (data) {
-                editroom(id,data.o_id,data.reference)
+    let form = document.getElementById("select_data").value;
+    let d = JSON.stringify({"room_id":id,"c_id":form});
+    $.ajax({
+        type : 'POST',
+        url : '/api/addcourse/existing/',
+        contentType :'application/json',
+        data : d,
+        headers: { "X-CSRFToken": csrftoken },
+        success:function (data) {
+                openroom(id,data.o_id,data.reference);
             }
-        }
-    );
+    });
+
 }
 
 
 
 function addcourseform(id){
+    let existing_c = allcourses;
+    if (existing_c === undefined){
+        alert("Some Error Occurred While Loading The Page, Please Refresh!");
+    }
+    let instructors = [];
     $.ajax(
         {
             type : 'GET',
@@ -456,17 +478,19 @@ function addcourseform(id){
             <tr>
                 <td class="A"><label class="my-1" for="">Select A Course To Add</label></td>
                 <td class="B">:</td>
-                <td class="C"><select class="abc">
+                <td class="C"><select class="abc" id="select_data">
                     <option selected>Choose A Course </option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    ${existing_c.map(function (obj){
+                        return`
+                        <option value="${obj.c_id}">${obj.c_name}</option>
+                        `
+                })}
                   </select></td>
              </tr>
              <tr>
                 <td class="A"></td>
                 <td class="B"></td>
-                <td class="text-right"><a class="btn btn-info btn-sm " type="button" onclick="addexistingcourse($id})">Add</a></td>
+                <td class="text-right"><a class="btn btn-info btn-sm " type="button" onclick="addexistingcourse(${id})">Add</a></td>
              </tr>
         </table>
         </div>

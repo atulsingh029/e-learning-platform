@@ -216,8 +216,29 @@ def change_student_room(request):
 
 
 @api_view(['POST'])
-def add_course(request):
-    return HttpResponse("work in progress")
+def add_course(request,type):
+    user = request.user
+    u = Account.objects.get(username=user)
+    if type == 'new':
+        pass
+    elif type == 'existing':
+        r_id = request.data['room_id']
+        r = Room.objects.get(id=r_id)
+        if request.user.is_authenticated and u.organization.account == r.organization.account:
+            addexistingcourse(r_id,request.data['c_id'])
+            return Response({"o_id":r.organization.id,"reference":r.reference})
+
+
+
+# api to return list of all the active courses running under particular organization
+@api_view(['GET'])
+def list_all_courses(request):
+    user = request.user
+    u = Account.objects.get(username=user)
+    if request.user.is_authenticated and u.is_organization:
+        org_obj = Organization.objects.filter(account=u)
+        data = listallcourses(org_obj[0])
+        return Response(data.data)
 
 # Teacher level apis
 

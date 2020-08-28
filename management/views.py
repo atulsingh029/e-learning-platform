@@ -251,7 +251,7 @@ def getaccount(account_id):
     return data
 
 
-def addcourse(title,room_id,organization_id,description,instructor_id):
+def addnewcourse(title,room_id,organization_id,description,instructor_id):
     c_id = str(random.randrange(10000,99999))+str(random.randrange(10000,99999))
     room = Room.objects.get(ud=room_id)
     organization = Organization.objects.get(id = organization_id)
@@ -259,3 +259,16 @@ def addcourse(title,room_id,organization_id,description,instructor_id):
     course = Course(c_id=c_id,c_name=title,c_description=description,for_organization=organization,instructor=instructor,for_room=room)
     course.save()
     return 'success'
+
+def addexistingcourse(room_id,course_id):
+    c = Course.objects.get(c_id=course_id)
+    r = Room.objects.get(id = room_id)
+    c.for_room.add(r)
+    c.save()
+    return 'success'
+
+
+def listallcourses(organization_obj):   #takes organization object as argument and returns serialized list of all active courses under the same
+    c = Course.objects.filter(for_organization=organization_obj.account, c_status=False)
+    serial_data = CourseSerializer(c,many=True)
+    return serial_data

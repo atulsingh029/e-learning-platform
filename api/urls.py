@@ -16,6 +16,8 @@ urlpatterns = [
     path('getaccount/<int:id>', get_account),
     path('removestudentfromcurrentroom/<int:id>', remove_student_from_current_room),
     path('changestudentroom/',change_student_room),
+    path('listallcourses/',list_all_courses),
+    path('addcourse/<str:type>/',add_course),
 
 
 ]

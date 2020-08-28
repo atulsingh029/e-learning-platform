@@ -37,3 +37,5 @@ custom_user/migrations/0006_remove_room_reference.py
 custom_user/migrations/0003_auto_20200813_1813.py
 custom_user/migrations/0004_room_reference.py
 custom_user/migrations/0005_auto_20200814_1333.py
+custom_user/migrations/0009_auto_20200828_2029.py
+management/migrations/0003_course_instructor.py
