@@ -240,6 +240,18 @@ def list_all_courses(request):
         data = listallcourses(org_obj[0])
         return Response(data.data)
 
+
+@api_view(['GET'])
+def list_all_teachers(request):
+    try:
+        user = Account.objects.get(username=request.user)
+        if request.user.is_authenticated and user.is_organization:
+            response = listallteachers(user)
+            return Response(response)
+        else:
+            raise Exception
+    except:
+        return Response({"status": "forbidden"})
 # Teacher level apis
 
 

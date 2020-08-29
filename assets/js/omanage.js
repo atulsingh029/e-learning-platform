@@ -63,6 +63,52 @@ function listallrooms() {
     );
 }
 
+function listallcourses() {
+    $.ajax(
+        {
+            type : 'GET',
+            url : '/api/listallcourses/',
+            dataType : 'json',
+            success  : function (data) {
+                let val = `
+                <div class="row row-cols-1 row-cols-md-3">
+                ${data.map(function(obj) {
+                    var url='';
+                    let btn_status;
+                    let btn_view='';
+                    let label = "disabled";
+                    if(obj.c_status !== true){
+                        btn_status = "btn-success";
+                        label="active";
+                    }
+                    else {
+                        btn_status = "btn-danger";
+                        btn_view = 'disabled';
+                        
+                    }
+                    return `
+                    
+                    <div class="card m-2 border-dark rounded" style='max-width: 20em;min-width: 20em;max-height: 16em;min-height: 16em;'>
+                        <div class="card-body" style='background-image:url(${url});background-size: cover'>
+                            <h4 class="card-title">${obj.c_name}</h4>
+                            <p class="card-text">${obj.c_description}</p>
+                        </div>    
+                        <div class="card-footer text-center">
+                              <a target="_blank" class="btn btn-sm  ${btn_status}">${label}</a>
+                              <a href="#" onclick="opencourse()" class="btn btn-sm btn-primary ${btn_view}">View Course</a>
+                        </div>
+                        
+                    </div>
+                    `;
+                }).join('')}
+                </div>`;
+                 document.getElementById("canvas").innerHTML= val;
+
+            }
+        }
+    );
+}
+
 /*completed*/
 function addroom(form_id) {
     let id = `#${form_id}`;
@@ -162,21 +208,20 @@ function openroom(room_id,o_id,reference) {   /*Teacher name feature pending*/
             url : '/api/viewroom/'+room_id,
             contentType :'application/json',
             success : function (data) {
-                let label ="teacher"
                 let val = `
                 <div class="row row-cols-1 row-cols-md-3">
                 ${data.data.map(function(obj) {
+                    if (obj.c_status === false){
                     return `
                     <div class="card m-2 " style='max-width: 20em;min-width: 20em;max-height: 16em;min-height: 16em;'>
                         <div class="card-body" >
                             <div class="card-body">
                               <h1 class=" card-title">${obj.c_name}</h1>
                               <p class="card-text">${obj.c_description}</p>
-                              <a  class="btn btn-secondary btn-sm  mt-5 disabled">${label}</a> 
                             </div>
                         </div>
                     </div>
-                    `;
+                    `;}
                 }).join('')}
                 </div><h5>Students In This Room</h5>`;
                 let elemen = document.getElementById('subcan2');
@@ -602,3 +647,62 @@ function removestudent(id,o_id,reference) {
             }
         );
 }
+
+
+function listallteachers() {
+    $.ajax(
+        {
+            type: 'GET',
+            url: '/api/listallteachers/',
+            contentType: 'application/json',
+            success : function (data) {
+                console.log(data)
+                let val = `
+            <style> 
+                  table tr th{
+                      padding: 2rem;
+                  }
+                  thead{
+                   background-color: black;
+                   background-size: cover;
+               }
+               .row1{
+                   background-color: white;
+                   background-size: cover;
+               }
+               
+             </style>
+             <h5 class="text-center text-sm-center">Teachers</h5>
+            <table class="table table-striped">
+                <thead class="text-light">
+                    <tr class="text-center">
+                        <th >Username</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+            ${data.map(function(obj) {
+                    return `
+            <tr class="text-center row1">
+                <td>${obj.username}</td>
+                <td>${obj.first_name} ${obj.last_name}</td>
+                <td>${obj.phone}</td>
+                <td>${obj.email}</td>
+                <td><a class="btn btn-outline-danger btn-sm d-inline" onclick="fireinstructor()">Delete</a></td>
+            </tr>`;
+                }).join('')}
+            </tbody>`;
+                let element = document.getElementById('canvas');
+                element.innerHTML = val;
+            }
+
+
+        }
+    );
+
+
+    }

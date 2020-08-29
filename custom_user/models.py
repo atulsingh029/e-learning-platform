@@ -49,6 +49,10 @@ class Student(models.Model):
 class Teacher(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE)
     manages_room = models.ManyToManyField(Room, blank=True)
+    from_organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True, default=None)
+
+    def __str__(self):
+        return self.user.first_name
 
 
 class ApplyForStudent(models.Model):

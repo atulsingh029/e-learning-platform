@@ -18,6 +18,7 @@ urlpatterns = [
     path('changestudentroom/',change_student_room),
     path('listallcourses/',list_all_courses),
     path('addcourse/<str:type>/',add_course),
+    path('listallteachers/',list_all_teachers)
 
 
 ]

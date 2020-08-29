@@ -26,8 +26,8 @@ def dashboard(request):
                                {'link': '#', 'method': 'listapplications()', 'label': 'Applications',
                                 'icon': 'group_add'},
                                 {'link':'#','method':'listallrooms()','label':'Rooms', 'icon':'class'},
-                                {'link': '#', 'method': '', 'label': 'Courses', 'icon': 'school'},
-                                {'link': '#', 'method': '', 'label': 'Teachers', 'icon': 'recent_actors'},
+                                {'link': '#', 'method': 'listallcourses()', 'label': 'Courses', 'icon': 'school'},
+                                {'link': '#', 'method': 'listallteachers()', 'label': 'Teachers', 'icon': 'recent_actors'},
                                 {'link': '#', 'method': 'listallstudents()', 'label': 'Students', 'icon': 'groups'},
                                 {'link': '#', 'method': '', 'label': 'eLibrary','icon': 'local_library'},
 
@@ -268,7 +268,18 @@ def addexistingcourse(room_id,course_id):
     return 'success'
 
 
-def listallcourses(organization_obj):   #takes organization object as argument and returns serialized list of all active courses under the same
-    c = Course.objects.filter(for_organization=organization_obj.account, c_status=False)
+def listallcourses(organization_obj):   #takes organization object as argument and returns serialized list of all courses under the same
+    c = Course.objects.filter(for_organization=organization_obj.account,)
     serial_data = CourseSerializer(c,many=True)
     return serial_data
+
+
+def listallteachers(user):
+    teachers = Teacher.objects.filter(from_organization=user.organization)
+    final_list = []
+    for teacher in teachers:
+        user = teacher.user
+        serial_user = AccountSerializer(user, many=False)
+        temp = dict(serial_user.data)
+        final_list.append(temp)
+    return final_list
