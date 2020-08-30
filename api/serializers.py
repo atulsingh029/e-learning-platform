@@ -28,7 +28,6 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = ['id', 'from_room', 'from_organization','user']
 
 
-
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
@@ -38,7 +37,7 @@ class CourseSerializer(serializers.ModelSerializer):
 class CourseResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseResource
-        fields = ['cr_name', 'cr_description', 'for_course', 'cr_url']
+        fields = ['cr_name', 'cr_description', 'file', 'cr_url']
 
 
 class LectureSerializer(serializers.ModelSerializer):
@@ -68,13 +67,6 @@ class CustomStudentSerializer(serializers.Serializer):
     room = serializers.CharField(max_length=1024)
     phone = serializers.IntegerField()
 
-# @abhishek
-# write serializers for following models :
-'''
-       NamingConvention for class name --> ClassNameThatYouAreSerializingSerializer
 
-       custom_user --> Account (some important ones are already added, add other fields)
-       management --> Course, CourseResources, Lecture, LectureResources
-
-       note: add only those fields that are relevant to show on front end, don't add sensitive fields like password
-       '''
+class CustomCourseSerializer(serializers.Serializer):
+    pass

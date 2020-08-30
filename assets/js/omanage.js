@@ -95,7 +95,7 @@ function listallcourses() {
                         </div>    
                         <div class="card-footer text-center">
                               <a target="_blank" class="btn btn-sm  ${btn_status}">${label}</a>
-                              <a href="#" onclick="opencourse()" class="btn btn-sm btn-primary ${btn_view}">View Course</a>
+                              <a href="#" onclick="opencourse(${obj.c_id})" class="btn btn-sm btn-primary ${btn_view}">View Course</a>
                         </div>
                         
                     </div>
@@ -107,6 +107,25 @@ function listallcourses() {
             }
         }
     );
+}
+
+function opencourse(c_id){
+    $.ajax({
+        type: 'GET',
+            url: '/api/opencourse/'+c_id,
+            contentType: 'application/json',
+            success : function (data) {
+            console.log(data);
+            /*
+            * Abhishek
+            * data is the variable that contains two arrays as shown in picture on github, i.e. first array contains all the lectures and second contains all the resources
+            * on the DOM you have a div with id "canvas"
+            * in that div you have to show all the data both lectures and resources
+            * first resources below it lectures
+            * */
+
+            }
+    });
 }
 
 /*completed*/

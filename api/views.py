@@ -252,8 +252,41 @@ def list_all_teachers(request):
             raise Exception
     except:
         return Response({"status": "forbidden"})
-# Teacher level apis
 
 
-# Student level apis
+
+# Common API
+
+@api_view(['GET'])
+def open_course(request, c_id):
+    if request.user.is_authenticated:
+        user = request.user
+        u = Account.objects.get(username=user)
+        c = Course.objects.get(c_id=c_id)
+        rooms = c.for_room.all()
+        test = False
+        try :
+            if u.organization.account == c.for_organization:
+                test = True
+        except:
+            pass
+        try :
+            if u.teacher == c.instructor:
+                test = True
+        except:
+            pass
+        try :
+            if u.student.from_room in rooms:
+                test = True
+        except:
+            pass
+
+        if test:
+            response = opencourse(c)
+            if len(response[0])==0 and len(response[1])==0:
+                return Response({"response":"no data available"})
+            return Response(response)
+        else:
+            return Response({"response": "no data available"})
+
 

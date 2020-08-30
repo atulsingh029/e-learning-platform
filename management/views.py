@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from custom_user.models import Room, ApplyForStudent, Student, Account, Teacher, Organization
 from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
-from api.serializers import ApplicationSerializer, RoomSerializer, DashOptionSerializer, CourseSerializer, StudentSerializer, AccountSerializer, CustomStudentSerializer
+from api.serializers import *
 from .manager import *
 import random
 from .forms import EditRoom
@@ -268,7 +268,7 @@ def addexistingcourse(room_id,course_id):
     return 'success'
 
 
-def listallcourses(organization_obj):   #takes organization object as argument and returns serialized list of all courses under the same
+def listallcourses(organization_obj):   # takes organization object and returns all courses under the same
     c = Course.objects.filter(for_organization=organization_obj.account,)
     serial_data = CourseSerializer(c,many=True)
     return serial_data
@@ -282,4 +282,15 @@ def listallteachers(user):
         serial_user = AccountSerializer(user, many=False)
         temp = dict(serial_user.data)
         final_list.append(temp)
+    return final_list
+
+
+def opencourse(c):  # takes course object and returns all the resources and lectures
+    lectures = Lecture.objects.filter(for_course=c)
+    resources = CourseResource.objects.filter(for_course=c)
+    final_list = []
+    serial_lectures = LectureSerializer(lectures,many=True)
+    serial_resources = CourseResourceSerializer(resources,many=True)
+    final_list.append(serial_lectures.data)
+    final_list.append(serial_resources.data)
     return final_list
