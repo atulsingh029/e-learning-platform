@@ -4,6 +4,7 @@ from management.models import Course, Lecture, CourseResource, LectureResource, 
 from api.serializers import *
 from .manager import *
 import random
+from .forms import AddNewTeacher, AddNewStudent
 from .forms import EditRoom
 
 
@@ -69,17 +70,131 @@ def dashboard(request):
                 'navButtons': nav_btns,
                 'options': options_available,
                 'owner': {'coverpic': "https://atulsingh029.github.io/images/banner2.gif",
-                          'title': profile_info.first_name,
-                          'lead1': profile_info.bio1, 'lead2': profile_info.bio2
+                          'title': profile_info.first_name+' '+profile_info.last_name,
+                          'lead1': profile_info.bio1, 'room': profile_info.student.from_room.title
                     , 'link': profile_info.url, 'label': 'Advertisement Page', 'profile_pic': p_url}
             }
             return render(request, template_name='dashboard/sdash.html', context=context)
         if user.is_teacher:
-            context = {}
+            profile_info = user
+            try:
+                p_url = profile_info.profile_pic.url
+            except:
+                p_url = '#'
+
+            default_options = [{'link': '', 'method': '', 'label': 'Dashboard', 'icon': 'dashboard'},
+
+                               {'link': '#', 'method': '', 'label': 'eLibrary', 'icon': 'local_library'},
+                               ]
+            options_available = DashOption.objects.filter(account=user)
+            extra_options = DashOptionSerializer(options_available, many=True).data
+            options_available = default_options + extra_options
+            nav_btns = [{'link': '/signout', 'label': 'Sign Out'}, {'link': '/settings', 'label': 'Settings'}]
+
+            context = {
+                'pagetitle': 'PrimeStudies : Dashboard',
+                'user': user_model.first_name.capitalize(),
+                'navButtons': nav_btns,
+                'options': options_available,
+                'owner': {'coverpic': "https://atulsingh029.github.io/images/banner2.gif",
+                          'title': profile_info.first_name + ' ' + profile_info.last_name,
+                          'lead1': profile_info.bio1
+                    , 'link': profile_info.url, 'label': 'Advertisement Page', 'profile_pic': p_url}
+            }
             return render(request, template_name='dashboard/tdash.html', context=context)
     else:
         return redirect('/signin')
 
+
+
+def add_new_teacher(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization and request.method == 'POST':
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            email = request.POST['email']
+            sex = request.POST['sex']
+            try:
+                phone = request.POST['phone']
+            except:
+                phone = ''
+            try:
+                profile_pic = request.FILES['profile_pic']
+            except:
+                profile_pic = ''
+            username = student_username_generator(email)
+            account = Account(username=username,first_name=first_name,last_name=last_name,sex=sex,email=email,phone=phone,is_teacher=True)
+            account.save()
+            raw = random.randrange(1000000000,9999999999)
+            account.set_password(raw)
+            account.bio1 = raw #remove this
+            if profile_pic != '':
+                account.profile_pic = profile_pic
+            account.save()
+            teacher = Teacher(user=account,from_organization=user.organization)
+            teacher.save()
+            #send email to teacher with password
+            return redirect('/')
+        elif user.is_organization and request.method == 'GET':
+            form = AddNewTeacher(initial={'phone':'+91'})
+            context = {
+                'form':form,
+                'formname':'Add New Teacher',
+                'text':'You are adding a new teacher to '+request.user.first_name.title()
+            }
+            return render(request, context=context, template_name='custom_user/forms.html')
+
+
+def add_new_student(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization and request.method == 'POST':
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            email = request.POST['email']
+            sex = request.POST['sex']
+            room = request.POST['room']
+            r = Room.objects.filter(id = room)
+            try:
+                phone = request.POST['phone']
+            except:
+                phone = ''
+            try:
+                profile_pic = request.FILES['profile_pic']
+            except:
+                profile_pic = ''
+            username = student_username_generator(email)
+            account = Account(username=username,first_name=first_name,last_name=last_name,sex=sex,email=email,phone=phone,is_student=True)
+            account.save()
+            raw = random.randrange(1000000000,9999999999)
+            account.set_password(raw)
+            account.bio1 = raw #remove this
+            if profile_pic != '':
+                account.profile_pic = profile_pic
+            account.save()
+            s = Student(user=account,from_organization=user.organization)
+            if len(r)!=0:
+                s.from_room = r[0]
+            s.save()
+            #send email to student with password
+            return redirect('/')
+        elif user.is_organization and request.method == 'GET':
+            rooms = Room.objects.filter(organization=user.organization)
+            e_mid = ''
+            for room in rooms:
+                e_mid = e_mid+'<option value="'+str(room.id )+'">'+room.title+'</option>'
+            form = AddNewStudent(initial={'phone': '+91'})
+            e_start ='<tr><th><label for="id_room">Room:</label><br></th><td><select name="room" required id="id_room"><option value="-1" selected>Select Room</option>'
+            e_end = '</select></td></tr><br>'
+            extra_fields = e_start+e_mid+e_end
+            context = {
+                'form':form,
+                'extra_fields':extra_fields,
+                'formname':'Add New Student',
+                'text':'You are adding a new student to '+request.user.first_name.title()
+            }
+            return render(request, context=context, template_name='custom_user/forms.html')
 
 
 # management api views :
@@ -251,12 +366,14 @@ def getaccount(account_id):
     return data
 
 
-def addnewcourse(title,room_id,organization_id,description,instructor_id):
+def addnewcourse(title,room_id,description,instructor_id):
     c_id = str(random.randrange(10000,99999))+str(random.randrange(10000,99999))
-    room = Room.objects.get(ud=room_id)
-    organization = Organization.objects.get(id = organization_id)
+    room = Room.objects.get(id=room_id)
+    organization = room.organization.account
     instructor = Teacher.objects.get(id=instructor_id)
-    course = Course(c_id=c_id,c_name=title,c_description=description,for_organization=organization,instructor=instructor,for_room=room)
+    course = Course(c_id=c_id,c_name=title,c_description=description,for_organization=organization,instructor=instructor)
+    course.save()
+    course.for_room.add(room)
     course.save()
     return 'success'
 

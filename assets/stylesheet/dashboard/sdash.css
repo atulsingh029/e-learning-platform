@@ -1,13 +1,18 @@
+
 #c_container{
-    margin-left: 330px;
+    margin: 0;
+    padding: 0;
+    margin-left: 300px;
 }
 
 #canvas{
-    padding: 30px;
-    padding-left: 0;
+   padding: 30px;
+    margin: 0;
     }
 
 #sidebar {
+    margin: 0;
+    padding: 0;
     position: fixed;
     background-color: black;
     height: 100%;
@@ -43,6 +48,7 @@
 
 #sm-sidebar{
     position: fixed;
+
 }
 
 #sm-sidebar ul{
@@ -73,6 +79,6 @@
     /*if user goes from large screen to mid or small with sidebar collapsed, there is ui problem*/
     }
     #canvas{
-        padding: 10px;
+
     }
 }

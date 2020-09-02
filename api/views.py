@@ -220,7 +220,15 @@ def add_course(request,type):
     user = request.user
     u = Account.objects.get(username=user)
     if type == 'new':
-        pass
+        title = request.data['title']
+        description = request.data['description']
+        room_id = request.data['room_id']
+        r = Room.objects.get(id=room_id)
+        teacher_account_id = request.data['teacher_id']
+        t_a = Account.objects.get(id = teacher_account_id)
+        teacher = Teacher.objects.get(user=t_a)
+        addnewcourse(title,room_id,description,teacher.id)
+        return Response({"o_id":r.organization.id,"reference":r.reference})
     elif type == 'existing':
         r_id = request.data['room_id']
         r = Room.objects.get(id=r_id)
@@ -289,4 +297,17 @@ def open_course(request, c_id):
         else:
             return Response({"response": "no data available"})
 
-
+# Student api
+@api_view(['GET'])
+def view_student_room(request):
+    try:
+        if request.user.is_authenticated:
+            user = request.user
+            student = Account.objects.get(username=user).student
+            room = student.from_room
+            response = viewroom(student.from_room)
+            return Response({"data":response.data,"title":room.title})
+        else:
+            return Response({'status': 'not allowed'})
+    except:
+        return Response({'status': 'not allowed'})

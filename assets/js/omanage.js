@@ -6,15 +6,33 @@ function all_c(){
             url : '/api/listallcourses/',
             dataType : 'json',
             success  : function (data) {
-                handleData(data);
+                handleData1(data);
             }
     });
     return c;
 }
 all_c();
 let allcourses;
-function handleData(data){
+function handleData1(data){
      allcourses= data;
+}
+
+
+function all_t(){
+    let c = $.ajax({
+    type : 'GET',
+            url : '/api/listallteachers/',
+            dataType : 'json',
+            success  : function (data) {
+                handleData2(data);
+            }
+    });
+    return c;
+}
+
+let allteachers;
+function handleData2(data){
+     allteachers= data;
 }
 
 /*completed*/
@@ -92,6 +110,7 @@ function listallcourses() {
                         <div class="card-body" style='background-image:url(${url});background-size: cover'>
                             <h4 class="card-title">${obj.c_name}</h4>
                             <p class="card-text">${obj.c_description}</p>
+                            <h6 class="card-title">Instructor : ${obj.instructor.user.first_name}</h6>
                         </div>    
                         <div class="card-footer text-center">
                               <a target="_blank" class="btn btn-sm  ${btn_status}">${label}</a>
@@ -210,7 +229,7 @@ function listapplications(){
 
 /*completed*/
 function openroom(room_id,o_id,reference) {   /*Teacher name feature pending*/
-
+    all_t();
     let element = document.getElementById('canvas');
     let trigers = ` <div>
                     <button onclick='addcourseform(${room_id})' class='btn btn-sm btn-success d-inline mr-1'>Add Course</button>
@@ -232,13 +251,16 @@ function openroom(room_id,o_id,reference) {   /*Teacher name feature pending*/
                 ${data.data.map(function(obj) {
                     if (obj.c_status === false){
                     return `
-                    <div class="card m-2 " style='max-width: 20em;min-width: 20em;max-height: 16em;min-height: 16em;'>
-                        <div class="card-body" >
-                            <div class="card-body">
-                              <h1 class=" card-title">${obj.c_name}</h1>
-                              <p class="card-text">${obj.c_description}</p>
-                            </div>
+                    <div class="card m-2 border-dark rounded" style='max-width: 20em;min-width: 20em;max-height: 16em;min-height: 16em;'>
+                        <div class="card-body">
+                            <h4 class="card-title">${obj.c_name}</h4>
+                            <p class="card-text">${obj.c_description}</p>
+                            <h6 class="card-title">Instructor : ${obj.instructor.user.first_name}</h6>
+                        </div>    
+                        <div class="card-footer text-center">
+                              <a href="#" onclick="opencourse(${obj.c_id})" class="btn btn-sm btn-primary">View Course</a>
                         </div>
+                        
                     </div>
                     `;}
                 }).join('')}
@@ -428,20 +450,28 @@ function roomstudents(id,o_id,reference) {
     }
 
 function addnewcourse(id) {
-    let form = $("addcoursef");
-    console.log(form);
+    let data = $("#addcoursef").serializeArray();
+    let teacher = document.getElementById("select_teacher");
+    if(teacher.options[teacher.selectedIndex].value === "Choose Instructor For This Course" || data[0].value==="" || data[1].value===""){
+        alert("Invalid Input : Some Fields Missing");
+    }
+    else {
+        var teacher_id = teacher.options[teacher.selectedIndex].value;
     $.ajax(
         {
             type : 'POST',
-            url : '/api/addcourse/',
+            url : '/api/addcourse/new/',
             contentType :'application/json',
-            data : JSON.stringify({}),
+            data : JSON.stringify({"room_id":id,"title":data[0].value,"description":data[1].value,"teacher_id":teacher_id}),
             headers: { "X-CSRFToken": csrftoken },
             success:function (data) {
+                alert("Course Added");
+                all_c();
                 openroom(id,data.o_id,data.reference)
             }
         }
     );
+    }
 }
 
 function addexistingcourse(id) {
@@ -467,7 +497,7 @@ function addcourseform(id){
     if (existing_c === undefined){
         alert("Some Error Occurred While Loading The Page, Please Refresh!");
     }
-    let instructors = [];
+    let instructors = allteachers;
     $.ajax(
         {
             type : 'GET',
@@ -521,17 +551,19 @@ function addcourseform(id){
              <tr>
                 <td class="A"><label class="my-1" for="">Course Choose Instructor</label></td>
                 <td class="B">:</td>
-                <td class="C"><select class="abc">
+                <td class="C"><select class="abc" id="select_teacher">
                     <option selected>Choose Instructor For This Course</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    ${instructors.map(function (obj){
+                        return`
+                        <option value="${obj.id}">${obj.first_name}${obj.last_name}</option>
+                        `
+                }).join('')}
                   </select></td>
              </tr>
              <tr>
                 <td class="A"></td>
                 <td class="B"></td>
-                <td class="text-right"><a class="btn btn-info btn-sm " type="button" onclick="addnewcourse($id})">Add</a></td>
+                <td class="text-right"><a class="btn btn-info btn-sm " type="button" onclick="addnewcourse('${id}')">Add</a></td>
              </tr>
          </table>
     </form>
@@ -548,7 +580,7 @@ function addcourseform(id){
                         return`
                         <option value="${obj.c_id}">${obj.c_name}</option>
                         `
-                })}
+                }).join('')}
                   </select></td>
              </tr>
              <tr>

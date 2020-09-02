@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from custom_user.models import ApplyForStudent, Room, Account, Student
+from custom_user.models import ApplyForStudent, Room, Account, Student, Teacher
 from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
 
 
@@ -28,16 +28,24 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = ['id', 'from_room', 'from_organization','user']
 
 
+class CustomInstructor(serializers.ModelSerializer):
+    user = AccountSerializer()
+    class Meta:
+        model = Teacher
+        fields = ['user',]
+
+
 class CourseSerializer(serializers.ModelSerializer):
+    instructor = CustomInstructor()
     class Meta:
         model = Course
-        fields = ['c_id', 'c_name', 'c_description', 'for_organization', 'c_status']
+        fields = ['c_id', 'c_name', 'c_description', 'for_organization', 'c_status', 'instructor']
 
 
 class CourseResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseResource
-        fields = ['cr_name', 'cr_description', 'file', 'cr_url']
+        fields = ['cr_name', 'cr_description', 'file', 'cr_url', ]
 
 
 class LectureSerializer(serializers.ModelSerializer):
@@ -68,5 +76,3 @@ class CustomStudentSerializer(serializers.Serializer):
     phone = serializers.IntegerField()
 
 
-class CustomCourseSerializer(serializers.Serializer):
-    pass

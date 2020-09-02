@@ -20,6 +20,7 @@ urlpatterns = [
     path('addcourse/<str:type>/',add_course),
     path('listallteachers/',list_all_teachers),
     path('opencourse/<str:c_id>/',open_course),
+    path('viewstudentroom/',view_student_room)
 
 
 

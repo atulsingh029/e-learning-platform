@@ -9,6 +9,11 @@
  <!-- Container for dashboard -->
     <div class="row">
         <div class="col d-none d-lg-block" id="sidebar">
+        <div class="text-center d-none d-lg-block mt-4">
+             <img src="{{ owner.profile_pic }}" class="rounded-circle" height="100px" width="100px" alt="{{ owner.title }}">
+            <h2 class="display-4 p-1" style="font-size: 20px;color: ghostwhite">{{ owner.title }}</h2>
+            <p style="color: ghostwhite;">{{ owner.room }}</p>
+        </div>
             <ul>
                 {% for li in options %}
                     <li><a href="{{ li.link }}" onclick="{{ li.method }} "><span class="material-icons vertical-align-middle padding-bottom-3">{{ li.icon }}</span>&nbsp;&nbsp; {{ li.label }}</a></li>
@@ -31,4 +36,5 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'js/smanage.js' %}"></script>
 {% endblock %}
