@@ -25,6 +25,16 @@ def send_confirmation_mail_to_student(email,name, username, institute, reference
     #mail([email,],subject,message)
 
 
+def send_direct_admission_notification(email,name,username,institute,pwd):
+    subject = 'Welcome Onboard!'
+    message = 'Hey ' + name + ',\nWelcome to ' + institute + '.\n' + 'Your username for login is "' + username + '" and your password is '+str(pwd)+'.'
+    # mail([email,],subject,message)
+
+def send_new_teacher_notification(email,name,institute,pwd):
+    subject = 'Welcome Onboard!'
+    message = 'Hey ' + name + ',\nWelcome to ' + institute + '.\n' + 'Your email : ' + email + ' \npassword : '+str(pwd)
+    # mail([email,],subject,message)
+
 def mail(emails, subject, message):
     if str(subject) == '':
         subject = 'Message From PrimeStudies'

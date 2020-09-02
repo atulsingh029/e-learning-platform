@@ -1,15 +1,14 @@
 const csrftoken = $("[name=csrfmiddlewaretoken]").val();
 
 function all_c(){
-    let c = $.ajax({
-    type : 'GET',
-            url : '/api/listallcourses/',
-            dataType : 'json',
-            success  : function (data) {
-                handleData1(data);
-            }
+    return $.ajax({
+        type: 'GET',
+        url: '/api/listallcourses/',
+        dataType: 'json',
+        success: function (data) {
+            handleData1(data);
+        }
     });
-    return c;
 }
 all_c();
 let allcourses;
@@ -19,20 +18,43 @@ function handleData1(data){
 
 
 function all_t(){
-    let c = $.ajax({
-    type : 'GET',
-            url : '/api/listallteachers/',
-            dataType : 'json',
-            success  : function (data) {
-                handleData2(data);
-            }
+    return $.ajax({
+        type: 'GET',
+        url: '/api/listallteachers/',
+        dataType: 'json',
+        success: function (data) {
+            handleData2(data);
+        }
     });
-    return c;
 }
 
 let allteachers;
 function handleData2(data){
      allteachers= data;
+}
+
+function search(){
+    let data= document.getElementById("search_key");
+    let area = document.getElementById("search_result");
+    let key = data.value;
+    data.value = "";
+    if(key === ''){
+        alert("Invalid Search");
+    }
+    else {
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/api/search/',
+                contentType: 'application/json',
+                data: JSON.stringify({"key": key}),
+                headers: {"X-CSRFToken": csrftoken},
+                success: function (data) {
+                    console.log(data)
+                }
+            }
+        );
+    }
 }
 
 /*completed*/

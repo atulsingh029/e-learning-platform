@@ -23,9 +23,18 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
+    user = AccountSerializer()
+    from_room = RoomSerializer()
     class Meta:
         model = Student
-        fields = ['id', 'from_room', 'from_organization','user']
+        fields = ['id', 'from_room', 'from_organization','user','from_room']
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+    user = AccountSerializer()
+    class Meta:
+        model = Teacher
+        fields = ['id','user']
 
 
 class CustomInstructor(serializers.ModelSerializer):

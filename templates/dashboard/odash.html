@@ -87,11 +87,20 @@
                           </div>
                 </a>
                 <div class="row mt-2">
-                    <div class="col">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-9 mt-2">
                         <a href="/dashboard/addnewteacher/" class='btn btn-sm btn-success d-inline mr-1'>Add New Teacher</a>
                         <a href="/dashboard/addnewstudent/" class="btn btn-sm  btn-success mr-1 d-inline">Add New Student</a>
                         <button href="" class='btn btn-sm btn-primary d-inline mr-1'>Edit Advertisement</button>
                     </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-3 input-group mb-3 mt-2 mt-sm-2 mt-md-2">
+                      <input type="text" class="form-control border-dark btn-sm" placeholder="@username/email/phone/name" id="search_key" required>
+                      <div class="input-group-append">
+                        <button class="btn btn-sm btn-outline-dark" type="button" onclick="search()">Search</button>
+                      </div>
+                    </div>
+                </div>
+                <div id="search_result">
+                    <!-- search result -->
                 </div>
                       <!-- code injection by JS //do not touch this div -->
             </div>

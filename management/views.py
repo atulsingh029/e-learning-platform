@@ -31,6 +31,7 @@ def dashboard(request):
                                 {'link': '#', 'method': 'listallteachers()', 'label': 'Teachers', 'icon': 'recent_actors'},
                                 {'link': '#', 'method': 'listallstudents()', 'label': 'Students', 'icon': 'groups'},
                                 {'link': '#', 'method': '', 'label': 'eLibrary','icon': 'local_library'},
+                                {'link': '#', 'method': '', 'label': 'Email', 'icon': 'mail'},
 
                                  ]
             options_available = DashOption.objects.filter(account=user)
@@ -117,8 +118,10 @@ def add_new_teacher(request):
             sex = request.POST['sex']
             try:
                 phone = request.POST['phone']
+                if phone=='':
+                    phone=-1
             except:
-                phone = ''
+                phone = -1
             try:
                 profile_pic = request.FILES['profile_pic']
             except:
@@ -134,10 +137,10 @@ def add_new_teacher(request):
             account.save()
             teacher = Teacher(user=account,from_organization=user.organization)
             teacher.save()
-            #send email to teacher with password
-            return redirect('/')
-        elif user.is_organization and request.method == 'GET':
-            form = AddNewTeacher(initial={'phone':'+91'})
+            send_new_teacher_notification(email=email, name=first_name, institute=user.first_name, pwd=raw)
+            return redirect('/dashboard')
+        if user.is_organization and request.method == 'GET':
+            form = AddNewTeacher()
             context = {
                 'form':form,
                 'formname':'Add New Teacher',
@@ -158,8 +161,10 @@ def add_new_student(request):
             r = Room.objects.filter(id = room)
             try:
                 phone = request.POST['phone']
+                if phone == '':
+                    phone = -1
             except:
-                phone = ''
+                phone = -1
             try:
                 profile_pic = request.FILES['profile_pic']
             except:
@@ -177,14 +182,14 @@ def add_new_student(request):
             if len(r)!=0:
                 s.from_room = r[0]
             s.save()
-            #send email to student with password
-            return redirect('/')
-        elif user.is_organization and request.method == 'GET':
-            rooms = Room.objects.filter(organization=user.organization)
+            send_direct_admission_notification(email=email,name=first_name,username=username,institute=user.first_name,pwd=raw)
+            return redirect('/dashboard')
+        if user.is_organization and request.method == 'GET':
+            rooms = Room.objects.filter(organization=user.organization,deleted = False)
             e_mid = ''
             for room in rooms:
                 e_mid = e_mid+'<option value="'+str(room.id )+'">'+room.title+'</option>'
-            form = AddNewStudent(initial={'phone': '+91'})
+            form = AddNewStudent()
             e_start ='<tr><th><label for="id_room">Room:</label><br></th><td><select name="room" required id="id_room"><option value="-1" selected>Select Room</option>'
             e_end = '</select></td></tr><br>'
             extra_fields = e_start+e_mid+e_end
@@ -273,15 +278,6 @@ def addroom(request, user, data):
 
 def viewroom(room):
     # you are given room object as argument, query all courses under this room and return it
-    '''try:
-        user_temp = Account.objects.get(username=room.user)
-    except:
-        return {"status": "forbidden test"}
-    data = Room.objects.filter(course=user_temp.course, deleted=False)
-    serial_data = RoomSerializer(data.all(), many=True)
-
-    return serial_data'''
-
     data = Course.objects.filter(for_room=room)
     serial_data = CourseSerializer(data.all(), many=True)
     return serial_data
@@ -300,12 +296,6 @@ def listallrooms(request):
 
 def deleteroom(room):
     # you are given room object as argument, this room object has property deleted, you have to set that attribute to true and it to database
-    '''try:
-        user_temp = Account.objects.get(username=room.user)
-    except:
-        return {"status": "forbidden test"}
-    data = Room.objects.filter(room=user_temp.room, deleted=True)
-    serial_data = RoomSerializer(data.all(), many=True)'''
     room.deleted = True
     room.save()
     data = Student.objects.filter(from_room=room)

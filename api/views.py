@@ -6,6 +6,60 @@ from management.models import Course, Lecture, CourseResource, LectureResource
 
 
 # organization level apis
+@api_view(['POST'])
+def search(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            key = request.data['key']
+            str(key).lower()
+            if (str(key).startswith('+91')):
+                temp_p_key = str(key).replace('+91', '')
+            else:
+                temp_p_key = key
+            email_flag = str(key).find('@')
+            phone_flag = str(temp_p_key).isdigit()
+            phone_flag2 = len(str(temp_p_key))
+            if str(key).startswith('@'):
+                temp_key = str(key).replace('@','')
+                teachers = Teacher.objects.filter(user__username=temp_key, from_organization=user.organization)
+                students = Student.objects.filter(user__username=temp_key, from_organization=user.organization)
+                teachers = TeacherSerializer(teachers, many=True)
+                students = StudentSerializer(students, many=True)
+                return Response({"teacher": teachers.data, "student": students.data})
+
+            elif email_flag != -1:
+                teachers = Teacher.objects.filter(user__email=key,from_organization=user.organization)
+                students = Student.objects.filter(user__email=key,from_organization=user.organization)
+                teachers = TeacherSerializer(teachers,many=True)
+                students = StudentSerializer(students,many=True)
+                return Response({"teacher":teachers.data,"student":students.data})
+
+            elif phone_flag and phone_flag2 == 10:
+                teachers = Teacher.objects.filter(user__phone=temp_p_key, from_organization=user.organization)
+                students = Student.objects.filter(user__phone=temp_p_key, from_organization=user.organization)
+                teachers = TeacherSerializer(teachers, many=True)
+                students = StudentSerializer(students, many=True)
+                return Response({"teacher": teachers.data, "student": students.data})
+
+            else:
+                temp = str(key).split(' ')
+                first_name = temp[0]
+                try:
+                    last_name = temp[1]
+                except(IndexError):
+                    last_name =''
+                teachers = Teacher.objects.filter( from_organization=user.organization, user__first_name__contains=first_name, user__last_name__contains=last_name)
+                students = Student.objects.filter(user__first_name__contains=first_name, user__last_name__contains=last_name, from_organization=user.organization)
+                teachers = TeacherSerializer(teachers, many=True)
+                students = StudentSerializer(students, many=True)
+                return Response({"teacher": teachers.data, "student": students.data})
+
+
+    else:
+        return Response({"status":"forbidden"})
+
+
 @api_view(['GET'])
 def list_students(request):
     try:
