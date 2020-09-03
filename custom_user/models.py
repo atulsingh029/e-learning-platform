@@ -12,7 +12,7 @@ class Account(AbstractUser):
     url = models.URLField(null=True, blank=True)
     dob = models.DateField(null=True, blank=True)
     address = models.CharField(max_length=1024, null=True, blank=True)
-    profile_pic = models.ImageField(null=True, blank=True)
+    profile_pic = models.ImageField(null=True, blank=True,upload_to='profile_pictures')
     phone = models.IntegerField(null=True,blank=True)
     is_organization = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
@@ -48,7 +48,6 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE)
-    manages_room = models.ManyToManyField(Room, blank=True)
     from_organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True, default=None)
 
     def __str__(self):

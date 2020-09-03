@@ -41,7 +41,7 @@ def dashboard(request):
 
             context = {
                 'pagetitle': 'PrimeStudies : Dashboard',
-                'user': user_model.first_name.capitalize(),
+                'u': user_model.first_name.capitalize(),
                 'navButtons' : nav_btns,
                 'options' : options_available,
                 'owner':{'coverpic':"https://atulsingh029.github.io/images/banner2.gif",'title':profile_info.first_name,
@@ -64,16 +64,17 @@ def dashboard(request):
             extra_options = DashOptionSerializer(options_available, many=True).data
             options_available = default_options + extra_options
             nav_btns = [{'link': '/signout', 'label': 'Sign Out'}, {'link': '/settings', 'label': 'Settings'}]
-
+            org = user.student.from_organization.account
             context = {
                 'pagetitle': 'PrimeStudies : Dashboard',
-                'user': user_model.first_name.capitalize(),
+                'u': user_model.first_name.capitalize(),
                 'navButtons': nav_btns,
                 'options': options_available,
                 'owner': {'coverpic': "https://atulsingh029.github.io/images/banner2.gif",
                           'title': profile_info.first_name+' '+profile_info.last_name,
                           'lead1': profile_info.bio1, 'room': profile_info.student.from_room.title
-                    , 'link': profile_info.url, 'label': 'Advertisement Page', 'profile_pic': p_url}
+                    , 'link': profile_info.url, 'label': 'Advertisement Page', 'profile_pic': p_url,
+                          'organization':{'name':org.first_name,'bio1':org.bio2}}
             }
             return render(request, template_name='dashboard/sdash.html', context=context)
         if user.is_teacher:
@@ -94,7 +95,7 @@ def dashboard(request):
 
             context = {
                 'pagetitle': 'PrimeStudies : Dashboard',
-                'user': user_model.first_name.capitalize(),
+                'u': user_model.first_name.capitalize(),
                 'navButtons': nav_btns,
                 'options': options_available,
                 'owner': {'coverpic': "https://atulsingh029.github.io/images/banner2.gif",
@@ -356,16 +357,18 @@ def getaccount(account_id):
     return data
 
 
-def addnewcourse(title,room_id,description,instructor_id):
+def addnewcourse(title,room_id,description,instructor_id,org):
     c_id = str(random.randrange(10000,99999))+str(random.randrange(10000,99999))
-    room = Room.objects.get(id=room_id)
-    organization = room.organization.account
+    organization = org
     instructor = Teacher.objects.get(id=instructor_id)
     course = Course(c_id=c_id,c_name=title,c_description=description,for_organization=organization,instructor=instructor)
     course.save()
-    course.for_room.add(room)
-    course.save()
-    return 'success'
+    if room_id != -1:
+        room = Room.objects.get(id=room_id)
+        course.for_room.add(room)
+        course.save()
+        return 'success'
+    return {'take_to': 'listallcourses'}
 
 def addexistingcourse(room_id,course_id):
     c = Course.objects.get(c_id=course_id)

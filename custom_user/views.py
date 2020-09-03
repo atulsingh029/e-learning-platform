@@ -112,7 +112,7 @@ def RegisterStudent(request,id,reference):
 
     student_form = StudentRegister()
     context = {'form':student_form,
-               'formname': 'Register With '+id,}
+               'formname': 'Register With '+user_temp[0].first_name,}
     return render(request, template_name='advertisement.html',context=context)
 
 

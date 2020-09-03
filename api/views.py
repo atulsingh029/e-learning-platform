@@ -118,6 +118,7 @@ def accept_application(request):
     else:
         return Response({'status':'forbidden'})
 
+
 @api_view(['POST'])
 def reject_application(request):
     try:
@@ -230,6 +231,7 @@ def edit_room(request,room_id):
         except:
             return Response({'status: not allowed'})
 
+
 @api_view(["GET"])
 def get_account(request,id):
     user = request.user
@@ -271,25 +273,31 @@ def change_student_room(request):
 
 @api_view(['POST'])
 def add_course(request,type):
-    user = request.user
-    u = Account.objects.get(username=user)
-    if type == 'new':
-        title = request.data['title']
-        description = request.data['description']
-        room_id = request.data['room_id']
-        r = Room.objects.get(id=room_id)
-        teacher_account_id = request.data['teacher_id']
-        t_a = Account.objects.get(id = teacher_account_id)
-        teacher = Teacher.objects.get(user=t_a)
-        addnewcourse(title,room_id,description,teacher.id)
-        return Response({"o_id":r.organization.id,"reference":r.reference})
-    elif type == 'existing':
-        r_id = request.data['room_id']
-        r = Room.objects.get(id=r_id)
-        if request.user.is_authenticated and u.organization.account == r.organization.account:
-            addexistingcourse(r_id,request.data['c_id'])
-            return Response({"o_id":r.organization.id,"reference":r.reference})
-
+    if request.user.is_authenticated:
+        user = request.user
+        u = Account.objects.get(username=user)
+        if type == 'new':
+            title = request.data['title']
+            description = request.data['description']
+            room_id = request.data['room_id']
+            if room_id == -1:
+                o = Organization(id=-1)
+                r = Room(reference=-1, organization=o)
+            else:
+                r = Room.objects.get(id=room_id)
+            teacher_account_id = request.data['teacher_id']
+            t_a = Account.objects.get(id=teacher_account_id)
+            teacher = Teacher.objects.get(user=t_a)
+            response = addnewcourse(title, room_id, description, teacher.id,u)
+            if response != 'success':
+                return Response(response)
+            return Response({"o_id": r.organization.id, "reference": r.reference})
+        elif type == 'existing':
+            r_id = request.data['room_id']
+            r = Room.objects.get(id=r_id)
+            if request.user.is_authenticated and u.organization.account == r.organization.account:
+                addexistingcourse(r_id, request.data['c_id'])
+                return Response({"o_id": r.organization.id, "reference": r.reference})
 
 
 # api to return list of all the active courses running under particular organization

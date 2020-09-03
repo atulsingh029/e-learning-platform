@@ -1,6 +1,6 @@
 const csrftoken = $("[name=csrfmiddlewaretoken]").val();
 
-function all_c(){
+function all_c() {
     return $.ajax({
         type: 'GET',
         url: '/api/listallcourses/',
@@ -12,12 +12,12 @@ function all_c(){
 }
 all_c();
 let allcourses;
-function handleData1(data){
-     allcourses= data;
+function handleData1(data) {
+    allcourses = data;
 }
 
 
-function all_t(){
+function all_t() {
     return $.ajax({
         type: 'GET',
         url: '/api/listallteachers/',
@@ -29,16 +29,16 @@ function all_t(){
 }
 
 let allteachers;
-function handleData2(data){
-     allteachers= data;
+function handleData2(data) {
+    allteachers = data;
 }
 
-function search(){
-    let data= document.getElementById("search_key");
+function search() {
+    let data = document.getElementById("search_key");
     let area = document.getElementById("search_result");
     let key = data.value;
     data.value = "";
-    if(key === ''){
+    if (key === '') {
         alert("Invalid Search");
     }
     else {
@@ -47,8 +47,8 @@ function search(){
                 type: 'POST',
                 url: '/api/search/',
                 contentType: 'application/json',
-                data: JSON.stringify({"key": key}),
-                headers: {"X-CSRFToken": csrftoken},
+                data: JSON.stringify({ "key": key }),
+                headers: { "X-CSRFToken": csrftoken },
                 success: function (data) {
                     console.log(data)
                 }
@@ -61,21 +61,21 @@ function search(){
 function listallrooms() {
     $.ajax(
         {
-            type : 'GET',
-            url : '/api/listallrooms/',
-            dataType : 'json',
-            success  : function (data) {
+            type: 'GET',
+            url: '/api/listallrooms/',
+            dataType: 'json',
+            success: function (data) {
                 let val = `
                 <button type="button" class="btn btn-primary btn-sm p-1" data-toggle="modal" data-target="#exampleModal">Add Room</button>
                 <div class="row row-cols-1 row-cols-md-3">
-                ${data.map(function(obj) {
+                ${data.map(function (obj) {
                     let url = obj.display_pic;
                     let room_id = obj.id;
                     let btn_status;
                     let label = "free";
-                    if(obj.room_stream_details !== "free"){
+                    if (obj.room_stream_details !== "free") {
                         btn_status = "btn-success";
-                        label="live";
+                        label = "live";
                     }
                     else {
                         btn_status = "disabled";
@@ -96,7 +96,7 @@ function listallrooms() {
                     `;
                 }).join('')}
                 </div>`;
-                 document.getElementById("canvas").innerHTML= val;
+                document.getElementById("canvas").innerHTML = val;
 
             }
         }
@@ -104,27 +104,29 @@ function listallrooms() {
 }
 
 function listallcourses() {
+    all_t();
     $.ajax(
         {
-            type : 'GET',
-            url : '/api/listallcourses/',
-            dataType : 'json',
-            success  : function (data) {
+            type: 'GET',
+            url: '/api/listallcourses/',
+            dataType: 'json',
+            success: function (data) {
                 let val = `
+                <button type="button" class="btn btn-primary btn-sm p-1" onclick="addcoursewithoutroom()">Add Course</button>
                 <div class="row row-cols-1 row-cols-md-3">
-                ${data.map(function(obj) {
-                    var url='';
+                ${data.map(function (obj) {
+                    var url = '';
                     let btn_status;
-                    let btn_view='';
+                    let btn_view = '';
                     let label = "disabled";
-                    if(obj.c_status !== true){
+                    if (obj.c_status !== true) {
                         btn_status = "btn-success";
-                        label="active";
+                        label = "active";
                     }
                     else {
                         btn_status = "btn-danger";
                         btn_view = 'disabled';
-                        
+
                     }
                     return `
                     
@@ -143,19 +145,19 @@ function listallcourses() {
                     `;
                 }).join('')}
                 </div>`;
-                 document.getElementById("canvas").innerHTML= val;
+                document.getElementById("canvas").innerHTML = val;
 
             }
         }
     );
 }
 
-function opencourse(c_id){
+function opencourse(c_id) {
     $.ajax({
         type: 'GET',
-            url: '/api/opencourse/'+c_id,
-            contentType: 'application/json',
-            success : function (data) {
+        url: '/api/opencourse/' + c_id,
+        contentType: 'application/json',
+        success: function (data) {
             console.log(data);
             /*
             * Abhishek
@@ -165,7 +167,7 @@ function opencourse(c_id){
             * first resources below it lectures
             * */
 
-            }
+        }
     });
 }
 
@@ -177,15 +179,15 @@ function addroom(form_id) {
     let a = form_data[1].value;
     let b = form_data[2].value;
     var token = form_data[0].value;
-    let input =JSON.stringify({"title":a,"description":b});
+    let input = JSON.stringify({ "title": a, "description": b });
     $.ajax(
         {
-            type : 'POST',
-            url : '/api/addroom/',
-            contentType :'application/json',
-            data : input,
+            type: 'POST',
+            url: '/api/addroom/',
+            contentType: 'application/json',
+            data: input,
             headers: { "X-CSRFToken": token },
-            success:function () {
+            success: function () {
                 $("#close_modal").click();
                 listallrooms();
             }
@@ -194,14 +196,14 @@ function addroom(form_id) {
 }
 
 /*completed*/
-function listapplications(){
+function listapplications() {
     $.ajax(
         {
             type: 'GET',
             url: '/api/listapplications/',
             contentType: 'application/json',
-            success : function (data) {
-                let label ="Accept"
+            success: function (data) {
+                let label = "Accept"
                 let val = `
             <style> 
                   table tr th{
@@ -229,7 +231,7 @@ function listapplications(){
                     </tr>
                 </thead>
                 <tbody>
-            ${data.map(function(obj) {
+            ${data.map(function (obj) {
                     return `
             <tr class="text-center row1">
                 <td>${obj.reference}</td>
@@ -250,29 +252,29 @@ function listapplications(){
 }
 
 /*completed*/
-function openroom(room_id,o_id,reference) {   /*Teacher name feature pending*/
+function openroom(room_id, o_id, reference) {   /*Teacher name feature pending*/
     all_t();
     let element = document.getElementById('canvas');
     let trigers = ` <div>
                     <button onclick='addcourseform(${room_id})' class='btn btn-sm btn-success d-inline mr-1'>Add Course</button>
                     <button onclick='deleteroom(${room_id})' class="btn btn-sm  btn-danger mr-1 d-inline">Delete Room</button>
                     </div> `;
-                element.innerHTML = trigers+
-                    "<div id='subcan1'></div>" +
-                    "<div id='subcan2'></div>" +
-                    "<div id='subcan3'></div>";
-    editroom(room_id,o_id,reference);
+    element.innerHTML = trigers +
+        "<div id='subcan1'></div>" +
+        "<div id='subcan2'></div>" +
+        "<div id='subcan3'></div>";
+    editroom(room_id, o_id, reference);
     $.ajax(
         {
-            type : 'GET',
-            url : '/api/viewroom/'+room_id,
-            contentType :'application/json',
-            success : function (data) {
+            type: 'GET',
+            url: '/api/viewroom/' + room_id,
+            contentType: 'application/json',
+            success: function (data) {
                 let val = `
                 <div class="row row-cols-1 row-cols-md-3">
-                ${data.data.map(function(obj) {
-                    if (obj.c_status === false){
-                    return `
+                ${data.data.map(function (obj) {
+                    if (obj.c_status === false) {
+                        return `
                     <div class="card m-2 border-dark rounded" style='max-width: 20em;min-width: 20em;max-height: 16em;min-height: 16em;'>
                         <div class="card-body">
                             <h4 class="card-title">${obj.c_name}</h4>
@@ -284,27 +286,28 @@ function openroom(room_id,o_id,reference) {   /*Teacher name feature pending*/
                         </div>
                         
                     </div>
-                    `;}
+                    `;
+                    }
                 }).join('')}
                 </div><h5>Students In This Room</h5>`;
                 let elemen = document.getElementById('subcan2');
                 elemen.innerHTML = val;
-                roomstudents(room_id,o_id,reference);
+                roomstudents(room_id, o_id, reference);
             }
 
         }
     );
 }
 
-function editroom(room_id,o_id,reference) {
+function editroom(room_id, o_id, reference) {
     $.ajax(
         {
-            type:"GET",
-            url: "/api/editroom/"+room_id,
-            contentType:"application/json",
-            success : function (data) {
+            type: "GET",
+            url: "/api/editroom/" + room_id,
+            contentType: "application/json",
+            success: function (data) {
                 let eleme = document.getElementById('subcan1');
-    eleme.innerHTML = `
+                eleme.innerHTML = `
     <style>
         input{
             background-color:ghostwhite;
@@ -367,15 +370,15 @@ function editroom(room_id,o_id,reference) {
 }
 
 /*completed*/
-function acceptapplication(reference){
+function acceptapplication(reference) {
     $.ajax(
         {
-            type : 'POST',
-            url : '/api/acceptapplications/',
-            contentType :'application/json',
-            data : JSON.stringify({"reference":reference}),
+            type: 'POST',
+            url: '/api/acceptapplications/',
+            contentType: 'application/json',
+            data: JSON.stringify({ "reference": reference }),
             headers: { "X-CSRFToken": csrftoken },
-            success:function (data) {
+            success: function (data) {
                 listapplications();
             }
         }
@@ -383,15 +386,15 @@ function acceptapplication(reference){
 }
 
 /*completed*/
-function rejectapplication(reference){
+function rejectapplication(reference) {
     $.ajax(
         {
-            type : 'POST',
-            url : '/api/rejectapplications/',
-            contentType :'application/json',
-            data : JSON.stringify({"reference":reference}),
+            type: 'POST',
+            url: '/api/rejectapplications/',
+            contentType: 'application/json',
+            data: JSON.stringify({ "reference": reference }),
             headers: { "X-CSRFToken": csrftoken },
-            success:function (data) {
+            success: function (data) {
                 listapplications();
             }
         }
@@ -399,15 +402,15 @@ function rejectapplication(reference){
 }
 
 /*completed*/
-function deleteroom(id){
-     $.ajax(
+function deleteroom(id) {
+    $.ajax(
         {
-            type : 'POST',
-            url : '/api/deleteroom/',
-            contentType :'application/json',
-            data : JSON.stringify({"id":id}),
+            type: 'POST',
+            url: '/api/deleteroom/',
+            contentType: 'application/json',
+            data: JSON.stringify({ "id": id }),
             headers: { "X-CSRFToken": csrftoken },
-            success:function () {
+            success: function () {
                 listallrooms();
             }
         }
@@ -415,14 +418,14 @@ function deleteroom(id){
 }
 
 /*completed*/
-function roomstudents(id,o_id,reference) {
+function roomstudents(id, o_id, reference) {
     $.ajax(
         {
             type: 'GET',
-            url: '/api/listroomstudents/'+id,
+            url: '/api/listroomstudents/' + id,
             contentType: 'application/json',
-            success : function (data) {
-                let label ="Accept"
+            success: function (data) {
+                let label = "Accept"
                 let val = `
             <style> 
                   table tr th{
@@ -450,7 +453,7 @@ function roomstudents(id,o_id,reference) {
                 </thead>
                 <tbody>
                 
-            ${data.map(function(obj) {
+            ${data.map(function (obj) {
                     return `
             <tr class="text-center row1">
                 <td>${obj.username}</td>
@@ -469,65 +472,142 @@ function roomstudents(id,o_id,reference) {
     );
 
 
-    }
+}
 
 function addnewcourse(id) {
     let data = $("#addcoursef").serializeArray();
     let teacher = document.getElementById("select_teacher");
-    if(teacher.options[teacher.selectedIndex].value === "Choose Instructor For This Course" || data[0].value==="" || data[1].value===""){
+    if (teacher.options[teacher.selectedIndex].value === "Choose Instructor For This Course" || data[0].value === "" || data[1].value === "") {
         alert("Invalid Input : Some Fields Missing");
     }
     else {
         var teacher_id = teacher.options[teacher.selectedIndex].value;
-    $.ajax(
-        {
-            type : 'POST',
-            url : '/api/addcourse/new/',
-            contentType :'application/json',
-            data : JSON.stringify({"room_id":id,"title":data[0].value,"description":data[1].value,"teacher_id":teacher_id}),
-            headers: { "X-CSRFToken": csrftoken },
-            success:function (data) {
-                alert("Course Added");
-                all_c();
-                openroom(id,data.o_id,data.reference)
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/api/addcourse/new/',
+                contentType: 'application/json',
+                data: JSON.stringify({ "room_id": id, "title": data[0].value, "description": data[1].value, "teacher_id": teacher_id }),
+                headers: { "X-CSRFToken": csrftoken },
+                success: function (data) {
+                    alert("Course Added");
+                    all_c();
+                    if (data.take_to === 'listallcourses') {
+                        listallcourses();
+                    }
+                    else {
+                        openroom(id, data.o_id, data.reference);
+                    }
+
+                }
             }
-        }
-    );
+        );
     }
 }
 
 function addexistingcourse(id) {
     let form = document.getElementById("select_data").value;
-    let d = JSON.stringify({"room_id":id,"c_id":form});
+    let d = JSON.stringify({ "room_id": id, "c_id": form });
     $.ajax({
-        type : 'POST',
-        url : '/api/addcourse/existing/',
-        contentType :'application/json',
-        data : d,
+        type: 'POST',
+        url: '/api/addcourse/existing/',
+        contentType: 'application/json',
+        data: d,
         headers: { "X-CSRFToken": csrftoken },
-        success:function (data) {
-                openroom(id,data.o_id,data.reference);
-            }
+        success: function (data) {
+            openroom(id, data.o_id, data.reference);
+        }
     });
 
 }
 
 
+function addcoursewithoutroom() {
+    if (allcourses === undefined) {
+        alert("Some Error Occurred While Loading The Page, Please Refresh!");
+    }
+    let instructors = allteachers;
+    let view = document.getElementById('canvas');
+    view.innerHTML = `
+                <style>
+        input{
+            background-color:ghostwhite;
+            border-top:0px; 
+            border-left: 0px; 
+            border-right: 0px; 
+            width: 100%;
+        }
+        select{
+            background-color:ghostwhite;
+            border-top:0px; 
+            border-left: 0px; 
+            border-right: 0px; 
+            width: 75%;
+        }
+        .abc:focus{
+            outline: 0;
+        }
+       .A{
+            width: auto;
+        }
+    
+        table{
+            width: 100%;
+        }
+    </style>
+    <div class="row">
+    <div class="col col-md-6">
+    <h5 class="display-5">Add A New Course</h5>
+    <form method="post"  id="addcoursef">
+         <table>   
+             <tr>
+                <td class="A"><label class="my-1" for="">Course Name</label></td>
+                <td class="B">:</td>
+                <td class="C"><input class="abc"  type="text" name="title" maxlength=20" required="" id="id_title"></td>
+             </tr>
+             <tr>
+                <td class="A"><label class=" my-1" for="">Description</label></td>
+                <td class="B">:</td>
+                <td class="C"><input type="text" class="abc" maxlength="150" required="" id="id_description" name="description"></td>
+             </tr>
+             <tr>
+                <td class="A"><label class="my-1" for="">Course Choose Instructor</label></td>
+                <td class="B">:</td>
+                <td class="C"><select class="abc" id="select_teacher">
+                    <option selected>Choose Instructor For This Course</option>
+                    ${instructors.map(function (obj) {
+        return `
+                        <option value="${obj.id}">${obj.first_name}${obj.last_name}</option>
+                        `
+    }).join('')}
+                  </select></td>
+             </tr>
+             <tr>
+                <td class="A"></td>
+                <td class="B"></td>
+                <td class="text-right"><a class="btn btn-info btn-sm " type="button" onclick="addnewcourse(-1)">Add</a></td>
+             </tr>
+         </table>
+    </form>
+</div>
+    </div>`;
+}
 
-function addcourseform(id){
+
+function addcourseform(id) {
     let existing_c = allcourses;
-    if (existing_c === undefined){
+    if (existing_c === undefined) {
         alert("Some Error Occurred While Loading The Page, Please Refresh!");
     }
     let instructors = allteachers;
     $.ajax(
         {
-            type : 'GET',
-            url : '/api/viewroom/'+id,
-            contentType :'application/json',
-            success: function(data){
+            type: 'GET',
+            url: '/api/viewroom/' + id,
+            contentType: 'application/json',
+            success: function (data) {
                 let view = document.getElementById('canvas');
-                view.innerHTML=`
+                view.innerHTML = `
                 <h3 class='display-5 mb-3'>You Are Adding Course In ${data.title}</h3>
                 <style>
         input{
@@ -575,8 +655,8 @@ function addcourseform(id){
                 <td class="B">:</td>
                 <td class="C"><select class="abc" id="select_teacher">
                     <option selected>Choose Instructor For This Course</option>
-                    ${instructors.map(function (obj){
-                        return`
+                    ${instructors.map(function (obj) {
+                    return `
                         <option value="${obj.id}">${obj.first_name}${obj.last_name}</option>
                         `
                 }).join('')}
@@ -598,8 +678,8 @@ function addcourseform(id){
                 <td class="B">:</td>
                 <td class="C"><select class="abc" id="select_data">
                     <option selected>Choose A Course </option>
-                    ${existing_c.map(function (obj){
-                        return`
+                    ${existing_c.map(function (obj) {
+                    return `
                         <option value="${obj.c_id}">${obj.c_name}</option>
                         `
                 }).join('')}
@@ -620,29 +700,29 @@ function addcourseform(id){
         });
 }
 /*completed*/
-function updateroom(id){
+function updateroom(id) {
     let fdata = $("#editroomform").serializeArray();
     let title = fdata[0].value;
     let description = fdata[1].value;
     let data = $("#id_picture");
     var file = data[0].files[0];
     let formData = new FormData();
-    formData.append("image",file);
-    formData.append("title",title);
-    formData.append("description",description);
+    formData.append("image", file);
+    formData.append("title", title);
+    formData.append("description", description);
     document.getElementById("editroomform").reset();
-     $.ajax(
+    $.ajax(
         {
-            type : 'POST',
-            url : '/api/editroom/'+id,
-            contentType :false,
-            processData : false,
-            data :formData,
-            headers : {"x-csrftoken" : csrftoken},
-            success : function (data) {
-                editroom(id,data.o_id,data.reference);
+            type: 'POST',
+            url: '/api/editroom/' + id,
+            contentType: false,
+            processData: false,
+            data: formData,
+            headers: { "x-csrftoken": csrftoken },
+            success: function (data) {
+                editroom(id, data.o_id, data.reference);
             },
-            error : function (error) {
+            error: function (error) {
                 console.log(error);
             }
         }
@@ -651,12 +731,12 @@ function updateroom(id){
 
 
 function listallstudents() {
-     $.ajax(
+    $.ajax(
         {
             type: 'GET',
             url: '/api/listallstudents/',
             contentType: 'application/json',
-            success : function (data) {
+            success: function (data) {
                 let val = `
             <style> 
                   table tr th{
@@ -685,7 +765,7 @@ function listallstudents() {
                     </tr>
                 </thead>
                 <tbody>
-            ${data.map(function(obj) {
+            ${data.map(function (obj) {
                     return `
             <tr class="text-center row1">
                 <td>${obj.username}</td>
@@ -708,17 +788,17 @@ function listallstudents() {
 }
 
 /*completed*/
-function removestudent(id,o_id,reference) {
+function removestudent(id, o_id, reference) {
     $.ajax(
         {
             type: 'GET',
-            url: '/api/removestudentfromcurrentroom/'+id,
+            url: '/api/removestudentfromcurrentroom/' + id,
             contentType: 'application/json',
-            success : function (data) {
-                roomstudents(data.room_id,o_id,reference);
+            success: function (data) {
+                roomstudents(data.room_id, o_id, reference);
             }
-            }
-        );
+        }
+    );
 }
 
 
@@ -728,8 +808,7 @@ function listallteachers() {
             type: 'GET',
             url: '/api/listallteachers/',
             contentType: 'application/json',
-            success : function (data) {
-                console.log(data)
+            success: function (data) {
                 let val = `
             <style> 
                   table tr th{
@@ -758,7 +837,7 @@ function listallteachers() {
                 </thead>
                 <tbody>
                 
-            ${data.map(function(obj) {
+            ${data.map(function (obj) {
                     return `
             <tr class="text-center row1">
                 <td>${obj.username}</td>
@@ -778,4 +857,4 @@ function listallteachers() {
     );
 
 
-    }
+}

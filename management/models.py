@@ -41,7 +41,7 @@ class LectureResource(models.Model):
     lr_description = models.CharField(max_length=1024)
     for_lecture = models.ForeignKey(Lecture,on_delete=models.CASCADE)
     lr_url = models.URLField(blank=True, null=True)
-    file = models.FileField(blank=True, null=True)
+    file = models.FileField(blank=True, null=True,upload_to='lecture_resource')
 
 
 class CourseResource(models.Model):
@@ -49,5 +49,5 @@ class CourseResource(models.Model):
     cr_description = models.CharField(max_length=1024)
     for_course = models.ForeignKey(Course,on_delete=models.CASCADE)
     cr_url = models.URLField(blank=True, null=True)
-    file = models.FileField(blank=True, null=True)
+    file = models.FileField(blank=True, null=True,upload_to='course_resource')
 
