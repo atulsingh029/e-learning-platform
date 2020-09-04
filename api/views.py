@@ -1,8 +1,11 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+from elibrary.models import Library
 from management.views import *
 from custom_user.models import Account, Room, Organization
 from management.models import Course, Lecture, CourseResource, LectureResource
+
 
 
 # organization level apis
@@ -373,3 +376,22 @@ def view_student_room(request):
             return Response({'status': 'not allowed'})
     except:
         return Response({'status': 'not allowed'})
+
+
+# library api
+
+@api_view(['GET'])
+def get_book(request,id):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        book = Book.objects.get(id=id)
+        library = book.library
+        if user.organization.account == library.owner.account:
+            s_b = BookSerializer(book)
+            data = book.bookreview.textreviews_set
+            reviews = TextReviewSerializer(data, many=True)
+            return Response({'book': s_b.data, 'comments': reviews.data})
+        else:
+            return Response({'status': 'forbidden'})
+    else:
+        return Response({'status':'forbidden'})

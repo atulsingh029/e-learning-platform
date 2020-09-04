@@ -22,6 +22,7 @@ urlpatterns = [
     path('opencourse/<str:c_id>/',open_course),
     path('viewstudentroom/',view_student_room),
     path('search/',search),
+    path('getbook/<str:id>/', get_book ),
 
 
 

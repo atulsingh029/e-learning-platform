@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from custom_user.models import ApplyForStudent, Room, Account, Student, Teacher
 from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
+from elibrary.models import Book, BookReview, TextReviews
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -83,5 +84,26 @@ class CustomStudentSerializer(serializers.Serializer):
     last_name = serializers.CharField(max_length=1024)
     room = serializers.CharField(max_length=1024)
     phone = serializers.IntegerField()
+
+
+class BookReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookReview
+        fields = ['points', 'reviews']
+
+
+class BookSerializer(serializers.ModelSerializer):
+    bookreview = BookReviewSerializer()
+    class Meta:
+        model = Book
+        fields = ['id', 'title', 'description', 'author', 'type', 'edition', 'publisher', 'file', 'cover', 'bookreview']
+
+
+class TextReviewSerializer(serializers.ModelSerializer):
+    reviewer = AccountSerializer()
+    class Meta:
+        model = TextReviews
+        fields = ['text', 'reviewer']
+
 
 
