@@ -55,13 +55,13 @@ class CourseSerializer(serializers.ModelSerializer):
 class CourseResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseResource
-        fields = ['cr_name', 'cr_description', 'file', 'cr_url', ]
+        fields = ['id', 'cr_name', 'cr_description', 'file', 'cr_url', ]
 
 
 class LectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
-        fields = ['for_course', 'l_number', 'l_name', 'l_url', 'l_description']
+        fields = ['id', 'for_course', 'l_number', 'l_name', 'l_url', 'l_description']
 
 
 class LectureResourceSerializer(serializers.ModelSerializer):

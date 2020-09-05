@@ -404,3 +404,27 @@ def opencourse(c):  # takes course object and returns all the resources and lect
     final_list.append(serial_lectures.data)
     final_list.append(serial_resources.data)
     return final_list
+
+
+def addlectureresource(user,data,file):
+    return data
+
+
+def addresource(user,data,file):
+    return data
+
+
+def addlecture(user,data):
+    return data
+
+
+def editlectureresource(user,data,file):
+    return data
+
+
+def editresource(user,data,file):
+    return data
+
+
+def editlecture(user,data):
+    return data

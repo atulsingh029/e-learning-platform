@@ -1,4 +1,4 @@
-function rm_opencourse(c_id) {
+function opencourse(c_id) {
     $.ajax({
         type: 'GET',
         url: '/api/opencourse/' + c_id,
@@ -117,13 +117,12 @@ function rm_opencourse(c_id) {
                                         </td>
                                         <td>
                                             <button class="btn btn-sm btn-outline-info" onclick="addlectureresource('${l.id}')">Add Resource</button>
-                                            <button class="btn btn-sm btn-outline-info" onclick="editlecture('${l.id}')">Edit</button>
+                                            <button class="btn btn-sm btn-outline-info" onclick="editlecture('${l}')">Edit</button>
                                             <button class="btn btn-sm btn-outline-danger" onclick="deletelecture('${l.id}')">Delete</button>
                                         </td>
                                     </tr>
                                     `;
-            }).join('')}
-                              
+            }).join('')}  
                             </tbody>
                         </table>
                     </div>
@@ -168,15 +167,8 @@ function submitaddlectureresource(){
 
 }
 
+
 function deletelecture(l_id){
-
-}
-
-function editlecture(l_id){
-
-}
-
-function submiteditlecture(){
 
 }
 
@@ -184,10 +176,31 @@ function deletelectureresource(lr_id){
 
 }
 
-function editlectureresource(lr_id){
+function deleteresource(cr_id){
+
+}
+
+
+function editlecture(l){
+
+}
+
+function submiteditlecture(){
+
+}
+
+function editlectureresource(lr){
 
 }
 
 function submiteditlectureresource(){
+
+}
+
+function editresource(r){
+
+}
+
+function submiteditresource(){
 
 }

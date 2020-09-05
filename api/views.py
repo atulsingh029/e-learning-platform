@@ -1,6 +1,5 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
 from elibrary.models import Library
 from management.views import *
 from custom_user.models import Account, Room, Organization
@@ -327,8 +326,174 @@ def list_all_teachers(request):
         return Response({"status": "forbidden"})
 
 
+@api_view(['GET'])
+def get_lecture_resource(request,id):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            l_r_f = LectureResource.objects.filter(id=id)
+            if len(l_r_f) != 0 and l_r_f[0].for_lecture.for_course.for_organization == user.organization.account:
+                l_r = l_r_f[0]
+                response = LectureResourceSerializer(l_r)
+                return Response(response.data)
+            else:
+                return Response({"status": "no such id"})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
 
-# Common API
+
+@api_view(['POST'])
+def add_lecture(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            data = request.data
+            response = addlecture(user,data)
+            return Response({"status" : response})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
+
+
+@api_view(['POST'])
+def add_resource(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            data = request.data
+            file = request.FILES
+            response = addresource(user, data, file)
+            return Response({"status": response})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
+
+
+@api_view(['POST'])
+def add_lecture_resource(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            data = request.data
+            file = request.FILES
+            response = addlectureresource(user, data, file)
+            return Response({"status": response})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
+
+
+@api_view(['POST'])
+def edit_lecture(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            data = request.data
+            response = editlecture(user, data)
+            return Response({"status":response})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
+
+
+@api_view(['POST'])
+def edit_resource(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            data = request.data
+            file = request.FILES
+            response = editresource(user, data, file)
+            return Response({"status": response})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
+
+
+@api_view(['POST'])
+def edit_lecture_resource(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            data = request.data
+            file = request.FILES
+            response = editlectureresource(user, data, file)
+            return Response({"status": response})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
+
+
+@api_view(['GET'])
+def delete_lecture(request,id):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            l_f = Lecture.objects.filter(id=id)
+            if len(l_f) != 0:
+                l = l_f[0]
+                if l.for_course.for_organization == user.organization.account:
+                    l.delete()
+                    return Response({"status": "success"})
+                else:
+                    return Response({"status": "forbidden"})
+            else:
+                return Response({"status": "no such id"})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
+
+
+@api_view(['GET'])
+def delete_resource(request,id):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            r_f = CourseResource.objects.filter(id=id)
+            if len(r_f) != 0:
+                r = r_f[0]
+                if r.for_course.for_organization == user.organization.account:
+                    r.delete()
+                    return Response({"status": "success"})
+                else:
+                    return Response({"status": "forbidden"})
+            else:
+                return Response({"status": "no such id"})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
+
+
+@api_view(['GET'])
+def delete_lecture_resource(request,id):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_organization or user.is_teacher:
+            l_r_f = LectureResource.objects.filter(id=id)
+            if len(l_r_f) != 0:
+                l_r = l_r_f[0]
+                if l_r.for_lecture.for_course.for_organization == user.organization.account:
+                    l_r.delete()
+                    return Response({"status": "success"})
+                else:
+                    return Response({"status": "forbidden"})
+            else:
+                return Response({"status": "no such id"})
+        else:
+            return Response({"status": "forbidden"})
+    else:
+        return Response({"status": "you are not authenticated"})
+
 
 @api_view(['GET'])
 def open_course(request, c_id):
@@ -361,6 +526,7 @@ def open_course(request, c_id):
             return Response(response)
         else:
             return Response({"response": "no data available"})
+
 
 # Student api
 @api_view(['GET'])

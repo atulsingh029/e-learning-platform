@@ -152,25 +152,6 @@ function listallcourses() {
     );
 }
 
-function opencourse(c_id) {
-    $.ajax({
-        type: 'GET',
-        url: '/api/opencourse/' + c_id,
-        contentType: 'application/json',
-        success: function (data) {
-            console.log(data);
-            /*
-            * Abhishek
-            * data is the variable that contains two arrays as shown in picture on github, i.e. first array contains all the lectures and second contains all the resources
-            * on the DOM you have a div with id "canvas"
-            * in that div you have to show all the data both lectures and resources
-            * first resources below it lectures
-            * */
-
-        }
-    });
-}
-
 /*completed*/
 function addroom(form_id) {
     let id = `#${form_id}`;

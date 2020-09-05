@@ -23,7 +23,15 @@ urlpatterns = [
     path('viewstudentroom/',view_student_room),
     path('search/',search),
     path('getbook/<str:id>/', get_book ),
-
-
+    path('getlectureresource/<str:id>/', get_lecture_resource ),
+    path('deletelectureresource/<str:id>/', delete_lecture_resource ),
+    path('deletecourseresource/<str:id>/', delete_resource ),
+    path('deletelecture/<str:id>/', delete_lecture ),
+    path('addlectureresource/', add_lecture_resource),
+    path('addcourseresource/', add_resource),
+    path('addlecture/', add_lecture),
+    path('editlectureresource/', edit_lecture_resource),
+    path('editcourseresource/', edit_resource),
+    path('editlecture/', edit_lecture),
 
 ]
