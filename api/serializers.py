@@ -67,7 +67,7 @@ class LectureSerializer(serializers.ModelSerializer):
 class LectureResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = LectureResource
-        fields = ['lr_name', 'lr_description', 'for_lecture', 'lr_url']
+        fields = ['id', 'lr_name', 'lr_description', 'for_lecture', 'lr_url']
 
 
 class DashOptionSerializer(serializers.ModelSerializer):
