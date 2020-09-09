@@ -69,3 +69,8 @@ class ApplyForStudent(models.Model):
 
     def __str__(self):
         return self.reference
+
+
+class Session(models.Model):
+    user = models.ForeignKey(Account,on_delete=models.CASCADE)
+    session_key = models.CharField(max_length=50)

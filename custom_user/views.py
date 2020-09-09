@@ -2,11 +2,12 @@ from django.core.mail import send_mail
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import ApplyForStudent, Account, Organization
+from .models import ApplyForStudent, Account, Organization, Session
 from .forms import SignUp,OTPForm,StudentRegister,SignIn
 import random
 from django.contrib.auth import login,logout
 from management.models import Room
+from django.contrib.sessions.models import Session as SysSession
 
 
 DATA_TRANSFER = {}
@@ -166,6 +167,14 @@ def signin(request):
             response = authenticate(request,username=user.username,password=password)
             if response is not None:
                 login(request,response)
+                u = Account.objects.get(username=request.user)
+                s = Session.objects.filter(user=u)
+                for i in s:
+                    SysSession.objects.get(session_key=i.session_key).delete()
+                    Session.objects.get(session_key=i.session_key).delete()
+                session = Session(user=u,session_key=request.session.session_key)
+                session.save()
+
                 return redirect('/dashboard')
             else:
                 return redirect('/signin?r=emailorpasswordincorrect')
@@ -176,6 +185,8 @@ def signin(request):
 
 def signout(request):
     if request.user.is_authenticated:
+        session_key = request.session.session_key
+        Session.objects.get(session_key=session_key).delete()
         logout(request)
         return redirect('/')
     else:
