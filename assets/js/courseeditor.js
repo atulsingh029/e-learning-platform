@@ -72,7 +72,7 @@ function opencourse(c_id) {
                 <div class="row align-items-center m-1">
                     <div class="col-12 col-xl-8">
                     <style>
-                    .container {
+                    .contain {
                       position: relative;
                       width: 100%;
                       overflow: hidden;
@@ -90,7 +90,7 @@ function opencourse(c_id) {
                       border: none;
                     }
                     </style>
-                    <div class="container mt-2 mb-2">
+                    <div class="contain mt-2 mb-2">
                          <iframe id = "videoframe" class="responsive-iframe" src="${firstlecture[0].l_url}"></iframe>
                     </div>
                     <div class="row p-0" id="lecturefooter">

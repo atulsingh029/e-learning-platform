@@ -168,12 +168,13 @@ def signin(request):
             if response is not None:
                 login(request,response)
                 u = Account.objects.get(username=request.user)
-                s = Session.objects.filter(user=u)
-                for i in s:
-                    SysSession.objects.get(session_key=i.session_key).delete()
-                    Session.objects.get(session_key=i.session_key).delete()
-                session = Session(user=u,session_key=request.session.session_key)
-                session.save()
+                if u.is_student:
+                    s = Session.objects.filter(user=u)
+                    for i in s:
+                        SysSession.objects.get(session_key=i.session_key).delete()
+                        Session.objects.get(session_key=i.session_key).delete()
+                    session = Session(user=u,session_key=request.session.session_key)
+                    session.save()
 
                 return redirect('/dashboard')
             else:
@@ -183,10 +184,13 @@ def signin(request):
         context = {'form':form,'formname': 'Sign In',}
         return render(request,template_name='custom_user/forms.html',context=context)
 
+
 def signout(request):
     if request.user.is_authenticated:
-        session_key = request.session.session_key
-        Session.objects.get(session_key=session_key).delete()
+        user = Account.objects.get(username=request.user)
+        if user.is_student:
+            session_key = request.session.session_key
+            Session.objects.get(session_key=session_key).delete()
         logout(request)
         return redirect('/')
     else:
