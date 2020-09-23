@@ -6,11 +6,19 @@ class SignIn(forms.Form):
     password = forms.CharField(max_length=512,widget=forms.PasswordInput,label='Password')
 
 
+class StudentSignIn(forms.Form):
+    username = forms.CharField(max_length=255, required=True, label='Username')
+    password = forms.CharField(max_length=512, required=True, label='Password')
+
+
 class SignUp(forms.Form):
     name = forms.CharField(max_length=255, min_length=3, required=True, label='Name')
     email = forms.EmailField(max_length=155, required=True,label='Email')
-    password1 = forms.CharField(max_length=512,widget=forms.PasswordInput, label='Password')
-    password2 = forms.CharField(max_length=512, widget=forms.PasswordInput, label='Confirm Password')
+    password1 = forms.CharField(max_length=512,widget=forms.PasswordInput, label='Password', required=True)
+    password2 = forms.CharField(max_length=512, widget=forms.PasswordInput, label='Confirm Password', required=True)
+    phone = forms.CharField(max_length=13, label='Phone Number',required=False)
+    bio = forms.CharField(max_length=155, label='Bio', required=False)
+    address = forms.CharField(max_length=255, label='Address', required=False)
 
 
 class OTPForm(forms.Form):

@@ -105,7 +105,7 @@ def dashboard(request):
             }
             return render(request, template_name='dashboard/tdash.html', context=context)
     else:
-        return redirect('/signin')
+        return redirect('/?status=youmustloginfirst')
 
 
 

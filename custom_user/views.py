@@ -3,7 +3,7 @@ from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from .models import ApplyForStudent, Account, Organization, Session
-from .forms import SignUp,OTPForm,StudentRegister,SignIn
+from .forms import SignUp ,OTPForm, StudentRegister, SignIn, StudentSignIn
 import random
 from django.contrib.auth import login,logout
 from management.models import Room
@@ -20,14 +20,20 @@ def signup(request):
         email = request.POST['email']
         password1 = request.POST['password1']
         password2 = request.POST['password2']
+        # extra details
 
+        phone = request.POST['phone']
+        if phone=='':
+            phone=-1
+        bio = request.POST['bio']
+        address = request.POST['address']
         if password1 == password2 and len(Account.objects.filter(email=email)) == 0:
             password = password1
             otp = generate_otp()
             message = 'Your One Time Password is ' + str(otp)
             data_transfer_key = email[0:4]+str(random.randrange(100000,999999))
-            DATA_TRANSFER[data_transfer_key] = [otp, name, email, password]
-            send_mail('Verify Your Account', message, 'atul.auth@gmail.com', [email, ], fail_silently=False)
+            DATA_TRANSFER[data_transfer_key] = [otp, name, email, password, phone, bio, address]
+            #send_mail('Verify Your Account', message, 'atul.auth@gmail.com', [email, ], fail_silently=False)
             return redirect('/verify?q=organization&dtk='+data_transfer_key )
         else:
             return redirect('/signup?q=passwdVDFailed')
@@ -61,6 +67,7 @@ def generate_otp():
     response = random.randrange(100000,999999)
     return response
 
+
 def verify_otp(request):
     try:
         mode = request.GET['q']
@@ -83,7 +90,7 @@ def verify_otp(request):
     return render(request,template_name='custom_user/forms.html', context=context)
 
 
-def RegisterStudent(request,id,reference):
+def RegisterStudent(request, id, reference):
     user_temp = Account.objects.filter(id=id)
     if len(user_temp) == 0 or user_temp[0].is_organization == False:
         return HttpResponse('bad url')
@@ -123,7 +130,7 @@ def Reg(request,mode,otp,dtk):
             if int(DATA_TRANSFER[dtk][0]) == int(otp):
                 username = generate_username(DATA_TRANSFER[dtk][2])
                 user = Account.objects.create_user(username=username, password=DATA_TRANSFER[dtk][3], first_name=DATA_TRANSFER[dtk][1],
-                                                email=DATA_TRANSFER[dtk][2], is_organization=True)
+                                                email=DATA_TRANSFER[dtk][2], is_organization=True, phone=DATA_TRANSFER[dtk][4],bio1=DATA_TRANSFER[dtk][5],bio2=DATA_TRANSFER[dtk][6])
                 organization = Organization(account=user)
                 organization.save()
 
@@ -153,6 +160,34 @@ def Reg(request,mode,otp,dtk):
                 return '/verify?q=student&dtk='+dtk
 
 
+def student_signin(request):
+    if request.user.is_authenticated:
+        return HttpResponse('bad request : not allowed')
+    else:
+        if request.method == 'POST':
+            username = request.POST['username']
+            password = request.POST['password']
+            response = authenticate(request, username=username, password=password)
+            if response is not None:
+                login(request,response)
+                u = Account.objects.get(username=request.user)
+                if u.is_student:
+                    s = Session.objects.filter(user=u)
+                    for i in s:
+                        SysSession.objects.get(session_key=i.session_key).delete()
+                        Session.objects.get(session_key=i.session_key).delete()
+                    session = Session(user=u, session_key=request.session.session_key)
+                    session.save()
+                return redirect('/dashboard')
+            else:
+                return redirect('/student_signin?status=authfailed')
+        else:
+            form = StudentSignIn()
+            context = {'form': form, 'formname': 'Student Sign In', }
+            return render(request, template_name='custom_user/forms.html', context=context)
+
+
+
 def signin(request):
     if request.user.is_authenticated:
         return HttpResponse('bad request : not allowed')
@@ -164,22 +199,15 @@ def signin(request):
                 user = Account.objects.get(email=email)
             except:
                 return redirect('/signin?r=nosuchuser')
-            response = authenticate(request,username=user.username,password=password)
+            if user.is_teacher or user.is_organization:
+                response = authenticate(request,username=user.username,password=password)
+            else:
+                response = None
             if response is not None:
                 login(request,response)
-                u = Account.objects.get(username=request.user)
-                if u.is_student:
-                    s = Session.objects.filter(user=u)
-                    for i in s:
-                        SysSession.objects.get(session_key=i.session_key).delete()
-                        Session.objects.get(session_key=i.session_key).delete()
-                    session = Session(user=u,session_key=request.session.session_key)
-                    session.save()
-
                 return redirect('/dashboard')
             else:
                 return redirect('/signin?r=emailorpasswordincorrect')
-
         form = SignIn()
         context = {'form':form,'formname': 'Sign In',}
         return render(request,template_name='custom_user/forms.html',context=context)
