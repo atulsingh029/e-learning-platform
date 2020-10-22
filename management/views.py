@@ -206,7 +206,7 @@ def add_new_student(request):
 # management api views :
 def listapplications(request):
     try:
-        user = Account.objects.get(username = request.user)
+        user = Account.objects.get(username=request.user)
     except:
         return {"status": "forbidden"}
     if request.user.is_authenticated and user.is_organization:
