@@ -50,5 +50,19 @@ class CourseResource(models.Model):
     cr_description = models.CharField(max_length=1024)
     for_course = models.ForeignKey(Course,on_delete=models.CASCADE)
     cr_url = models.URLField(blank=True, null=True)
-    file = models.FileField(blank=True, null=True,upload_to='course_resource')
+    file = models.FileField(blank=True, null=True, upload_to='course_resource')
 
+
+class Slot(models.Model):
+    info = models.CharField(max_length=1000, null=True, blank=True)
+    date = models.DateField(null=True,blank=True)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+    session_id = models.CharField(max_length=500, null=True, blank=True)
+
+
+class TimeTable(models.Model):
+    room = models.OneToOneField(Room, on_delete=models.CASCADE, null=True, blank=True)
+    slot = models.ManyToManyField(Slot, null=True, blank=True)
+    status = models.CharField(max_length=100, choices=(('enable', 'enable'), ('disable', 'disable')))

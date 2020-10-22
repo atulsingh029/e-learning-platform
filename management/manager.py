@@ -30,12 +30,32 @@ def send_direct_admission_notification(email,name,username,institute,pwd):
     message = 'Hey ' + name + ',\nWelcome to ' + institute + '.\n' + 'Your username for login is "' + username + '" and your password is '+str(pwd)+'.'
     # mail([email,],subject,message)
 
+
 def send_new_teacher_notification(email,name,institute,pwd):
     subject = 'Welcome Onboard!'
     message = 'Hey ' + name + ',\nWelcome to ' + institute + '.\n' + 'Your email : ' + email + ' \npassword : '+str(pwd)
     # mail([email,],subject,message)
 
+
 def mail(emails, subject, message):
     if str(subject) == '':
         subject = 'Message From PrimeStudies'
     send_mail(subject,message,'atul.auth@gmail.com',emails,fail_silently=True)
+
+
+def slot_generator(start, end, size):
+    slots = []
+    '''
+    :param start: start is starting time in the format hh:mm am/pm
+    :param end: end is ending time in the format hh:mm am/pm
+    :param size: size is length of one slot in format hh:mm
+    :return: a list of all possible slots
+    example :
+    start = 10:00 am
+    end = 12:00 pm
+    size = 01:00
+    output format : ['slot name', 'start time', 'end time']
+    expected output : [['slot1', 10:00, 11:00],['slot2', 11:00, 12:00]]
+    explaination : two slots are possible 10 to 11 and 11 to 12
+    '''
+    return slots

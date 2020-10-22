@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from custom_user.models import Room, ApplyForStudent, Student, Account, Teacher, Organization
-from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
+from management.models import Course, Lecture, CourseResource, LectureResource, DashOption, TimeTable
 from api.serializers import *
 from .manager import *
 import random
@@ -272,6 +272,7 @@ def addroom(request, user, data):
         room.organization = temp[0].organization
         room.reference = temp[0].organization.account.username+str(random.randrange(111111,999999))
         room.save()
+        TimeTable(room=room, status='enable').save()
         return 'success'
     except:
         return 'failed'
@@ -298,12 +299,17 @@ def listallrooms(request):
 def deleteroom(room):
     # you are given room object as argument, this room object has property deleted, you have to set that attribute to true and it to database
     room.deleted = True
+    tt = room.timetable
+    tt.status = 'disable'
+    tt.save()
     room.save()
+
     data = Student.objects.filter(from_room=room)
     for i in data:
         i.from_room = None
         i.save()
     return 'success'
+
 
 def removestudentfromroom(student_id):
     user = Account.objects.get(id=student_id)
@@ -312,6 +318,7 @@ def removestudentfromroom(student_id):
     s.from_room = None
     s.save()
     return r_id
+
 
 def changestudentroom(student_id,room_id):
     user = Account.objects.get(id=student_id)
@@ -369,6 +376,7 @@ def addnewcourse(title,room_id,description,instructor_id,org):
         course.save()
         return 'success'
     return {'take_to': 'listallcourses'}
+
 
 def addexistingcourse(room_id,course_id):
     c = Course.objects.get(c_id=course_id)

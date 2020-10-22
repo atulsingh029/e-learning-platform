@@ -25,3 +25,11 @@ class CACourseResource(admin.ModelAdmin):
 @admin.register(DashOption)
 class CACourseResource(admin.ModelAdmin):
     list_display = ('label','account')
+
+
+admin.site.register(Slot)
+
+
+@admin.register(TimeTable)
+class CATimeTable(admin.ModelAdmin):
+    list_display = ('room',)
