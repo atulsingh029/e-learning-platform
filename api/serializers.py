@@ -20,7 +20,7 @@ class RoomSerializer(serializers.ModelSerializer):
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['id', 'username', 'email', 'first_name', 'last_name','phone']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name','phone', 'profile_pic']
 
 
 class StudentSerializer(serializers.ModelSerializer):

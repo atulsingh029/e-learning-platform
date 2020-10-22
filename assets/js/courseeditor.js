@@ -147,7 +147,7 @@ function addlecture(c_id){
 
 }
 
-function submitaddlecture(){
+function submitaddlecture(c_id){
 
 }
 

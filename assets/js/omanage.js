@@ -50,7 +50,28 @@ function search() {
                 data: JSON.stringify({ "key": key }),
                 headers: { "X-CSRFToken": csrftoken },
                 success: function (data) {
-                    console.log(data)
+                    let teacher = data.teacher;
+                    let student = data.student;
+                    let final = teacher.concat(student);
+                    let val = `
+                <div class="row row-cols-1 row-cols-md-3">
+                
+                ${final.map(function (obj) {
+                    return `
+                    <div class="card m-2 border-dark rounded" style='max-width: 20em;min-width: 20em;max-height: 16em;min-height: 16em;'>
+                        <div class="card-body">
+                            ${obj.user.email}
+                            ${obj.user.first_name}
+                            ${obj.user.last_name}
+                            ${obj.user.phone}
+                            ${obj.user.profile_pic}
+                            
+                        </div>    
+                    </div>
+                    `;
+                }).join('')}
+                </div>`;
+                area.innerHTML=val;
                 }
             }
         );
