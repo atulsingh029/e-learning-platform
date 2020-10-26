@@ -59,6 +59,7 @@ def slot_generator(start, end, size):
     explaination : two slots are possible 10 to 11 and 11 to 12
     '''
 
+
     # extracting the hour and minute from given time by using string slicing
     if (start.find('am') == -1):
         starthr = int(start[0:2]) + 12
@@ -76,7 +77,6 @@ def slot_generator(start, end, size):
 
 
     # converting the hour and minute into total minutes
-
     totalMin = ((endhr - starthr) * 60) + (endmin - startmin)
 
     sizehr = int(size[0:2])
@@ -89,6 +89,7 @@ def slot_generator(start, end, size):
     slots = []
 
     for i in range(1, hr + 1, 1):
+
         strtime = []
 
         # this block is used when size of slot is 1 hr (or) 2 hrs
@@ -107,7 +108,7 @@ def slot_generator(start, end, size):
             starthr = totalhr
             startmin = totalmin
 
-            # this is used for any case when (hr >= 12 or h <12) and (min >= 60 or min < 60)
+            # this is used for any case  when (hr>=12 or h <12) and (min >= 60 or min < 60)
             totalmin = (totalmin) % 60
             addExtraHr = totalmin // 60
             totalhr = totalhr + addExtraHr
@@ -118,15 +119,31 @@ def slot_generator(start, end, size):
                 starthr = totalhr
 
             strtime.append(str(totalhr) + ':' + str((totalmin)))
-
             slots.append(strtime)
 
+        # this block is used when size of slot is (1 hr 30 mins)
+        if (totalsizemin == 90):
+            strtime.append('slot' + str(i))
 
+            starthr = (starthr) % 12
+            if (starthr == 0):
+                starthr = 12
 
+            strtime.append(str(starthr) + ':' + str(startmin))
 
+            startmin = startmin + totalsizemin
+            startmin = (startmin) % 60
+            if (startmin == 0):
+                starthr = starthr + 1
 
+            starthr = starthr + 1
 
+            starthr = (starthr) % 12
+            if (starthr == 0):
+                starthr = 12
 
-
+            strtime.append(str(starthr) + ':' + str((startmin)))
+            slots.append(strtime)
 
     return slots
+
