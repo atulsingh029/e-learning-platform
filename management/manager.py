@@ -44,7 +44,7 @@ def mail(emails, subject, message):
 
 
 def slot_generator(start, end, size):
-    slots = []
+
     '''
     :param start: start is starting time in the format hh:mm am/pm
     :param end: end is ending time in the format hh:mm am/pm
@@ -86,8 +86,10 @@ def slot_generator(start, end, size):
 
     hr = int(totalMin / totalsizemin)
 
+    slots = []
 
-
+    for i in range(1, hr + 1, 1):
+        strtime = []
 
 
 
