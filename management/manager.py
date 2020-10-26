@@ -91,6 +91,42 @@ def slot_generator(start, end, size):
     for i in range(1, hr + 1, 1):
         strtime = []
 
+        # this block is used when size of slot is 1 hr (or) 2 hrs
+        if (totalsizemin == 60 or totalsizemin == 120):
+            strtime.append('slot' + str(i))
+
+            starthr = (starthr) % 12
+            if (starthr == 0):
+                starthr = 12
+
+            strtime.append(str(starthr) + ':' + str(startmin))
+
+            totalhr = (starthr + sizehr)
+            totalmin = (startmin + sizemin)
+
+            starthr = totalhr
+            startmin = totalmin
+
+            # this is used for any case when (hr >= 12 or h <12) and (min >= 60 or min < 60)
+            totalmin = (totalmin) % 60
+            addExtraHr = totalmin // 60
+            totalhr = totalhr + addExtraHr
+
+            totalhr = (totalhr) % 12
+            if (totalhr == 0):
+                totalhr = 12
+                starthr = totalhr
+
+            strtime.append(str(totalhr) + ':' + str((totalmin)))
+
+            slots.append(strtime)
+
+
+
+
+
+
+
 
 
     return slots
