@@ -59,6 +59,7 @@ def slot_generator(start, end, size):
     explaination : two slots are possible 10 to 11 and 11 to 12
     '''
 
+    # extracting the hour and minute from given time by using string slicing
     if (start.find('am') == -1):
         starthr = int(start[0:2]) + 12
         startmin = int(start[3:5])
@@ -74,6 +75,16 @@ def slot_generator(start, end, size):
         endmin = int(end[3:5])
 
 
+    # converting the hour and minute into total minutes
+
+    totalMin = ((endhr - starthr) * 60) + (endmin - startmin)
+
+    sizehr = int(size[0:2])
+    sizemin = int(size[3:5])
+
+    totalsizemin = (sizehr * 60) + sizemin
+
+    hr = int(totalMin / totalsizemin)
 
 
 
