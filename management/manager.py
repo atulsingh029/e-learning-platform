@@ -58,4 +58,26 @@ def slot_generator(start, end, size):
     expected output : [['slot1', 10:00, 11:00],['slot2', 11:00, 12:00]]
     explaination : two slots are possible 10 to 11 and 11 to 12
     '''
+
+    if (start.find('am') == -1):
+        starthr = int(start[0:2]) + 12
+        startmin = int(start[3:5])
+    else:
+        starthr = int(start[0:2])
+        startmin = int(start[3:5])
+
+    if (end.find('am') == -1):
+        endhr = int(end[0:2]) + 12
+        endmin = int(end[3:5])
+    else:
+        endhr = int(end[0:2])
+        endmin = int(end[3:5])
+
+
+
+
+
+
+
+
     return slots
