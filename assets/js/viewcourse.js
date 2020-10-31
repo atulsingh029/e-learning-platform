@@ -76,7 +76,7 @@ function rm_opencourse(c_id) {
                     }
                     </style>
                     <div class="container mt-2 mb-2">
-                         <iframe id = "videoframe" class="responsive-iframe" src="${lectures[0].l_url}"></iframe>
+                         <iframe id = "videoframe" class="responsive-iframe" src="${lectures[0].video}"></iframe>
                     </div>
                     <div class="row p-0" id="lecturefooter">
                         <p>${lectures[0].l_description}</p>

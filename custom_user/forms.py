@@ -16,9 +16,6 @@ class SignUp(forms.Form):
     email = forms.EmailField(max_length=155, required=True,label='Email')
     password1 = forms.CharField(max_length=512,widget=forms.PasswordInput, label='Password', required=True)
     password2 = forms.CharField(max_length=512, widget=forms.PasswordInput, label='Confirm Password', required=True)
-    phone = forms.CharField(max_length=13, label='Phone Number',required=False)
-    bio = forms.CharField(max_length=155, label='Bio', required=False)
-    address = forms.CharField(max_length=255, label='Address', required=False)
 
 
 class OTPForm(forms.Form):
@@ -32,3 +29,12 @@ class StudentRegister(forms.Form):
     phone = forms.CharField(min_length=10,max_length=10, label='Phone Number',)
     password1 = forms.CharField(max_length=512, widget=forms.PasswordInput, label='Password')
     password2 = forms.CharField(max_length=512, widget=forms.PasswordInput, label='Confirm Password')
+
+
+class CompleteSetup(forms.Form):
+    name = forms.CharField(max_length=255, min_length=3, required=True, label='Name')
+    phone = forms.CharField(max_length=13, label='Phone Number', required=False)
+    bio = forms.CharField(max_length=155, label='Bio', required=False)
+    address = forms.CharField(max_length=255, label='Address', required=False)
+    profile_pic = forms.ImageField(required=False)
+

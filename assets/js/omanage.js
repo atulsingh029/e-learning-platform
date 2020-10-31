@@ -58,14 +58,39 @@ function search() {
                 
                 ${final.map(function (obj) {
                     return `
+                    <style>
+                        .card-img{
+                            border-radius: 100%;
+                            align-items: center;
+                            background-repeat: no-repeat;
+                            background-position: 50% 50%;
+                            background-size: cover;
+                            height: 100px;
+                            width: 100px;
+                        }
+                        .name{
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            line-height: 16px;
+                            max-height: 32px;
+                        }
+                    
+                    </style>
                     <div class="card m-2 border-dark rounded" style='max-width: 20em;min-width: 20em;max-height: 16em;min-height: 16em;'>
+                        <div class="row">
+                            <div class="col-4">
+                                 <img src="${obj.user.profile_pic}" alt="profile_pic" class=" card-img p-1">
+                            </div>
+                        <div class="col-8 pt-2">
+                            <h6 class="pr-2 name text-capitalize">${obj.user.first_name} ${obj.user.last_name}</h6>
+                            <h6 class="text-info">Designation</h6>
+                        </div>
+                        </div>
                         <div class="card-body">
-                            ${obj.user.email}
-                            ${obj.user.first_name}
-                            ${obj.user.last_name}
-                            ${obj.user.phone}
-                            ${obj.user.profile_pic}
-                            
+                          <h6 class="text-center">Room</h6>
+                          <hr>
+                          <h6 class=""><i class = "material-icons vertical-align-middle padding-bottom-3">call</i> ${obj.user.phone}</h6>
+                          <h6 class="light name"><i class = "material-icons vertical-align-middle padding-bottom-3" >message</i> ${obj.user.email}</h6>
                         </div>    
                     </div>
                     `;
@@ -180,6 +205,13 @@ function addroom(form_id) {
     document.getElementById("roomform").reset(); //This line resets the form that was filled by user after collecting data from it.
     let a = form_data[1].value;
     let b = form_data[2].value;
+    if(a===''){
+        let out = prompt("Enter Room Name");
+        while(out===''){
+            out = prompt("Enter Room Name");
+        }
+        a=out;
+    }
     var token = form_data[0].value;
     let input = JSON.stringify({ "title": a, "description": b });
     $.ajax(

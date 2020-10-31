@@ -30,7 +30,7 @@ class Lecture(models.Model):
     for_course = models.ForeignKey(Course,on_delete=models.CASCADE)
     l_number = models.IntegerField()
     l_name = models.CharField(max_length=1024)
-    l_url = models.URLField(max_length=1024)
+    video = models.FileField(upload_to='videos')
     l_description = models.CharField(max_length=512, null=True,blank=True)
 
     def __str__(self):

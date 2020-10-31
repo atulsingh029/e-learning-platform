@@ -9,7 +9,7 @@ class CACourse(admin.ModelAdmin):
 
 @admin.register(Lecture)
 class CALecture(admin.ModelAdmin):
-    list_display = ('for_course', 'l_number', 'l_name', 'l_url')
+    list_display = ('for_course', 'l_number', 'l_name', 'video')
 
 
 @admin.register(LectureResource)

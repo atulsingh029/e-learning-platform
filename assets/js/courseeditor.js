@@ -91,10 +91,11 @@ function opencourse(c_id) {
                     }
                     </style>
                     <div class="contain mt-2 mb-2">
-                         <iframe id = "videoframe" class="responsive-iframe" src="${firstlecture[0].l_url}"></iframe>
+                         <video id = "videoframe" class="responsive-iframe" controls autoplay> <source src="${firstlecture[0].video}" type="video/mp4"> </source> </video>
                     </div>
                     <div class="row p-0" id="lecturefooter">
                         <p>${firstlecture[0].l_description}</p>
+                        ${firstlecture[0].video}
                        </div> 
                     </div>
                     <div class="col-12 col-xl-4 mt-2">
@@ -107,11 +108,11 @@ function opencourse(c_id) {
                             </thead>
                             <tbody>
                                 ${lectures.map(function (l) {
-                var l_url = l.l_url;
+                var l_url = l.video;
                 return `
                                     <tr>
                                         <td>
-                                            <button class="btn btn-link border-0 btn-block text-left" onclick="loadlecture('${l_url}','${l.l_description}','${l.id}')"><span style="font-weight: bolder">Lecture ${l.l_number}</span>
+                                            <button class="btn btn-link border-0 btn-block text-left" onclick="loadlecture('${l_url}','${l.l_description}','${l.id}')"><span style="font-weight: bolder">L: ${l.l_number}</span>
                                             <p>${l.l_name}</p>
                                             </button>
                                         </td>

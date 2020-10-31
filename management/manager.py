@@ -51,99 +51,23 @@ def slot_generator(start, end, size):
     :param size: size is length of one slot in format hh:mm
     :return: a list of all possible slots
     example :
-    start = 10:00 am
-    end = 12:00 pm
+    start = 10:00am
+    end = 12:00pm
     size = 01:00
     output format : ['slot name', 'start time', 'end time']
     expected output : [['slot1', 10:00, 11:00],['slot2', 11:00, 12:00]]
     explaination : two slots are possible 10 to 11 and 11 to 12
     '''
-
-
-    # extracting the hour and minute from given time by using string slicing
-    if (start.find('am') == -1):
-        starthr = int(start[0:2]) + 12
-        startmin = int(start[3:5])
-    else:
-        starthr = int(start[0:2])
-        startmin = int(start[3:5])
-
-    if (end.find('am') == -1):
-        endhr = int(end[0:2]) + 12
-        endmin = int(end[3:5])
-    else:
-        endhr = int(end[0:2])
-        endmin = int(end[3:5])
-
-
-    # converting the hour and minute into total minutes
-    totalMin = ((endhr - starthr) * 60) + (endmin - startmin)
-
-    sizehr = int(size[0:2])
-    sizemin = int(size[3:5])
-
-    totalsizemin = (sizehr * 60) + sizemin
-
-    hr = int(totalMin / totalsizemin)
-
     slots = []
+    # start time in 24hr format
+    start_type = start[5:7]
+    end_type = end[5:7]
+    if start_type == 'pm':
+        start_hh = int(start[0:3])+12
+    if end_type == 'pm':
+        end_hh = int(end[0:3])+12
 
-    for i in range(1, hr + 1, 1):
 
-        strtime = []
-
-        # this block is used when size of slot is 1 hr (or) 2 hrs
-        if (totalsizemin == 60 or totalsizemin == 120):
-            strtime.append('slot' + str(i))
-
-            starthr = (starthr) % 12
-            if (starthr == 0):
-                starthr = 12
-
-            strtime.append(str(starthr) + ':' + str(startmin))
-
-            totalhr = (starthr + sizehr)
-            totalmin = (startmin + sizemin)
-
-            starthr = totalhr
-            startmin = totalmin
-
-            # this is used for any case  when (hr>=12 or h <12) and (min >= 60 or min < 60)
-            totalmin = (totalmin) % 60
-            addExtraHr = totalmin // 60
-            totalhr = totalhr + addExtraHr
-
-            totalhr = (totalhr) % 12
-            if (totalhr == 0):
-                totalhr = 12
-                starthr = totalhr
-
-            strtime.append(str(totalhr) + ':' + str((totalmin)))
-            slots.append(strtime)
-
-        # this block is used when size of slot is (1 hr 30 mins)
-        if (totalsizemin == 90):
-            strtime.append('slot' + str(i))
-
-            starthr = (starthr) % 12
-            if (starthr == 0):
-                starthr = 12
-
-            strtime.append(str(starthr) + ':' + str(startmin))
-
-            startmin = startmin + totalsizemin
-            startmin = (startmin) % 60
-            if (startmin == 0):
-                starthr = starthr + 1
-
-            starthr = starthr + 1
-
-            starthr = (starthr) % 12
-            if (starthr == 0):
-                starthr = 12
-
-            strtime.append(str(starthr) + ':' + str((startmin)))
-            slots.append(strtime)
 
     return slots
 

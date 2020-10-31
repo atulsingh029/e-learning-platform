@@ -3,7 +3,7 @@ from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from .models import ApplyForStudent, Account, Organization, Session
-from .forms import SignUp ,OTPForm, StudentRegister, SignIn, StudentSignIn
+from .forms import SignUp ,OTPForm, StudentRegister, SignIn, StudentSignIn, CompleteSetup
 import random
 from django.contrib.auth import login,logout
 from management.models import Room
@@ -20,19 +20,13 @@ def signup(request):
         email = request.POST['email']
         password1 = request.POST['password1']
         password2 = request.POST['password2']
-        # extra details
 
-        phone = request.POST['phone']
-        if phone=='':
-            phone=-1
-        bio = request.POST['bio']
-        address = request.POST['address']
         if password1 == password2 and len(Account.objects.filter(email=email)) == 0:
             password = password1
             otp = generate_otp()
             message = 'Your One Time Password is ' + str(otp)
             data_transfer_key = email[0:4]+str(random.randrange(100000,999999))
-            DATA_TRANSFER[data_transfer_key] = [otp, name, email, password, phone, bio, address]
+            DATA_TRANSFER[data_transfer_key] = [otp, name, email, password]
             #send_mail('Verify Your Account', message, 'atul.auth@gmail.com', [email, ], fail_silently=False)
             return redirect('/verify?q=organization&dtk='+data_transfer_key )
         else:
@@ -79,6 +73,8 @@ def verify_otp(request):
         response = Reg(request,mode,user_otp,dtk)
         if response == 200:
             return HttpResponse("success!")
+        elif response == '/dashboard':
+            return redirect('/completeSetup')
         return redirect(response)
     otp_form = OTPForm()
     context = {
@@ -130,7 +126,7 @@ def Reg(request,mode,otp,dtk):
             if int(DATA_TRANSFER[dtk][0]) == int(otp):
                 username = generate_username(DATA_TRANSFER[dtk][2])
                 user = Account.objects.create_user(username=username, password=DATA_TRANSFER[dtk][3], first_name=DATA_TRANSFER[dtk][1],
-                                                email=DATA_TRANSFER[dtk][2], is_organization=True, phone=DATA_TRANSFER[dtk][4],bio1=DATA_TRANSFER[dtk][5],bio2=DATA_TRANSFER[dtk][6])
+                                                email=DATA_TRANSFER[dtk][2], is_organization=True)
                 organization = Organization(account=user)
                 organization.save()
 
@@ -158,6 +154,51 @@ def Reg(request,mode,otp,dtk):
                 return 200
             else:
                 return '/verify?q=student&dtk='+dtk
+
+
+def complete_setup(request):
+    try:
+        type = request.GET['edit']
+    except:
+        type = False
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            name = request.POST['name']
+            phone = request.POST['phone']
+            bio = request.POST['bio']
+            address = request.POST['address']
+
+            try:
+                profile = request.FILES['profile_pic']
+
+            except:
+                profile = '404'
+            user = Account.objects.get(username=request.user)
+            user.first_name = name
+            if phone == '':
+                phone = -1
+            user.phone = phone
+            user.bio1 = bio
+            user.bio2 = address
+            delete_img = request.POST['profile_pic-clear']
+            if delete_img:
+                user.profile_pic='default.png'
+            if profile != '404':
+                user.profile_pic = profile
+            user.save()
+
+            return redirect('/advertisement',permanent=True)
+        user = Account.objects.get(username=request.user)
+        profile_pic = user.profile_pic
+        if type:
+            forname = 'Edit Profile'
+            text = ''
+        else:
+            forname = 'Complete Setup'
+            text = ' >> <a href="/advertisement">Skip to advertisement setup</a>'
+        form = CompleteSetup(initial={'name':user.first_name, 'phone':user.phone, 'bio':user.bio1, 'address':user.bio2, 'profile_pic':user.profile_pic})
+        context = {'form':form, 'pic': profile_pic, 'forname': forname, 'text': text}
+        return render(request, template_name='custom_user/setup.html', context=context)
 
 
 def student_signin(request):
@@ -224,6 +265,10 @@ def signout(request):
     else:
         return redirect('/')
 
+
+def advertisement(request):
+    context = {}
+    return render(request, 'custom_user/advertisement.html', context=context)
 
 def testing(request):
     student = STUDENT_APPLICATION

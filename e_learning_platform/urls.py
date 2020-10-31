@@ -34,6 +34,8 @@ urlpatterns = [
     path('elibrary/',include('elibrary.urls')),
     path('r/<str:id>/<str:reference>', user_views.RegisterStudent),
     path('api/', include('api.urls') ),
+    path('completeSetup/', user_views.complete_setup),
+    path('advertisement/', user_views.advertisement),
     path('testing/',user_views.testing),
 
 ]
