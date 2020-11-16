@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from custom_user.models import ApplyForStudent, Room, Account, Student, Teacher
-from management.models import Course, Lecture, CourseResource, LectureResource, DashOption
+from management.models import Course, Lecture, CourseResource, DashOption
 from elibrary.models import Book, BookReview, TextReviews
 
 
@@ -28,7 +28,7 @@ class StudentSerializer(serializers.ModelSerializer):
     from_room = RoomSerializer()
     class Meta:
         model = Student
-        fields = ['id', 'from_room', 'from_organization','user','from_room']
+        fields = ['id', 'from_room', 'from_organization', 'user']
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -63,11 +63,6 @@ class LectureSerializer(serializers.ModelSerializer):
         model = Lecture
         fields = ['id', 'for_course', 'l_number', 'l_name', 'video', 'l_description']
 
-
-class LectureResourceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LectureResource
-        fields = ['id', 'lr_name', 'lr_description', 'for_lecture', 'lr_url']
 
 
 class DashOptionSerializer(serializers.ModelSerializer):

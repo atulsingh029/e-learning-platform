@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import ApplyForStudent, Account, Organization, Session
+from .models import ApplyForStudent, Account, Organization, Session, Advertisement
 from .forms import SignUp ,OTPForm, StudentRegister, SignIn, StudentSignIn, CompleteSetup
 import random
 from django.contrib.auth import login,logout
@@ -180,14 +180,19 @@ def complete_setup(request):
             user.phone = phone
             user.bio1 = bio
             user.bio2 = address
-            delete_img = request.POST['profile_pic-clear']
+            try:
+                delete_img = request.POST['profile_pic-clear']
+            except:
+                delete_img=False
             if delete_img:
-                user.profile_pic='default.png'
+                user.profile_pic='org_default.png'
             if profile != '404':
                 user.profile_pic = profile
             user.save()
+            if type:
+                return redirect('/dashboard')
 
-            return redirect('/advertisement',permanent=True)
+            return redirect('/',permanent=True)
         user = Account.objects.get(username=request.user)
         profile_pic = user.profile_pic
         if type:
@@ -269,6 +274,19 @@ def signout(request):
 def advertisement(request):
     context = {}
     return render(request, 'custom_user/advertisement.html', context=context)
+
+
+def base_ad(request,id):
+    user_temp = Account.objects.filter(id=id)
+    if len(user_temp) == 0 or user_temp[0].is_organization == False:
+        return HttpResponse('bad url')
+    adtm=''
+    banners = Advertisement.objects.filter(account=user_temp[0])
+    rooms = Room.objects.filter(organization=user_temp[0].organization, deleted=False)
+    context = {'organization': user_temp[0].first_name, 'bio1': user_temp[0].bio1, 'bio2': user_temp[0].bio2,
+               'admission_tag': adtm, 'rooms': rooms, 'email':user_temp[0].email, 'phone':user_temp[0].phone, 'banners':banners}
+    return render(request, 'ad_base.html', context=context)
+
 
 def testing(request):
     student = STUDENT_APPLICATION

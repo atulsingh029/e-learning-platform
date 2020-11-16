@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Account,Room,ApplyForStudent, Student, Teacher, Organization
+from .models import Account,Room,ApplyForStudent, Student, Teacher, Organization, Advertisement
 
 
 @admin.register(Account)
@@ -41,3 +41,8 @@ class CAStudent(admin.ModelAdmin):
 @admin.register(Teacher)
 class CATeacher(admin.ModelAdmin):
     list_display = ('user','id')
+
+
+@admin.register(Advertisement)
+class CAAdvertisement(admin.ModelAdmin):
+    list_display = ('account','title')

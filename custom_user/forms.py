@@ -8,7 +8,7 @@ class SignIn(forms.Form):
 
 class StudentSignIn(forms.Form):
     username = forms.CharField(max_length=255, required=True, label='Username')
-    password = forms.CharField(max_length=512, required=True, label='Password')
+    password = forms.CharField(max_length=512, required=True, label='Password', widget=forms.PasswordInput)
 
 
 class SignUp(forms.Form):

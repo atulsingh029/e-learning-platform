@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from elibrary.models import Library
 from management.views import *
 from custom_user.models import Account, Room, Organization
-from management.models import Course, Lecture, CourseResource, LectureResource
+from management.models import Course, Lecture, CourseResource
 
 
 
@@ -55,6 +55,7 @@ def search(request):
                 students = Student.objects.filter(user__first_name__contains=first_name, user__last_name__contains=last_name, from_organization=user.organization)
                 teachers = TeacherSerializer(teachers, many=True)
                 students = StudentSerializer(students, many=True)
+                print(students.data)
                 return Response({"teacher": teachers.data, "student": students.data})
 
 
@@ -262,11 +263,11 @@ def remove_student_from_current_room(request,id):
 def change_student_room(request):
     user = request.user
     u = Account.objects.get(username=user)
-    s_id = request.POST['student_id']
+    s_id = request.data['student_id']
     getacc = Account.objects.get(id=s_id)
-    r_id = request.POST['room_id']
-    if user.is_authenticated and u.is_organization and getacc.student.from_room.organization == u.organization:
-        response = changestudentroom(student_id=s_id,room_id=r_id)
+    r_id = request.data['room_id']
+    if user.is_authenticated and u.is_organization and getacc.student.from_organization == u.organization:
+        response = changestudentroom(student_id=s_id, room_id=r_id)
         return Response({"room_id": response})
     else:
         return Response({'status': 'not allowed'})
@@ -326,24 +327,6 @@ def list_all_teachers(request):
         return Response({"status": "forbidden"})
 
 
-@api_view(['GET'])
-def get_lecture_resource(request,id):
-    if request.user.is_authenticated:
-        user = Account.objects.get(username=request.user)
-        if user.is_organization or user.is_teacher:
-            l_r_f = LectureResource.objects.filter(id=id)
-            if len(l_r_f) != 0 and l_r_f[0].for_lecture.for_course.for_organization == user.organization.account:
-                l_r = l_r_f[0]
-                response = LectureResourceSerializer(l_r)
-                return Response(response.data)
-            else:
-                return Response({"status": "no such id"})
-        else:
-            return Response({"status": "forbidden"})
-    else:
-        return Response({"status": "you are not authenticated"})
-
-
 @api_view(['POST'])
 def add_lecture(request):
     if request.user.is_authenticated:
@@ -374,21 +357,6 @@ def add_resource(request):
 
 
 @api_view(['POST'])
-def add_lecture_resource(request):
-    if request.user.is_authenticated:
-        user = Account.objects.get(username=request.user)
-        if user.is_organization or user.is_teacher:
-            data = request.data
-            file = request.FILES
-            response = addlectureresource(user, data, file)
-            return Response({"status": response})
-        else:
-            return Response({"status": "forbidden"})
-    else:
-        return Response({"status": "you are not authenticated"})
-
-
-@api_view(['POST'])
 def edit_lecture(request):
     if request.user.is_authenticated:
         user = Account.objects.get(username=request.user)
@@ -410,21 +378,6 @@ def edit_resource(request):
             data = request.data
             file = request.FILES
             response = editresource(user, data, file)
-            return Response({"status": response})
-        else:
-            return Response({"status": "forbidden"})
-    else:
-        return Response({"status": "you are not authenticated"})
-
-
-@api_view(['POST'])
-def edit_lecture_resource(request):
-    if request.user.is_authenticated:
-        user = Account.objects.get(username=request.user)
-        if user.is_organization or user.is_teacher:
-            data = request.data
-            file = request.FILES
-            response = editlectureresource(user, data, file)
             return Response({"status": response})
         else:
             return Response({"status": "forbidden"})
@@ -463,27 +416,6 @@ def delete_resource(request,id):
                 r = r_f[0]
                 if r.for_course.for_organization == user.organization.account:
                     r.delete()
-                    return Response({"status": "success"})
-                else:
-                    return Response({"status": "forbidden"})
-            else:
-                return Response({"status": "no such id"})
-        else:
-            return Response({"status": "forbidden"})
-    else:
-        return Response({"status": "you are not authenticated"})
-
-
-@api_view(['GET'])
-def delete_lecture_resource(request,id):
-    if request.user.is_authenticated:
-        user = Account.objects.get(username=request.user)
-        if user.is_organization or user.is_teacher:
-            l_r_f = LectureResource.objects.filter(id=id)
-            if len(l_r_f) != 0:
-                l_r = l_r_f[0]
-                if l_r.for_lecture.for_course.for_organization == user.organization.account:
-                    l_r.delete()
                     return Response({"status": "success"})
                 else:
                     return Response({"status": "forbidden"})

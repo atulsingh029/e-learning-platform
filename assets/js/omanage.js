@@ -1,5 +1,10 @@
 const csrftoken = $("[name=csrfmiddlewaretoken]").val();
-
+let roomslist;
+function update_room(){
+    $.ajax({type:'GET',url:'/api/listallrooms/',contentType:'application/json',success:function (data){
+                        roomslist=data;
+                    }});
+}
 function all_c() {
     return $.ajax({
         type: 'GET',
@@ -10,6 +15,7 @@ function all_c() {
         }
     });
 }
+update_room();
 all_c();
 let allcourses;
 function handleData1(data) {
@@ -52,11 +58,55 @@ function search() {
                 success: function (data) {
                     let teacher = data.teacher;
                     let student = data.student;
-                    let final = teacher.concat(student);
                     let val = `
                 <div class="row row-cols-1 row-cols-md-3">
                 
-                ${final.map(function (obj) {
+                ${student.map(function (obj) {
+                    return `
+                    <style>
+                        .card-img{
+                            border-radius: 100%;
+                            align-items: center;
+                            background-repeat: no-repeat;
+                            background-position: 50% 50%;
+                            background-size: cover;
+                            height: 100px;
+                            width: 100px;
+                        }
+                        .name{
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            line-height: 16px;
+                            max-height: 32px;
+                        }
+                    
+                    </style>
+                    <div class="card m-2 border-dark rounded" style='max-width: 20em;min-width: 20em;max-height: 16em;min-height: 16em;'>
+                        <div class="row">
+                            <div class="col-4">
+                                 <img src="${obj.user.profile_pic}" alt="profile_pic" class="card-img p-1">
+                            </div>
+                        <div class="col-8 pt-2">
+                            <h6 class="pr-2 name text-capitalize">${obj.user.first_name} ${obj.user.last_name}</h6>
+                            <h6 class="text-info">@${obj.user.username}</h6>
+                            <h6 class="text-info">Student</h6>
+                        </div>
+                        </div>
+                        <div class="card-body">
+                          <h6 class="text-center">${obj.from_room.title} <span style="color: #1e7e34"> : ${obj.from_room.room_stream_details}</span></h6>
+                          <hr>
+                          <h6 class=""><i class = "material-icons vertical-align-middle padding-bottom-3">call</i> ${obj.user.phone}</h6>
+                          <h6 class="light name"><i class = "material-icons vertical-align-middle padding-bottom-3" >message</i> ${obj.user.email}</h6>
+                        </div>    
+                    </div>
+                    `;
+                }).join('')}
+                </div>`;
+
+                let val2 = `
+                <div class="row row-cols-1 row-cols-md-3">
+                
+                ${teacher.map(function (obj) {
                     return `
                     <style>
                         .card-img{
@@ -83,11 +133,11 @@ function search() {
                             </div>
                         <div class="col-8 pt-2">
                             <h6 class="pr-2 name text-capitalize">${obj.user.first_name} ${obj.user.last_name}</h6>
-                            <h6 class="text-info">Designation</h6>
+                            <h6 class="text-info">@${obj.user.username}</h6>
+                            <h6 class="text-info">Teacher</h6>
                         </div>
                         </div>
                         <div class="card-body">
-                          <h6 class="text-center">Room</h6>
                           <hr>
                           <h6 class=""><i class = "material-icons vertical-align-middle padding-bottom-3">call</i> ${obj.user.phone}</h6>
                           <h6 class="light name"><i class = "material-icons vertical-align-middle padding-bottom-3" >message</i> ${obj.user.email}</h6>
@@ -96,6 +146,7 @@ function search() {
                     `;
                 }).join('')}
                 </div>`;
+                 val = val+val2;
                 area.innerHTML=val;
                 }
             }
@@ -224,6 +275,7 @@ function addroom(form_id) {
             success: function () {
                 $("#close_modal").click();
                 listallrooms();
+                update_room();
             }
         }
     );
@@ -790,7 +842,7 @@ function listallstudents() {
             <table class="table table-striped">
                 <thead class="text-light">
                     <tr class="text-center">
-                        <th>username</th>
+                        <th>Username</th>
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Email</th>
@@ -807,7 +859,10 @@ function listallstudents() {
                 <td>${obj.phone}</td>
                 <td>${obj.email}</td>
                 <td>${obj.room}</td>
-                <td>action</td>
+                <td><select name="rooms" id="rooms" onchange="change_room(this, '${obj.id}')">
+                        <option>select to change</option>
+                          ${roomslist.map(function (o){return `<option value="${o.id}">${o.title}</option>`})}
+                        </select></td>
             </tr>`;
                 }).join('')}
             </tbody>`;
@@ -819,6 +874,21 @@ function listallstudents() {
         }
     );
 
+}
+
+function change_room(selectObject,s_id){
+    var value = selectObject.value;
+    $.ajax({
+        type : 'POST',
+        url : '/api/changestudentroom/',
+        contentType: 'application/json',
+        data: JSON.stringify({'student_id':s_id, 'room_id':value}),
+        headers: { "X-CSRFToken": csrftoken },
+        success:function (data){
+            listallstudents();
+            alert('Room changed status : '+data.room_id);
+        }
+    })
 }
 
 /*completed*/
@@ -862,11 +932,11 @@ function listallteachers() {
             <table class="table table-striped">
                 <thead class="text-light">
                     <tr class="text-center">
-                        <th >Username</th>
+                        <th>Username</th>
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Email</th>
-                        <th>Action</th>
+                       <th>Action</th> 
                     </tr>
                 </thead>
                 <tbody>
@@ -885,10 +955,17 @@ function listallteachers() {
                 let element = document.getElementById('canvas');
                 element.innerHTML = val;
             }
-
-
         }
     );
 
 
+}
+
+
+function timetablems(){
+    var area = document.getElementById("canvas");
+    let initial = `
+    <h1>this is testing</h1>
+    `;
+    area.innerHTML=initial;
 }

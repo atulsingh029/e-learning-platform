@@ -37,14 +37,6 @@ class Lecture(models.Model):
         return self.l_name
 
 
-class LectureResource(models.Model):
-    lr_name = models.CharField(max_length=512)
-    lr_description = models.CharField(max_length=1024)
-    for_lecture = models.ForeignKey(Lecture,on_delete=models.CASCADE)
-    lr_url = models.URLField(blank=True, null=True)
-    file = models.FileField(blank=True, null=True,upload_to='lecture_resource')
-
-
 class CourseResource(models.Model):
     cr_name = models.CharField(max_length=512)
     cr_description = models.CharField(max_length=1024)
@@ -53,16 +45,35 @@ class CourseResource(models.Model):
     file = models.FileField(blank=True, null=True, upload_to='course_resource')
 
 
+class Assignment(models.Model):
+    name = models.CharField(max_length=512)
+    description = models.CharField(max_length=1024)
+    for_course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    url = models.URLField(blank=True, null=True)
+    deadline = models.DateTimeField(null=True, blank=True)
+    max_marks = models.IntegerField(null=True, blank=True)
+    problem = models.FileField(blank=True, null=True, upload_to='assignment/problem')
+
+
+class Solution(models.Model):
+    uploader = models.ForeignKey(Account, on_delete=models.CASCADE)
+    solution_to = models.ForeignKey(Assignment, on_delete=models.SET_NULL, null=True, blank=True)
+    solution = models.FileField(upload_to='assignment/solution')
+    marks = models.IntegerField(null=True, blank=True)
+    remarks = models.CharField(max_length=512, null=True, blank=True)
+
+
 class Slot(models.Model):
-    info = models.CharField(max_length=1000, null=True, blank=True)
     date = models.DateField(null=True,blank=True)
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+    day = models.CharField(max_length=100, choices=(('monday', 'monday'), ('tuesday', 'tuesday'),('wednesday', 'wednesday'), ('thursday', 'thursday'), ('friday', 'friday'), ('saturday', 'saturday'),('sunday', 'sunday')))
     session_id = models.CharField(max_length=500, null=True, blank=True)
 
 
 class TimeTable(models.Model):
     room = models.OneToOneField(Room, on_delete=models.CASCADE, null=True, blank=True)
-    slot = models.ManyToManyField(Slot, null=True, blank=True)
+    slot = models.ManyToManyField(Slot)
     status = models.CharField(max_length=100, choices=(('enable', 'enable'), ('disable', 'disable')))
+

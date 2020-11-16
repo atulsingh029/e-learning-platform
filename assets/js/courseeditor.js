@@ -1,3 +1,33 @@
+/*modal construction */
+/*
+modal_1 + {id} + modal_2 + {form} + modal_3
+*/
+
+
+
+
+
+let  modal_1 = `
+<!-- Modal -->
+<div class="modal fade" id="`;
+
+
+let  modal_2 =`" tabindex="-1" role="dialog" aria-labelledby="editor_modal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">`;
+let modal_3 = `
+      </div>
+    </div>
+  </div>
+</div>`
+;
+
 function opencourse(c_id) {
     $.ajax({
         type: 'GET',
@@ -27,7 +57,32 @@ function opencourse(c_id) {
                 </style>
                 <div id="course_editor">
                 <div class="btn-group m-2" role="group">
-                <button type="button" class="btn btn-success" onclick="addlecture(${c_id})">Add Lecture</button>
+                
+                ${modal_1}add_lecture${modal_2}
+                    <form enctype="multipart/form-data" action="/api/addlecture/" id="add_lecture_form">
+                        <input type="hidden" value="${c_id}">
+                        
+                        <label for="exampleFormControlInput1">Lecture Number</label>
+                        <input type="number" required class="form-control" id="exampleFormControlInput1">
+                      
+                      <div class="form-group">
+                        <label for="name">Lecture Name</label>
+                        <input type="text" required class="form-control" id="name">
+                      </div>
+                      <div class="form-group">
+                        <label for="video">Video</label>
+                        <input type="file" required class="form-control" id="video">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Lecture Description</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                      </div>
+                      <button type="button" onclick="addlecture()" class="btn btn-sm btn-primary">save</button>
+                    </form>
+                ${modal_3}
+                
+                
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_lecture">Add Lecture</button>
                 <button type="button" class="btn btn-success" onclick="addresource(${c_id})">Add Course Resource</button>
                 </div>
                 </div>
@@ -90,6 +145,10 @@ function opencourse(c_id) {
                       border: none;
                     }
                     </style>
+                    
+                    
+                    
+                    
                     <div class="contain mt-2 mb-2">
                          <video id = "videoframe" class="responsive-iframe" controls autoplay> <source src="${firstlecture[0].video}" type="video/mp4"> </source> </video>
                     </div>
@@ -144,13 +203,38 @@ function loadlecture(l, description, id) {
 }
 
 
-function addlecture(c_id){
 
+
+function addlecture(){
+    var add = $('#add_lecture_form').serialize();
+    console.log(add);
+    let data = $("#video");
+    var file = data[0].files[0];
+    let formData = new FormData();
+    formData.append("video", file);
+    formData.append("title", l_name);
+    formData.append("description", l_des);
+    formData.append("number", l_num);
+    formData.append("c_id", c_id);
+    document.getElementById("add_lecture_form").reset();
+    /*$.ajax(
+        {
+            type: 'POST',
+            url: '/api/addlecture/',
+            contentType: false,
+            processData: false,
+            data: formData,
+            headers: { "x-csrftoken": csrftoken },
+            success: function (data) {
+                alert('added');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        }
+    );*/
 }
 
-function submitaddlecture(c_id){
-
-}
 
 function addresource(c_id){
 

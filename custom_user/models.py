@@ -12,7 +12,7 @@ class Account(AbstractUser):
     url = models.URLField(null=True, blank=True)
     dob = models.DateField(null=True, blank=True)
     address = models.CharField(max_length=1024, null=True, blank=True)
-    profile_pic = models.ImageField(null=True, blank=True,upload_to='profile_pictures')
+    profile_pic = models.ImageField(null=True, blank=True,upload_to='profile_pictures', default='def_user.png')
     phone = models.IntegerField(null=True,blank=True)
     is_organization = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
@@ -74,3 +74,12 @@ class ApplyForStudent(models.Model):
 class Session(models.Model):
     user = models.ForeignKey(Account,on_delete=models.CASCADE)
     session_key = models.CharField(max_length=50)
+
+
+class Advertisement(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    banner = models.ImageField(upload_to='banner/', null=True, blank=True)
+    description = models.CharField(max_length=200, null=True,blank=True)
+    adtg = models.CharField(max_length=100, null=True,blank=True)
+    active = models.CharField(max_length=200, choices=[('active','active'),], null=True, blank=True)

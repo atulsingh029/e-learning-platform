@@ -12,11 +12,6 @@ class CALecture(admin.ModelAdmin):
     list_display = ('for_course', 'l_number', 'l_name', 'video')
 
 
-@admin.register(LectureResource)
-class CALectureResource(admin.ModelAdmin):
-    list_display = ('lr_name', 'lr_description', 'for_lecture', 'lr_url')
-
-
 @admin.register(CourseResource)
 class CACourseResource(admin.ModelAdmin):
     list_display = ('cr_name', 'cr_description', 'for_course', 'cr_url')
@@ -33,3 +28,13 @@ admin.site.register(Slot)
 @admin.register(TimeTable)
 class CATimeTable(admin.ModelAdmin):
     list_display = ('room',)
+
+
+@admin.register(Assignment)
+class CAAssignment(admin.ModelAdmin):
+    list_display = ('name', 'for_course', 'deadline')
+
+
+@admin.register(Solution)
+class CASolution(admin.ModelAdmin):
+    list_display = ('uploader', 'solution_to')

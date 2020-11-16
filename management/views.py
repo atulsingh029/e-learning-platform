@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from custom_user.models import Room, ApplyForStudent, Student, Account, Teacher, Organization
-from management.models import Course, Lecture, CourseResource, LectureResource, DashOption, TimeTable
+from management.models import Course, Lecture, CourseResource, DashOption, TimeTable
 from api.serializers import *
 from .manager import *
 import random
@@ -27,6 +27,7 @@ def dashboard(request):
                                {'link': '#', 'method': 'listapplications()', 'label': 'Applications',
                                 'icon': 'group_add'},
                                 {'link':'#','method':'listallrooms()','label':'Rooms', 'icon':'class'},
+                                {'link': '#', 'method': 'timetablems()', 'label': 'TimeTable', 'icon': 'view_module'},
                                 {'link': '#', 'method': 'listallcourses()', 'label': 'Courses', 'icon': 'school'},
                                 {'link': '#', 'method': 'listallteachers()', 'label': 'Teachers', 'icon': 'recent_actors'},
                                 {'link': '#', 'method': 'listallstudents()', 'label': 'Students', 'icon': 'groups'},
@@ -37,7 +38,7 @@ def dashboard(request):
             options_available = DashOption.objects.filter(account=user)
             extra_options = DashOptionSerializer(options_available,many=True).data
             options_available = default_options+extra_options
-            nav_btns = [{'link':'/signout', 'label':'Sign Out'},{'link':'/settings', 'label':'Settings'}]
+            nav_btns = [{'link':'/signout', 'label':'Sign Out'},]
 
             context = {
                 'pagetitle': 'PrimeStudies : Dashboard',
@@ -63,7 +64,7 @@ def dashboard(request):
             options_available = DashOption.objects.filter(account=user)
             extra_options = DashOptionSerializer(options_available, many=True).data
             options_available = default_options + extra_options
-            nav_btns = [{'link': '/signout', 'label': 'Sign Out'}, {'link': '/settings', 'label': 'Settings'}]
+            nav_btns = [{'link': '/signout', 'label': 'Sign Out'},]
             org = user.student.from_organization.account
             context = {
                 'pagetitle': 'PrimeStudies : Dashboard',
@@ -91,7 +92,7 @@ def dashboard(request):
             options_available = DashOption.objects.filter(account=user)
             extra_options = DashOptionSerializer(options_available, many=True).data
             options_available = default_options + extra_options
-            nav_btns = [{'link': '/signout', 'label': 'Sign Out'}, {'link': '/settings', 'label': 'Settings'}]
+            nav_btns = [{'link': '/signout', 'label': 'Sign Out'},]
 
             context = {
                 'pagetitle': 'PrimeStudies : Dashboard',
@@ -414,19 +415,11 @@ def opencourse(c):  # takes course object and returns all the resources and lect
     return final_list
 
 
-def addlectureresource(user,data,file):
-    return data
-
-
 def addresource(user,data,file):
     return data
 
 
 def addlecture(user,data):
-    return data
-
-
-def editlectureresource(user,data,file):
     return data
 
 
