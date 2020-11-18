@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <title>Elibrary</title>
+</head>
+<style>
+  @media (max-width: 768px) {
+    .first-slide .carousel-inner .carousel-item>div {
+      display: none;
+    }
+
+    .first-slide .carousel-inner .carousel-item>div:first-child {
+      display: block;
+    }
+  }
+
+  .first-slide .carousel-inner .carousel-item.active,
+  .first-slide .carousel-inner .carousel-item-next,
+  .first-slide .carousel-inner .carousel-item-prev {
+    display: flex;
+  }
+
+  display 3 @media (min-width: 768px) {
+
+    .first-slide .carousel-inner .carousel-item-right.active,
+    .first-slide .carousel-inner .carousel-item-next {
+      transform: translateX(50%);
+    }
+
+    .first-slide .carousel-inner .carousel-item-left.active,
+    .first-slide .carousel-inner .carousel-item-prev {
+      transform: translateX(-50%);
+    }
+  }
+
+  .first-slide .carousel-inner .carousel-item-right,
+  .first-slide .carousel-inner .carousel-item-left {
+    transform: translateX(0);
+  }
+
+
+  @media (max-width: 768px) {
+    .second-slide .carousel-inner .carousel-item>div {
+      display: none;
+    }
+
+    .second-slide .carousel-inner .carousel-item>div:first-child {
+      display: block;
+    }
+  }
+
+  .second-slide .carousel-inner .carousel-item.active,
+  .second-slide .carousel-inner .carousel-item-next,
+  .second-slide .carousel-inner .carousel-item-prev {
+    display: flex;
+  }
+
+  /* medium - display 4  */
+  @media (min-width: 768px) {
+
+    .second-slide .carousel-inner .carousel-item-right.active,
+    .second-slide .carousel-inner .carousel-item-next {
+      transform: translateX(50%);
+    }
+
+    .second-slide .carousel-inner .carousel-item-left.active,
+    .second-slide .carousel-inner .carousel-item-prev {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* large - display 6 */
+  @media (min-width: 992px) {
+
+    .second-slide .carousel-inner .carousel-item-right.active,
+    .second-slide .carousel-inner .carousel-item-next {
+      transform: translateX(50%);
+    }
+
+    .second-slide .carousel-inner .carousel-item-left.active,
+    .second-slide .carousel-inner .carousel-item-prev {
+      transform: translateX(-50%);
+    }
+  }
+
+  .second-slide .carousel-inner .carousel-item-right,
+  .second-slide .carousel-inner .carousel-item-left {
+    transform: translateX(0);
+  }
+
+  .second-slide .movie-img {
+    height: 200px;
+    width: 150px;
+    background-color: aqua;
+    overflow: hidden;
+    background-image: url("https://i.hizliresim.com/mX07R4.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: fill;
+  }
+
+  .second-slide .movie-title {
+    height: 40px;
+    width: 150px;
+    background-color: black;
+    overflow: hidden;
+  }
+
+
+
+  .first-image {
+    height: 200px;
+    width: 180px;
+    border-radius: 50%;
+  }
+
+  .first-card {
+    height: 280px;
+    width: 300px;
+  }
+</style>
+
+<body>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" href="#prime-library">Prime Library</a>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+        aria-expanded="false">Books</a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="#science">Science</a>
+        <a class="dropdown-item" href="#commerce">Commerce</a>
+        <a class="dropdown-item" href="#arts">Arts</a>
+        <a class="dropdown-item" href="#biographies">Biographies</a>
+        <a class="dropdown-item" href="#magazine">Magazine</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#comics">Comics</a>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">About</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Home</a>
+    </li>
+  </ul>
+
+
+  <div class="collapse" id="collapseExample">
+    <div class="card card-body">
+      Welcome to PRIME LIBRARY.
+      <br>
+      This is PRIME LIBRARY i.e. the official elibrary of prime studies. There are many books that provide knowledge and entertainment.
+    </div>
+  </div>
+
+
+
+  <div class="first-slide">
+    <div class="container text-center my-3">
+      <h1 id="prime-library" class="font-weight-light mb-5 text-info display-4">|| Prime Library ||</h1>
+      <div class="row mx-auto my-auto py-auto">
+        <div id="recipeCarousel" class="carousel slide w-100" data-ride="carousel" data-interval="false">
+          <div class="carousel-inner w-100" role="listbox">
+            <div class="carousel-item active">
+              <div class="col-md-4">
+                <div class="card card-body first-card">
+                  <a href="#science"><img class="img-fluid first-image" src="imgs/science.jpg"></a>
+                  <h3>Science</h3>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-md-4">
+                <div class="card card-body first-card">
+                  <a href="#commerce"><img class="img-fluid first-image" src="imgs/commerce.jpg"></a>
+                  <h3>Commerce</h3>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-md-4">
+                <div class="card card-body first-card">
+                  <a href="#arts"><img class="img-fluid first-image" src="imgs/arts111.jpg"></a>
+                  <h3>Arts</h3>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-md-4">
+                <div class="card card-body first-card">
+                  <a href="#biographies"><img class="img-fluid first-image" src="imgs/biographies.png"></a>
+                  <h3>Biographies</h3>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-md-4">
+                <div class="card card-body first-card">
+                  <a href="#magazine"><img class="img-fluid first-image" src="imgs/magazine11.jpg"></a>
+                  <h3>Magazine</h3>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-md-4">
+                <div class="card card-body first-card">
+                  <a href="#comics"><img class="img-fluid first-image" src="imgs/comics111.jpg"></a>
+                  <h3>Comics</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev w-auto" href="#recipeCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon bg-dark border border-dark rounded-circle"
+              aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next w-auto" href="#recipeCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon bg-dark border border-dark rounded-circle"
+              aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<hr style="border: 10px solid grey;">
+
+  <div id="science" class="second-slide">
+    <div class="container text-center my-3">
+      <h1 class="font-weight-light display-4 p-3 m-3 text-primary">Science</h1>
+      <hr style="border:5px groove grey">
+      <div class="row mx-auto my-auto">
+        <div id="Carousel1" class="carousel slide w-100" data-ride="carousel">
+          <div class="carousel-inner w-100 " role="listbox">
+            <div class="carousel-item active">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/sci1.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="https://en.wikipedia.org/wiki/Cosmos_(Sagan_book)">
+                      <p class="text-white text-sm-center font-small flex-center">CARL SAGAN</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/sci2.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="https://en.wikipedia.org/wiki/Stephen_Hawking">
+                      <p class="text-white text-sm-center font-small flex-center">STEPHEN HAWKING</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/sci3.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="http://www.open.ac.uk/people/sr2247">
+                      <p class="text-white text-sm-center font-small flex-center">Silvia De Renzi</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/sci4.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">SCHONINGH AND FINK</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/sci5.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="https://en.wikipedia.org/wiki/William_E._Burrows">
+                      <p class="text-white text-sm-center font-small flex-center">William E. Burrows</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/sci6.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="https://www.researchgate.net/scientific-contributions/Andrej-Kuznetsov-2152819472">
+                      <p class="text-white text-sm-center font-small flex-center">Andrej Kuznetsov</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev w-auto" href="#Carousel1" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next w-auto" href="#Carousel1" role="button" data-slide="next">
+            <span class="carousel-control-next-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="m-5 bg-info text-info" style="border: 5px solid;">
+
+
+
+  
+
+
+  <div id="commerce" class="second-slide">
+    <div class="container text-center my-3">
+      <h1 class="font-weight-light display-4 p-3 m-3 text-primary">Commerce</h1>
+      <hr style="border:5px groove grey">
+      <div class="row mx-auto my-auto">
+        <div id="Carousel2" class="carousel slide w-100" data-ride="carousel">
+          <div class="carousel-inner w-100 " role="listbox">
+            <div class="carousel-item active">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/commerce1.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">William J. Bernstein</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/commerce2.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Paul Hawken</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/commerce3.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Paco Underhill</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/commerce4.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">D.K. Goel</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/commerce5.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center"> Marsha Collier</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/commerce6.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Timothy Ferriss</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev w-auto" href="#Carousel2" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next w-auto" href="#Carousel2" role="button" data-slide="next">
+            <span class="carousel-control-next-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="m-5 bg-info text-info" style="border: 5px solid;">
+
+
+
+  
+
+
+  <div id="arts" class="second-slide">
+    <div class="container text-center my-3">
+      <h1 class="font-weight-light display-4 p-3 m-3 text-primary">Arts</h1>
+      <hr style="border:5px groove grey">
+      <div class="row mx-auto my-auto">
+        <div id="Carousel3" class="carousel slide w-100" data-ride="carousel">
+          <div class="carousel-inner w-100 " role="listbox">
+            <div class="carousel-item active">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/arts1 histrory1.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Susan Wise Bauer</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/arts2 hisstroy2.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Thomas Asbridge</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/arts3.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Steven D. Levitt and Stephen J. Dubner</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/arts4.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">ERIC WEINER</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/arts5.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">TIM MARSHALL</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/arts6.jpeg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Robert E. Goodin, Hans-Dieter Klingemann</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev w-auto" href="#Carousel3" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next w-auto" href="#Carousel3" role="button" data-slide="next">
+            <span class="carousel-control-next-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="m-5 bg-info text-info" style="border: 5px solid;">
+
+
+
+  
+
+
+  <div id="biographies" class="second-slide">
+    <div class="container text-center my-3">
+      <h1 class="font-weight-light display-4 p-3 m-3 text-primary">Biographies</h1>
+      <hr style="border:5px groove grey">
+      <div class="row mx-auto my-auto">
+        <div id="Carousel4" class="carousel slide w-100" data-ride="carousel">
+          <div class="carousel-inner w-100 " role="listbox">
+            <div class="carousel-item active">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/biography1.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Walter Isaacson</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/biography2.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center"> Ashlee Vance </p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/biography3.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Walter Isaacson</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/biography4.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Jon Krakauer</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/biography5.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Walter Isaacson </p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/biography6.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center"> Stacy Schiff </p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev w-auto" href="#Carousel4" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next w-auto" href="#Carousel4" role="button" data-slide="next">
+            <span class="carousel-control-next-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="m-5 bg-info text-info" style="border: 5px solid;">
+
+
+
+  
+
+
+  <div id="magazine" class="second-slide">
+    <div class="container text-center my-3">
+      <h1 class="font-weight-light display-4 p-3 m-3 text-primary">Magazine</h1>
+      <hr style="border:5px groove grey">
+      <div class="row mx-auto my-auto">
+        <div id="Carousel5" class="carousel slide w-100" data-ride="carousel">
+          <div class="carousel-inner w-100 " role="listbox">
+            <div class="carousel-item active">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/magazine1.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Creative Nonfiction</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/magazine2.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">GUERNICA</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/magazine3.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Bookmarks Magazine</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/magazine4.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Poets & Writers</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/magazine5.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">Glimmer Train</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/magazine6.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">BOOKLIST</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev w-auto" href="#Carousel5" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next w-auto" href="#Carousel5" role="button" data-slide="next">
+            <span class="carousel-control-next-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="m-5 bg-info text-info" style="border: 5px solid;">
+
+
+
+  
+
+
+  <div id="comics" class="second-slide">
+    <div class="container text-center my-3">
+      <h1 class="font-weight-light display-4 p-3 m-3 text-primary">Comics</h1>
+      <hr style="border:5px groove grey">
+      <div class="row mx-auto my-auto">
+        <div id="Carousel6" class="carousel slide w-100" data-ride="carousel">
+          <div class="carousel-inner w-100 " role="listbox">
+            <div class="carousel-item active">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/comics1.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">THE PLANETRY OMNIBUS</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/comics2.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">SANDMAN</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/comics3.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">BATMAN</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/comics8.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">THE SUPERIOR SPIDERMAN</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/comics6.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">GOTHAM CENTRAL</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-lg-2 col-md-6">
+
+                <div class="movie-card m-1">
+                  <div class="movie-img">
+                    <a href="#"><img
+                        src="imgs/comics11.jpg"
+                        class="img-fluid"></a>
+                  </div>
+                  <div class="movie-title">
+                    <a href="#">
+                      <p class="text-white text-sm-center font-small flex-center">WATCHMEN</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev w-auto" href="#Carousel6" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next w-auto" href="#Carousel6" role="button" data-slide="next">
+            <span class="carousel-control-next-icon bg-info border border-dark rounded-square"
+              aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="m-5 bg-info text-info" style="border: 5px solid;">
+
+
+
+  
+
+
+
+  
+
+  
+
+
+
+</body>
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+  integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+  integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+
+<script>
+ $('#recipeCarousel').carousel({
+          interval: false
+        
+        })
+        
+        $('.carousel .carousel-item').each(function(){
+            var minPerSlide = 3;
+            var next = $(this).next();
+            if (!next.length) {
+            next = $(this).siblings(':first');
+            }
+            next.children(':first-child').clone().appendTo($(this));
+            
+            for (var i=0;i<minPerSlide;i++) {
+                next=next.next();
+                if (!next.length) {
+                  next = $(this).siblings(':first');
+                }
+                
+                next.children(':first-child').clone().appendTo($(this));
+              }
+        });
+</script>
+
+<script>
+  $('.second-slide .carousel').carousel({
+    interval: false
+  })
+
+  $('.second-slide .carousel .carousel-item').each(function () {
+    var minPerSlide = 4;
+    var next = $(this).next();
+    if (!next.length) {
+      next = $(this).siblings(':first');
+    }
+    next.children(':first-child').clone().appendTo($(this));
+
+    for (var i = 0; i < minPerSlide; i++) {
+      next = next.next();
+      if (!next.length) {
+        next = $(this).siblings(':first');
+      }
+
+      next.children(':first-child').clone().appendTo($(this));
+    }
+  });
+
+</script>
+
+</html>
