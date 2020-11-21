@@ -129,3 +129,84 @@ def slot_generator(start, end, size):
 
             strtime.append(str(starthr) + ':' + str(startmin))
             slots.append(strtime)
+
+
+    # when newstarthr is (12:00 pm)
+    elif (newstarthr == 12 and newendhr != 12):
+
+        # converting the hour and minute into total minutes
+        totalMin = ((endhr - newstarthr) * 60) + (endmin - newstartmin)
+
+        sizehr = int(size[0:2])
+        sizemin = int(size[3:5])
+        totalsizemin = (sizehr * 60) + sizemin
+
+        hr = int(totalMin / totalsizemin)
+        slots = []
+
+        for i in range(1, hr + 1, 1):
+
+            strtime = []
+            strtime.append('slot' + str(i))
+
+            newstarthr = (newstarthr) % 12
+            if (newstarthr == 0):
+                newstarthr = 12
+
+            strtime.append(str(newstarthr) + ':' + str(newstartmin))
+
+            hhr, mmin = divmod(totalsizemin, 60)
+            newstarthr = (newstarthr + hhr)
+            totalmincal = newstartmin + mmin
+            addhr, totalmin = divmod(totalmincal, 60)
+            newstartmin = totalmin
+            newstarthr = (newstarthr + addhr) % 12
+
+            newstarthr = (newstarthr) % 12
+            if (newstarthr == 0):
+                newstarthr = 12
+
+            strtime.append(str(newstarthr) + ':' + str(newstartmin))
+            slots.append(strtime)
+
+
+    # when newendhr is (12:00 pm)
+    elif (newendhr == 12 and newstarthr != 12):
+
+        # converting the hour and minute into total minutes
+        totalMin = ((newendhr - starthr) * 60) + (newendmin - startmin)
+
+        sizehr = int(size[0:2])
+        sizemin = int(size[3:5])
+        totalsizemin = (sizehr * 60) + sizemin
+
+        hr = int(totalMin / totalsizemin)
+        slots = []
+
+        for i in range(1, hr + 1, 1):
+
+            strtime = []
+            strtime.append('slot' + str(i))
+
+            starthr = (starthr) % 12
+            if (starthr == 0):
+                starthr = 12
+
+            strtime.append(str(starthr) + ':' + str(startmin))
+
+            hhr, mmin = divmod(totalsizemin, 60)
+            starthr = (starthr + hhr)
+            totalmincal = startmin + mmin
+            addhr, totalmin = divmod(totalmincal, 60)
+            startmin = totalmin
+            starthr = (starthr + addhr) % 12
+
+            starthr = (starthr) % 12
+            if (starthr == 0):
+                starthr = 12
+
+            strtime.append(str(starthr) + ':' + str(startmin))
+            slots.append(strtime)
+
+    return slots
+
