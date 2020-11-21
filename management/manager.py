@@ -43,6 +43,7 @@ def mail(emails, subject, message):
     send_mail(subject,message,'atul.auth@gmail.com',emails,fail_silently=True)
 
 
+
 def slot_generator(start, end, size):
 
     '''
@@ -51,23 +52,80 @@ def slot_generator(start, end, size):
     :param size: size is length of one slot in format hh:mm
     :return: a list of all possible slots
     example :
-    start = 10:00am
-    end = 12:00pm
+    start = 10:00 am
+    end = 12:00 pm
     size = 01:00
     output format : ['slot name', 'start time', 'end time']
     expected output : [['slot1', 10:00, 11:00],['slot2', 11:00, 12:00]]
     explaination : two slots are possible 10 to 11 and 11 to 12
     '''
-    slots = []
-    # start time in 24hr format
-    start_type = start[5:7]
-    end_type = end[5:7]
-    if start_type == 'pm':
-        start_hh = int(start[0:3])+12
-    if end_type == 'pm':
-        end_hh = int(end[0:3])+12
+
+    newstarthr = 00
+    newstartmin = 00
+    newendhr = 00
+    newendmin = 00
+
+    # extracting the hour and minute from given time by using string slicing
+    if (start.find('am') == -1):
+
+        if (start == '12:00 pm'):
+            newstarthr = 12
+            newstartmin = 00
+
+        starthr = int(start[0:2]) + 12
+        startmin = int(start[3:5])
+
+    else:
+        starthr = int(start[0:2])  # for am
+        startmin = int(start[3:5])
+
+    if (end.find('am') == -1):
+
+        if (end == '12:00 pm'):
+            newendhr = 12
+            newendmin = 00
+
+        endhr = int(end[0:2]) + 12
+        endmin = int(end[3:5])
+
+    else:
+        endhr = int(end[0:2])  # for am
+        endmin = int(end[3:5])
 
 
+    if (newstarthr != 12 and newendhr != 12):
 
-    return slots
+        # converting the hour and minute into total minutes
+        totalMin = ((endhr - starthr) * 60) + (endmin - startmin)
 
+        sizehr = int(size[0:2])
+        sizemin = int(size[3:5])
+        totalsizemin = (sizehr * 60) + sizemin
+
+        hr = int(totalMin / totalsizemin)
+        slots = []
+
+        for i in range(1, hr + 1, 1):
+
+            strtime = []
+            strtime.append('slot' + str(i))
+
+            starthr = (starthr) % 12
+            if (starthr == 0):
+                starthr = 12
+
+            strtime.append(str(starthr) + ':' + str(startmin))
+
+            hhr, mmin = divmod(totalsizemin, 60)
+            starthr = (starthr + hhr)
+            totalmincal = startmin + mmin
+            addhr, totalmin = divmod(totalmincal, 60)
+            startmin = totalmin
+            starthr = (starthr + addhr) % 12
+
+            starthr = (starthr) % 12
+            if (starthr == 0):
+                starthr = 12
+
+            strtime.append(str(starthr) + ':' + str(startmin))
+            slots.append(strtime)
