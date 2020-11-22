@@ -6,5 +6,5 @@ urlpatterns = [
     path('lib/', showcase ),
     path('add/', add_book),
     path('edit/', edit_book),
-    path('delete/', delete_book)
+    path('delete/<int:id>', delete_book)
 ]

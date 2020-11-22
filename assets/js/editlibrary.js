@@ -20,6 +20,7 @@ function loadLibraryDashboard(){
                     }
                 });
                 var acad_template = `
+                <div><a href="/elibrary/add/" class="btn btn-sm btn-info">Add Book</a></div><br>
                 <div><h5>ACADEMICS BOOK</h5></div>
                 <div class="row row-cols-1 row-cols-md-3">
                 
@@ -32,7 +33,7 @@ function loadLibraryDashboard(){
                     <div class="card-body">
                        
                     </div>
-                    <div><a href="${o.file}"><span class="material-icons">get_app</span></a></div><h5 class="p-1">${o.title}</h5>
+                    <div><a href="${o.file}"><span class="material-icons">get_app</span></a><a href="#" onclick="delete_book(${o.id})"><span class="material-icons">delete</span></a></div><h5 class="p-1">${o.title}</h5>
                 </div>
                     `;
                 }).join('')}
@@ -53,7 +54,7 @@ function loadLibraryDashboard(){
                     <div class="card-body text-center">
                        
                     </div>
-                    <div><a href="${o.file}"><span class="material-icons">get_app</span></a></div><h5 class="p-1">${o.title}</h5>
+                    <div><a href="${o.file}"><span class="material-icons">get_app</span></a><a href="#" onclick="delete_book(${o.id})"><span class="material-icons">delete</span></a></div><h5 class="p-1">${o.title}</h5>
                 </div>
                     `;
                 }).join('')}
@@ -65,4 +66,20 @@ function loadLibraryDashboard(){
             }
         }
     );
+}
+
+
+function delete_book(id){
+    $.ajax({
+        type: "GET",
+        url: "/elibrary/delete/"+id,
+        contentType: "application/json",
+        success:function (data){
+            alert(data);
+            loadLibraryDashboard();
+        },
+        error:function (){
+            alert("Error : Try again!")
+        }
+    });
 }

@@ -30,7 +30,9 @@ urlpatterns = [
     path('addcourseresource/', add_resource),
     path('addlecture/', add_lecture),
 
-    path('editcourseresource/', edit_resource),
+
     path('editlecture/', edit_lecture),
+
+    path('getteacherscourse', get_teachers_course),
 
 ]

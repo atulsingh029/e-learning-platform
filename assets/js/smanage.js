@@ -1,3 +1,4 @@
+
 $.ajax(
         {
             type : 'GET',
@@ -28,3 +29,84 @@ $.ajax(
 
         }
     );
+
+const csrftoken = $("[name=csrfmiddlewaretoken]").val();
+function view_assignments(){
+    let can = document.getElementById("canvas");
+    $.ajax({
+        type: 'GET',
+        url:'/dashboard/listassignments/',
+        contentType: 'json',
+        success: function (data){
+             let assign=`
+                <style> 
+                  table tr th{
+                      padding: 2rem;
+                  }
+                  thead{
+                   background-color: black;
+                   background-size: cover;
+               }
+               .row1{
+                   background-color: white;
+                   background-size: cover;
+               }
+               
+             </style>
+             <h5 class="text-center text-sm-center">Assignments</h5>
+            <table class="table table-striped">
+                <thead class="text-light">
+                    <tr class="text-center">
+                        <th>Ref_No.</th>
+                        <th>Name</th>
+                        <th>Problem</th>
+                        <th>Max_Marks</th>
+                        <th>Upload</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+            ${data.map(function (obj) {
+                 return `
+            <tr class="text-center row1">
+                <td>${obj.id}</td>
+                <td>${obj.name}</td>
+                <td><a class="btn btn-outline-success d-inline" href="${obj.problem}">Download</a></td>
+                <td>${obj.max_marks}</td>
+                <td><input type="file" id="${obj.id}"></input></td>
+                <td><button type="button" class="btn btn-sm btn-success" onclick="upload('${obj.id}')">Upload</button></td>
+            </tr>`;
+             }).join('')}
+            </tbody>
+        `;
+        can.innerHTML=assign;
+        }
+    });
+
+}
+
+function upload(id){
+    var i = "#"+id;
+    let data = $(i);
+    var file = data[0].files[0];
+    let formData = new FormData();
+    formData.append("solution", file);
+    formData.append("id", id);
+    $.ajax(
+        {
+            type: 'POST',
+            url: '/dashboard/send_sol/',
+            contentType: false,
+            processData: false,
+            data: formData,
+            headers: { "x-csrftoken": csrftoken },
+            success: function (data) {
+                view_assignments();
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        }
+    );
+
+}

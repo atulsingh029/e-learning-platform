@@ -5,11 +5,15 @@
       rel="stylesheet">
        <link rel="stylesheet" href={% static 'stylesheet/dashboard/sdash.css' %}>
 {% endblock %}
+
+
 {% block body %}
- <!-- Container for dashboard -->
+{% csrf_token %}
+
+    <!-- Container for dashboard -->
     <div class="row m-0 p-0">
-        <div class="col d-none d-lg-block" id="sidebar">
-        <div class="text-center d-none d-lg-block mt-4">
+        <div class="col d-none d-lg-block " id="sidebar">
+       <div class="text-center d-none d-lg-block mt-4">
              <img src="{{ owner.profile_pic }}" class="rounded-circle" height="100px" width="100px" alt="{{ owner.title }}">
             <h2 class="display-4 p-1" style="font-size: 20px;color: ghostwhite">{{ owner.title }}</h2>
             <h2 class="display-4 p-1" style="font-size: 20px;color: ghostwhite">{{ owner.organization.name }}</h2>
@@ -34,10 +38,17 @@
 
         <div class="col" id="c_container">
             <div id="canvas" >
+
                       <!-- code injection by JS //do not touch this div -->
             </div>
         </div>
     </div>
+
+    <!-- Container for footer section -->
+
+
+
     <script src="{% static 'js/smanage.js' %}"></script>
+    <script src="{% static 'js/viewlibrary.js' %}"></script>
     <script src="{% static 'js/viewcourse.js' %}"></script>
 {% endblock %}

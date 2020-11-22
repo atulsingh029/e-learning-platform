@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block body %}
+    <div class="container">
+        <div class="row m-1 p-1 mt-5">
+            <div class="col-xs-12 col-md-5 m-auto">
+                <div class="card mt-3">
+                  <div class="card-header display-4" style="font-size: 35px;font-weight: normal">
+                    {{ formname }}
+                  </div>
+                  <div class="card-body">
+                      {% if text %}
+                      <p class="card-text">{{ text }}</p>
+                      {% endif %}
+                      <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        {% if extra_fields %}
+                            {{ extra_fields | safe }}
+                        {% endif %}
+                      <br>
+                      <label for="course">Choose a course:</label>
+
+                        <select name="course" id="course">
+                            <option value="none">select a course</option>
+                        {% for c in courses %}
+                            <option value="{{ c.c_id }}">{{ c.c_name }}</option>
+                        {% endfor %}
+                        </select><br>
+                        <button type="submit" class="btn btn-sm btn-info mt-1">submit</button>
+                    </form>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

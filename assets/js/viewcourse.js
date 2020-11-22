@@ -1,11 +1,25 @@
-function rm_opencourse(c_id) {
+function opencourse(c_id) {
     $.ajax({
         type: 'GET',
         url: '/api/opencourse/' + c_id,
         contentType: 'application/json',
         success: function (data) {
-            var lectures = data[0];
-            var resourses = data[1];
+            let lectures = data[0];
+            let resourses = data[1];
+            let firstlecture;
+
+            if(data.response === "no data available"){
+                lectures = [];
+                resourses = [];
+                firstlecture = [{"video":"/filestatic/videos/default.mp4","l_description":"", 'l_name':"NO LECTURE IS ADDED YET"},]
+            }
+            else if(lectures[0]===undefined){
+                lectures = [];
+                firstlecture = [{"video":"/filestatic/videos/default.mp4","l_description":"", 'l_name':"NO LECTURE IS ADDED YET"},]
+            }
+            else {
+                firstlecture = [lectures[0],];
+            }
             canvas.innerHTML = `
             <div>
                 <style>
@@ -55,9 +69,9 @@ function rm_opencourse(c_id) {
                 </div>
             
                 <div class="row align-items-center m-1">
-                    <div class="col-12 col-xl-8 ">
+                    <div class="col-12 col-xl-8">
                     <style>
-                    .container {
+                    .contain {
                       position: relative;
                       width: 100%;
                       overflow: hidden;
@@ -75,14 +89,19 @@ function rm_opencourse(c_id) {
                       border: none;
                     }
                     </style>
-                    <div class="container mt-2 mb-2">
-                         <iframe id = "videoframe" class="responsive-iframe" src="${lectures[0].video}"></iframe>
+                    
+                    
+                    
+                    
+                    <div class="contain mt-2 mb-2">
+                         <video id = "videoframe" class="responsive-iframe" controls autoplay> <source src="${firstlecture[0].video}" type="video/mp4"> </video>
                     </div>
                     <div class="row p-0" id="lecturefooter">
-                        <p>${lectures[0].l_description}</p>
+                        <h5 class="ml-2">${firstlecture[0].l_name}</h5>
+                        <p class="ml-2">${firstlecture[0].l_description}</p>
                        </div> 
                     </div>
-                    <div class="col-12 col-xl-4  mt-2">
+                    <div class="col-12 col-xl-4 mt-2">
                         <table class="table">
                             <thead class="text-dark">
                                 <tr class="text-center">
@@ -92,18 +111,17 @@ function rm_opencourse(c_id) {
                             </thead>
                             <tbody>
                                 ${lectures.map(function (l) {
-                var l_url = l.l_url;
+                let l_url = l.video;
                 return `
                                     <tr>
                                         <td>
-                                            <button class="btn btn-link border-0 btn-block text-left" onclick="loadlecture('${l_url}','${l.l_description}','${l.id}')"><span style="font-weight: bolder">Lecture ${l.l_number}</span>
+                                            <button class="btn btn-link border-0 btn-block text-left" onclick="loadlecture('${l_url}','${l.l_description}','${l.id}','${l.l_name}')"><span style="font-weight: bolder">L: ${l.l_number}</span>
                                             <p>${l.l_name}</p>
                                             </button>
                                         </td>
                                     </tr>
                                     `;
-            }).join('')}
-                              
+            }).join('')}  
                             </tbody>
                         </table>
                     </div>
@@ -115,10 +133,13 @@ function rm_opencourse(c_id) {
     });
 }
 
-function loadlecture(l, description, id) {
-    var frame = document.getElementById("videoframe");
+
+
+function loadlecture(l, description, id, name) {
+    let frame = document.getElementById("videoframe");
     frame.setAttribute("src", l);
     document.getElementById("lecturefooter").innerHTML = `
-    <p>${description}</p>
+    <h5 class="ml-2">${name}</h5><br>
+    <p class="ml-2">${description}</p>
     `;
 }

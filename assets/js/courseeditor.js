@@ -4,9 +4,6 @@ modal_1 + {id} + modal_2 + {form} + modal_3
 */
 
 
-
-
-
 let  modal_1 = `
 <!-- Modal -->
 <div class="modal fade" id="`;
@@ -34,13 +31,18 @@ function opencourse(c_id) {
         url: '/api/opencourse/' + c_id,
         contentType: 'application/json',
         success: function (data) {
-            var lectures = data[0];
-            var resourses = data[1];
-            var firstlecture;
+            let lectures = data[0];
+            let resourses = data[1];
+            let firstlecture;
+
             if(data.response === "no data available"){
                 lectures = [];
                 resourses = [];
-                firstlecture = [{"l_url":"null","l_description":"NO LECTURES ADDED YET!"},]
+                firstlecture = [{"video":"/filestatic/videos/default.mp4","l_description":"", 'l_name':"ADD FIRST LECTURE"},]
+            }
+            else if(lectures[0]===undefined){
+                lectures = [];
+                firstlecture = [{"video":"/filestatic/videos/default.mp4","l_description":"", 'l_name':"ADD FIRST LECTURE"},]
             }
             else {
                 firstlecture = [lectures[0],];
@@ -59,31 +61,51 @@ function opencourse(c_id) {
                 <div class="btn-group m-2" role="group">
                 
                 ${modal_1}add_lecture${modal_2}
-                    <form enctype="multipart/form-data" action="/api/addlecture/" id="add_lecture_form">
-                        <input type="hidden" value="${c_id}">
+                    <form enctype="multipart/form-data"  id="add_lecture_form" type="post">
+                        <input type="hidden" value="${c_id}" name="c_id">
                         
                         <label for="exampleFormControlInput1">Lecture Number</label>
-                        <input type="number" required class="form-control" id="exampleFormControlInput1">
+                        <input type="number" required class="form-control" id="exampleFormControlInput1" name="l_number">
                       
                       <div class="form-group">
                         <label for="name">Lecture Name</label>
-                        <input type="text" required class="form-control" id="name">
+                        <input type="text" required class="form-control" id="name" name="l_name">
                       </div>
                       <div class="form-group">
                         <label for="video">Video</label>
-                        <input type="file" required class="form-control" id="video">
+                        <input type="file" required class="form-control" id="video" name="l_video">
                       </div>
                       <div class="form-group">
                         <label for="exampleFormControlTextarea1">Lecture Description</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="l_description"></textarea>
                       </div>
                       <button type="button" onclick="addlecture()" class="btn btn-sm btn-primary">save</button>
                     </form>
                 ${modal_3}
                 
+                ${modal_1}add_course_resource${modal_2}
+                <form id="add_resource_form" enctype="multipart/form-data" type="post">
+                        <input type="hidden" value="${c_id}" name="c_id">
+                        
+                        <label for="exampleFormControlInputz">Title</label>
+                        <input type="text" required class="form-control" id="exampleFormControlInputz" name="r_title">
+                      
+                      <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" required class="form-control" id="description" name="r_description">
+                      </div>
+                      <div class="form-group">
+                        <label for="r_file">File</label>
+                        <input type="file" required class="form-control" id="r_file" name="r_file">
+                      </div>
+                      </form>
+                      <button type="button" onclick="addresource()" class="btn btn-sm btn-primary">save</button>
+                    
+                ${modal_3}
+                
                 
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_lecture">Add Lecture</button>
-                <button type="button" class="btn btn-success" onclick="addresource(${c_id})">Add Course Resource</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_course_resource">Add Course Resource</button>
                 </div>
                 </div>
                 <div class="accordion col text-center text-dark" id="accordionE">
@@ -150,11 +172,11 @@ function opencourse(c_id) {
                     
                     
                     <div class="contain mt-2 mb-2">
-                         <video id = "videoframe" class="responsive-iframe" controls autoplay> <source src="${firstlecture[0].video}" type="video/mp4"> </source> </video>
+                         <video id = "videoframe" class="responsive-iframe" controls autoplay> <source src="${firstlecture[0].video}" type="video/mp4"> </video>
                     </div>
                     <div class="row p-0" id="lecturefooter">
-                        <p>${firstlecture[0].l_description}</p>
-                        ${firstlecture[0].video}
+                        <h5 class="ml-2">${firstlecture[0].l_name}</h5>
+                        <p class="ml-2">${firstlecture[0].l_description}</p>
                        </div> 
                     </div>
                     <div class="col-12 col-xl-4 mt-2">
@@ -167,16 +189,15 @@ function opencourse(c_id) {
                             </thead>
                             <tbody>
                                 ${lectures.map(function (l) {
-                var l_url = l.video;
+                let l_url = l.video;
                 return `
                                     <tr>
                                         <td>
-                                            <button class="btn btn-link border-0 btn-block text-left" onclick="loadlecture('${l_url}','${l.l_description}','${l.id}')"><span style="font-weight: bolder">L: ${l.l_number}</span>
+                                            <button class="btn btn-link border-0 btn-block text-left" onclick="loadlecture('${l_url}','${l.l_description}','${l.id}','${l.l_name}')"><span style="font-weight: bolder">L: ${l.l_number}</span>
                                             <p>${l.l_name}</p>
                                             </button>
                                         </td>
                                         <td>
-                                            <button class="btn btn-sm btn-outline-info" onclick="addlectureresource('${l.id}')">Add Resource</button>
                                             <button class="btn btn-sm btn-outline-info" onclick="editlecture('${l}')">Edit</button>
                                             <button class="btn btn-sm btn-outline-danger" onclick="deletelecture('${l.id}')">Delete</button>
                                         </td>
@@ -194,11 +215,14 @@ function opencourse(c_id) {
     });
 }
 
-function loadlecture(l, description, id) {
-    var frame = document.getElementById("videoframe");
+
+
+function loadlecture(l, description, id, name) {
+    let frame = document.getElementById("videoframe");
     frame.setAttribute("src", l);
     document.getElementById("lecturefooter").innerHTML = `
-    <p>${description}</p>
+    <h5 class="ml-2">${name}</h5><br>
+    <p class="ml-2">${description}</p>
     `;
 }
 
@@ -206,18 +230,23 @@ function loadlecture(l, description, id) {
 
 
 function addlecture(){
-    var add = $('#add_lecture_form').serialize();
-    console.log(add);
-    let data = $("#video");
+    var add = $('#add_lecture_form').serializeArray();
+    var data = $("#video");
     var file = data[0].files[0];
-    let formData = new FormData();
+    var videoname = file.name;
+    if (videoname.endsWith('.mp4')){
+        let formData = new FormData();
+    var c_id = add[0].value;
+    var l_number = add[1].value;
+    var l_description = add[3].value;
+    var l_name = add[2].value;
     formData.append("video", file);
     formData.append("title", l_name);
-    formData.append("description", l_des);
-    formData.append("number", l_num);
+    formData.append("description", l_description);
+    formData.append("number", l_number);
     formData.append("c_id", c_id);
     document.getElementById("add_lecture_form").reset();
-    /*$.ajax(
+    $.ajax(
         {
             type: 'POST',
             url: '/api/addlecture/',
@@ -232,32 +261,63 @@ function addlecture(){
                 console.log(error);
             }
         }
-    );*/
-}
-
-
-function addresource(c_id){
-
-}
-
-function submitaddresource(){
+    );
+    }
+    else {
+        alert("invalid file format : only mp4 allowed");
+    }
 
 }
 
-function addlectureresource(l_id){
+
+function addresource(){
+    var add = $('#add_resource_form').serializeArray();
+    var data = $("#r_file");
+    var file = data[0].files[0];
+    var c_id = add[0].value;
+    var r_title = add[1].value;
+    var l_description = add[2].value;
+    if (file === undefined || r_title===''){
+        alert("Something went wrong, try again!");
+    }
+    else{
+    var videoname = file.name;
+    if (videoname.endsWith('.pdf') || videoname.endsWith('.zip') || videoname.endsWith('.pptx') || videoname.endsWith('.ppt') || videoname.endsWith('.docx') ||videoname.endsWith('.doc')  ){
+        let formData = new FormData();
+
+        /*var l_url = add[3].value;*/
+        formData.append("file", file);
+        formData.append("title", r_title);
+        formData.append("description", l_description);
+        /*formData.append("url", l_url);*/
+        formData.append("c_id", c_id);
+        document.getElementById("add_resource_form").reset();
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/api/addcourseresource/',
+                contentType: false,
+                processData: false,
+                data: formData,
+                headers: { "x-csrftoken": csrftoken },
+                success: function (data) {
+                    alert('added');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            }
+        );
+        }
+    else {
+        alert("invalid file format");
+    }}
 
 }
 
-function submitaddlectureresource(){
-
-}
 
 
 function deletelecture(l_id){
-
-}
-
-function deletelectureresource(lr_id){
 
 }
 
@@ -270,22 +330,3 @@ function editlecture(l){
 
 }
 
-function submiteditlecture(){
-
-}
-
-function editlectureresource(lr){
-
-}
-
-function submiteditlectureresource(){
-
-}
-
-function editresource(r){
-
-}
-
-function submiteditresource(){
-
-}

@@ -8,6 +8,7 @@ import random
 from django.contrib.auth import login,logout
 from management.models import Room
 from django.contrib.sessions.models import Session as SysSession
+from elibrary.models import Library
 
 
 DATA_TRANSFER = {}
@@ -129,7 +130,8 @@ def Reg(request,mode,otp,dtk):
                                                 email=DATA_TRANSFER[dtk][2], is_organization=True)
                 organization = Organization(account=user)
                 organization.save()
-
+                lib = Library(owner=organization)
+                lib.save()
                 DATA_TRANSFER.pop(dtk)
                 login(request, user)
                 return '/dashboard'

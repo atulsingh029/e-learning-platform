@@ -251,7 +251,7 @@ function listallcourses() {
 
 /*completed*/
 function addroom(form_id) {
-    let id = `#${form_id}`;
+    let id = `#${form_id}`; // #formid
     let form_data = $(id).serializeArray(); // This line collects data inputted by user in form
     document.getElementById("roomform").reset(); //This line resets the form that was filled by user after collecting data from it.
     let a = form_data[1].value;
@@ -309,7 +309,7 @@ function listapplications() {
             <table class="table table-striped">
                 <thead class="text-light">
                     <tr class="text-center">
-                        <th >Ref_No.</th>
+                        <th>Ref_No.</th>
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Email</th>

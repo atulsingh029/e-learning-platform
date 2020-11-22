@@ -347,8 +347,7 @@ def add_resource(request):
         user = Account.objects.get(username=request.user)
         if user.is_organization or user.is_teacher:
             data = request.data
-            file = request.FILES
-            response = addresource(user, data, file)
+            response = addresource(user, data)
             return Response({"status": response})
         else:
             return Response({"status": "forbidden"})
@@ -364,21 +363,6 @@ def edit_lecture(request):
             data = request.data
             response = editlecture(user, data)
             return Response({"status":response})
-        else:
-            return Response({"status": "forbidden"})
-    else:
-        return Response({"status": "you are not authenticated"})
-
-
-@api_view(['POST'])
-def edit_resource(request):
-    if request.user.is_authenticated:
-        user = Account.objects.get(username=request.user)
-        if user.is_organization or user.is_teacher:
-            data = request.data
-            file = request.FILES
-            response = editresource(user, data, file)
-            return Response({"status": response})
         else:
             return Response({"status": "forbidden"})
     else:
@@ -479,7 +463,7 @@ def view_student_room(request):
 # library api
 
 @api_view(['GET'])
-def get_book(request,id):
+def get_book(request, id):
     if request.user.is_authenticated:
         user = Account.objects.get(username=request.user)
         book = Book.objects.get(id=id)
@@ -493,3 +477,13 @@ def get_book(request,id):
             return Response({'status': 'forbidden'})
     else:
         return Response({'status':'forbidden'})
+
+
+@api_view(['GET'])
+def get_teachers_course(request):
+    if request.user.is_authenticated:
+        user = Account.objects.get(username=request.user)
+        if user.is_teacher:
+            c = Course.objects.filter(instructor=user.teacher)
+            serialdata = CourseSerializer1(c,many=True)
+            return Response(serialdata.data)

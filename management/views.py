@@ -1,11 +1,14 @@
 from django.shortcuts import render, HttpResponse, redirect
 from custom_user.models import Room, ApplyForStudent, Student, Account, Teacher, Organization
-from management.models import Course, Lecture, CourseResource, DashOption, TimeTable
+from management.models import Course, Lecture, CourseResource, DashOption, TimeTable, Assignment, Solution
 from api.serializers import *
 from .manager import *
 import random
-from .forms import AddNewTeacher, AddNewStudent
+from .forms import AddNewTeacher, AddNewStudent, AddAssignment
 from .forms import EditRoom
+from rest_framework.decorators import api_view
+from api.serializers import AssignmentSerializer
+from rest_framework.response import Response
 
 
 def dashboard(request):
@@ -31,7 +34,7 @@ def dashboard(request):
                                 {'link': '#', 'method': 'listallcourses()', 'label': 'Courses', 'icon': 'school'},
                                 {'link': '#', 'method': 'listallteachers()', 'label': 'Teachers', 'icon': 'recent_actors'},
                                 {'link': '#', 'method': 'listallstudents()', 'label': 'Students', 'icon': 'groups'},
-                                {'link': '#', 'method': '', 'label': 'eLibrary','icon': 'local_library'},
+                                {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary','icon': 'local_library'},
                                 {'link': '#', 'method': '', 'label': 'Email', 'icon': 'mail'},
 
                                  ]
@@ -47,7 +50,7 @@ def dashboard(request):
                 'options' : options_available,
                 'owner':{'coverpic':"https://atulsingh029.github.io/images/banner2.gif",'title':profile_info.first_name,
                          'lead1':profile_info.bio1, 'lead2': profile_info.bio2
-                         , 'link':profile_info.url,'label':'Advertisement Page', 'profile_pic':p_url}
+                         , 'link':'/r/'+str(profile_info.id),'label':'Advertisement Page', 'profile_pic':p_url}
             }
             return render(request, template_name='dashboard/odash.html', context=context)
         if user.is_student:
@@ -58,8 +61,8 @@ def dashboard(request):
                 p_url = '#'
 
             default_options = [{'link': '', 'method': '', 'label': 'Dashboard', 'icon': 'dashboard'},
-                               {'link': '#', 'method': '', 'label': 'Teachers', 'icon': 'recent_actors'},
-                               {'link': '#', 'method': '', 'label': 'eLibrary', 'icon': 'local_library'},
+                              {'link': '#', 'method': 'view_assignments()', 'label': 'Assignments', 'icon': 'work'},
+                               {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary', 'icon': 'local_library'},
                                ]
             options_available = DashOption.objects.filter(account=user)
             extra_options = DashOptionSerializer(options_available, many=True).data
@@ -86,8 +89,8 @@ def dashboard(request):
                 p_url = '#'
 
             default_options = [{'link': '', 'method': '', 'label': 'Dashboard', 'icon': 'dashboard'},
-
-                               {'link': '#', 'method': '', 'label': 'eLibrary', 'icon': 'local_library'},
+                               {'link': '/dashboard/assignwork', 'method': '', 'label': 'Assign Work', 'icon': 'work'},
+                               {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary', 'icon': 'local_library'},
                                ]
             options_available = DashOption.objects.filter(account=user)
             extra_options = DashOptionSerializer(options_available, many=True).data
@@ -415,17 +418,90 @@ def opencourse(c):  # takes course object and returns all the resources and lect
     return final_list
 
 
-def addresource(user,data,file):
-    return data
+def addresource(user,data):
+    c_id = data['c_id']
+    course = Course.objects.get(c_id=c_id)
+    resource = CourseResource(for_course=course, cr_name=data['title'], cr_description=data['description'],
+                     file=data['file'])
+    resource.save()
+    return 'success'
 
 
 def addlecture(user,data):
-    return data
-
-
-def editresource(user,data,file):
-    return data
+    c_id = data['c_id']
+    course = Course.objects.get(c_id = c_id)
+    lecture = Lecture(for_course=course, l_number=data['number'] , l_name=data['title'], l_description=data['description'], video=data['video'])
+    lecture.save()
+    return 'success'
 
 
 def editlecture(user,data):
     return data
+
+
+def give_assignment(request):
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            account = Account.objects.filter(username=request.user)
+            if account[0].is_teacher:
+                data = request.POST
+                file = request.FILES
+                title = data.get('title')
+                description = data.get('description')
+                max_marks = data.get('max_marks')
+                course = data.get('course')
+                problem = file.get('problem')
+                if course=='none':
+                    return redirect('/dashboard/?status=failed:ASelectACourse')
+                c=Course.objects.get(c_id=course)
+                assignment = Assignment(name=title,description=description,max_marks=max_marks,for_course=c,problem=problem)
+                assignment.save()
+                return redirect('/dashboard/?status=added')
+        else:
+            account = Account.objects.filter(username=request.user)
+            if account[0].is_teacher:
+                courses = Course.objects.filter(instructor=account[0].teacher)
+                form = AddAssignment()
+                return render(request, 'custom_user/assignment.html',context={'form':form,'courses':courses, 'formname':'Assign Work'})
+
+def checkAssignment(request):
+    pass
+
+
+#for student only
+@api_view(['GET'])
+def list_assignments(request):
+    if request.user.is_authenticated:
+        account = Account.objects.filter(username=request.user)
+        if account[0].is_student:
+            try:
+                room = account[0].student.from_room
+                c = Course.objects.filter(for_room=room)
+                assignments = []
+
+                for i in c:
+                    a = Assignment.objects.filter(for_course=i)
+                    #print(a)
+                    for j in a:
+                        #print(j)
+                        s = Solution.objects.filter(solution_to=j, uploader=account[0])
+                        #print(s)
+                        if len(s) == 0:
+                            assignments.append(j)
+                serialdata = AssignmentSerializer(assignments, many=True)
+                return Response(serialdata.data)
+            except:
+                return HttpResponse("You are not assigned any room. Please contact your organization first!")
+
+
+@api_view(['POST'])
+def send_sol(request):
+    if request.user.is_authenticated:
+        account = Account.objects.filter(username=request.user)
+        if account[0].is_student:
+            file = request.FILES
+
+            sol = Solution(uploader=account[0],solution_to_id=request.POST['id'],solution=request.FILES['solution'])
+            sol.save()
+            return Response("success")
+
