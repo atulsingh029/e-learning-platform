@@ -28,11 +28,13 @@ function loadLibraryDashboard(){
                         o.description='';
                     }
                     return`
-                <div class="card border-dark m-3" style="max-width: 250px; height: 200px; background-image: url('${o.cover}')">
-                    <div class="card-body">
+                <div class="card border-none m-3" style="max-width: 150px; height: 250px;">
+                    <div class="card-body" onclick="showdetail('${o.title}','${o.author}','${o.edition}')" style="background-image: url('${o.cover}'); background-size: cover">
                        
                     </div>
-                    <div><a href="${o.file}"><span class="material-icons">get_app</span></a></div><h5 class="p-1">${o.title}</h5>
+                    <div class="card-footer">
+                        <div class="text-center"><a href="${o.file}"><span class="material-icons">get_app</span></a><</div>
+                    </div>
                 </div>
                     `;
                 }).join('')}
@@ -49,11 +51,13 @@ function loadLibraryDashboard(){
                         o.description='';
                     }
                     return`
-                <div class="card border-dark m-3" style="max-width: 250px; height: 200px; background-image: url('${o.cover}')">
-                    <div class="card-body text-center">
+                <div class="card border-none m-3" style="max-width: 150px; height: 250px;">
+                    <div class="card-body" onclick="showdetail('${o.title}','${o.author}','${o.edition}')" style="background-image: url('${o.cover}'); background-size: cover">
                        
                     </div>
-                    <div><a href="${o.file}"><span class="material-icons">get_app</span></a></div><h5 class="p-1">${o.title}</h5>
+                    <div class="card-footer">
+                        <div class="text-center"><a href="${o.file}"><span class="material-icons">get_app</span></a></div>
+                    </div>
                 </div>
                     `;
                 }).join('')}
@@ -65,4 +69,8 @@ function loadLibraryDashboard(){
             }
         }
     );
+}
+
+function showdetail(name,author,edition){
+    alert(name+"\nBy "+author+"\nEdition : "+edition);
 }
