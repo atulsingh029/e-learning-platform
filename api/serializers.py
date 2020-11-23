@@ -2,7 +2,7 @@ from rest_framework import serializers
 from custom_user.models import ApplyForStudent, Room, Account, Student, Teacher
 from management.models import Course, Lecture, CourseResource, DashOption
 from elibrary.models import Book, BookReview, TextReviews
-from management.models import Assignment
+from management.models import Assignment, Solution
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -113,3 +113,10 @@ class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
         fields = ['id', 'name', 'description', 'for_course', 'max_marks', 'problem']
+
+
+class SolutionSerializer(serializers.ModelSerializer):
+    uploader = AccountSerializer()
+    class Meta:
+        model = Solution
+        fields = ['id', 'uploader', 'solution_to', 'solution', 'marks', 'remarks', 'uploader']

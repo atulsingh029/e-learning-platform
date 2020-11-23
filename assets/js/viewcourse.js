@@ -96,9 +96,9 @@ function opencourse(c_id) {
                     <div class="contain mt-2 mb-2">
                          <video id = "videoframe" class="responsive-iframe" controls autoplay> <source src="${firstlecture[0].video}" type="video/mp4"> </video>
                     </div>
-                    <div class="row p-0" id="lecturefooter">
+                    <div class="p-0" id="lecturefooter">
                         <h5 class="ml-2">${firstlecture[0].l_name}</h5>
-                        <p class="ml-2">${firstlecture[0].l_description}</p>
+                        <h6 class="ml-2">${firstlecture[0].l_description}</h6>
                        </div> 
                     </div>
                     <div class="col-12 col-xl-4 mt-2">
@@ -139,7 +139,7 @@ function loadlecture(l, description, id, name) {
     let frame = document.getElementById("videoframe");
     frame.setAttribute("src", l);
     document.getElementById("lecturefooter").innerHTML = `
-    <h5 class="ml-2">${name}</h5><br>
-    <p class="ml-2">${description}</p>
+    <h5 class="ml-2">${name}</h5>
+    <h6 class="ml-2">${description}</h6>
     `;
 }

@@ -90,7 +90,13 @@ def dashboard(request):
 
             default_options = [{'link': '', 'method': '', 'label': 'Dashboard', 'icon': 'dashboard'},
                                {'link': '/dashboard/assignwork', 'method': '', 'label': 'Assign Work', 'icon': 'work'},
+                               {'link': '#', 'method': 'roomstudentsIni()', 'label': 'Students', 'icon': 'groups'},
+                               {'link': '#', 'method': 'scheduleclass()', 'label': 'Schedule Online Class',
+                                'icon': 'class'},
+
+                               {'link': '#', 'method': 'assignments()', 'label': 'Assignments', 'icon': 'assignment'},
                                {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary', 'icon': 'local_library'},
+
                                ]
             options_available = DashOption.objects.filter(account=user)
             extra_options = DashOptionSerializer(options_available, many=True).data
@@ -505,3 +511,47 @@ def send_sol(request):
             sol.save()
             return Response("success")
 
+
+
+@api_view(['GET'])
+def get_student_by_teacher(request):
+    if request.user.is_authenticated:
+        account = Account.objects.filter(username=request.user)
+        if account[0].is_teacher:
+            c = Course.objects.filter(instructor=account[0].teacher)
+            student = []
+            for i in c:
+                room = Room.objects.filter(course=i)
+                for j in room:
+                    s=Student.objects.filter(from_room=j)
+                    student.extend(s)
+            student=set(student)
+            serialStudent = StudentSerializer(student,many=True)
+
+            return Response(serialStudent.data)
+
+
+@api_view(['GET'])
+def assignments(request):
+    if request.user.is_authenticated:
+        account = Account.objects.filter(username=request.user)
+        assignments = []
+        if account[0].is_teacher:
+            c = Course.objects.filter(instructor=account[0].teacher)
+            for i in c:
+                a = Assignment.objects.filter(for_course=i)
+                #assigned_to = Student.objects.filter(from_room=i.from_room)
+                assignments.extend(a)
+        serialAssignment = AssignmentSerializer(assignments, many=True)
+        return Response(serialAssignment.data)
+
+
+@api_view(['GET'])
+def solutions(request, id):
+    if request.user.is_authenticated:
+        account = Account.objects.filter(username=request.user)
+        if account[0].is_teacher:
+            assignments = Assignment.objects.get(id=id)
+            solutions = Solution.objects.filter(solution_to=assignments)
+        serialSol = SolutionSerializer(solutions, many=True)
+        return Response(serialSol.data)
