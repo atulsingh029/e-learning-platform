@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from custom_user.models import Room, ApplyForStudent, Student, Account, Teacher, Organization
-from management.models import Course, Lecture, CourseResource, DashOption, TimeTable, Assignment, Solution
+from management.models import Course, Lecture, CourseResource, DashOption, TimeTable, Assignment, Solution, Slot
 from api.serializers import *
 from .manager import *
 import random
@@ -9,6 +9,7 @@ from .forms import EditRoom
 from rest_framework.decorators import api_view
 from api.serializers import AssignmentSerializer
 from rest_framework.response import Response
+import datetime
 
 
 def dashboard(request):
@@ -555,3 +556,86 @@ def solutions(request, id):
             solutions = Solution.objects.filter(solution_to=assignments)
         serialSol = SolutionSerializer(solutions, many=True)
         return Response(serialSol.data)
+
+
+@api_view(['POST'])
+def scheduleclass(request):
+    if request.user.is_authenticated:
+        account = Account.objects.filter(username=request.user)
+        if account[0].is_teacher:
+            data1 = request.data
+            data = {}
+            for i in data1:
+                data.update({i['name']:i["value"]})
+            agenda = data.get('agenda')
+            stime = data.get('stime')
+            et1 = int(stime[0:2])+1
+            et2 =int(stime[3:5])
+            stime = datetime.time(int(stime[0:2]),0)
+
+            etime = datetime.time(et1,0)
+            date = data.get('date')
+            date = datetime.date(int(date[0:4]), int(date[5:7]), int(date[8:10]))
+            course = data.get('course')
+            url = data.get('url')
+            c = Course.objects.get(c_id=course)
+            room = Room.objects.filter(course=c)
+            slots=[]
+            if stime>=etime:
+                return Response("Start time and end time invalid")
+            if date<datetime.date.today():
+                return Response("Invalid Date")
+            for r in room:
+                s = TimeTable.objects.filter(room=r)
+                for tt in s:
+                    sl = Slot.objects.filter(timetable=tt, start_time=stime, end_time=etime, date=date)
+                    for m in sl:
+                        slots.append(m)
+            if len(slots)!=0:
+                return Response("Slot Not Available")
+            else:
+                ns = Slot(agenda=agenda, start_time=stime, end_time=etime, course=c, session_id=url, date=date)
+                ns.save()
+                for r in room:
+                    s = TimeTable.objects.filter(room=r)
+                    for x in s:
+                        x.slot.add(ns)
+                        x.save()
+                return Response("added")
+
+
+@api_view(['GET'])
+def teachers_live_schedule(request):
+    if request.user.is_authenticated:
+        account = Account.objects.filter(username=request.user)
+        if account[0].is_teacher:
+            slots = []
+            courses = Course.objects.filter(instructor=account[0].teacher)
+            for c in courses:
+                s= Slot.objects.filter(course=c)
+                for i in s:
+
+                    if str(i.date) == str(datetime.datetime.today())[0:10]:
+
+                        slots.append(i)
+            print(slots)
+            serialslot = SlotSerializer(slots, many=True)
+            return Response(serialslot.data)
+
+
+@api_view(['GET'])
+def students_live_schedule(request):
+    if request.user.is_authenticated:
+        account = Account.objects.filter(username=request.user)
+        if account[0].is_student:
+            slots = []
+            tt = account[0].student.from_room.timetable
+            s= Slot.objects.filter(timetable=tt)
+            for i in s:
+
+                    if str(i.date) == str(datetime.datetime.today())[0:10]:
+
+                        slots.append(i)
+
+            serialslot = SlotSerializer(slots, many=True)
+            return Response(serialslot.data)

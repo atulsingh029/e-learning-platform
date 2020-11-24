@@ -1,3 +1,53 @@
+document.getElementById("canvas").innerHTML="<div id='can1'></div>" +
+    "<div id = 'can2'></div>";
+
+
+$.ajax({
+    type:'GET',
+    url:"/dashboard/sls/",
+    contentType:'json',
+    success:function (data) {
+        let va = `
+<h5>Today's Live Class TimeTable</h5>
+            <style> 
+                  table tr th{
+                      padding: 2rem;
+                  }
+                  thead{
+                   background-color: black;
+                   background-size: cover;
+               }
+               .row1{
+                   background-color: white;
+                   background-size: cover;
+               }
+               
+             </style>
+            <table class="table table-striped">
+                <thead class="text-light">
+                    <tr class="text-center">
+                        <th>Course</th>
+                        <th>Time</th>
+                        <th>Agenda</th>
+                        <th>Join</th
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                
+            ${data.map(function (obj) {
+            return `
+            <tr class="text-center row1">
+                <td>${obj.course.c_name}</td>
+                <td>${obj.start_time}</td>
+                <td>${obj.agenda}</td>
+                <td><a href="${obj.session_id}" target="_blank" class="btn btn-sm btn-info">Join</a> </td>
+               
+            </tr>`;
+        }).join('')}
+            </tbody>`;
+        document.getElementById("can1").innerHTML=va;
+    }});
 
 $.ajax(
         {
@@ -6,6 +56,7 @@ $.ajax(
             contentType :'application/json',
             success : function (data) {
                 let val = `
+<h5>Your courses, keep learning</h5>
                 <div class="row row-cols-1 row-cols-md-3">
                 ${data.data.map(function(obj) {
                     if (obj.c_status === false){
@@ -23,7 +74,7 @@ $.ajax(
                     </div>
                     `;}
                 }).join('')}`;
-                let elemen = document.getElementById('canvas');
+                let elemen = document.getElementById('can2');
                 elemen.innerHTML = val;
             }
 

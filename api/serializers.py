@@ -2,7 +2,7 @@ from rest_framework import serializers
 from custom_user.models import ApplyForStudent, Room, Account, Student, Teacher
 from management.models import Course, Lecture, CourseResource, DashOption
 from elibrary.models import Book, BookReview, TextReviews
-from management.models import Assignment, Solution
+from management.models import Assignment, Solution, Slot
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -120,3 +120,10 @@ class SolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Solution
         fields = ['id', 'uploader', 'solution_to', 'solution', 'marks', 'remarks', 'uploader']
+
+
+class SlotSerializer(serializers.ModelSerializer):
+    course = CourseSerializer()
+    class Meta:
+        model = Slot
+        fields = ['id', 'course', 'start_time', 'session_id', 'agenda', 'date']

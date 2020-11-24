@@ -22,6 +22,48 @@ def search(request):
             email_flag = str(key).find('@')
             phone_flag = str(temp_p_key).isdigit()
             phone_flag2 = len(str(temp_p_key))
+
+            if user.is_teacher:
+                if str(key).startswith('@'):
+                    temp_key = str(key).replace('@', '')
+                    teachers = Teacher.objects.filter(user__username=temp_key, from_organization=user.teacher.from_organization)
+                    students = Student.objects.filter(user__username=temp_key, from_organization=user.teacher.from_organization)
+                    teachers = TeacherSerializer(teachers, many=True)
+                    students = StudentSerializer(students, many=True)
+                    return Response({"teacher": teachers.data, "student": students.data})
+
+                elif email_flag != -1:
+                    teachers = Teacher.objects.filter(user__email=key, from_organization=user.teacher.from_organization)
+                    students = Student.objects.filter(user__email=key, from_organization=user.teacher.from_organization)
+                    teachers = TeacherSerializer(teachers, many=True)
+                    students = StudentSerializer(students, many=True)
+                    return Response({"teacher": teachers.data, "student": students.data})
+
+                elif phone_flag and phone_flag2 == 10:
+                    teachers = Teacher.objects.filter(user__phone=temp_p_key, from_organization=user.teacher.from_organization)
+                    students = Student.objects.filter(user__phone=temp_p_key, from_organization=user.teacher.from_organization)
+                    teachers = TeacherSerializer(teachers, many=True)
+                    students = StudentSerializer(students, many=True)
+                    return Response({"teacher": teachers.data, "student": students.data})
+
+                else:
+                    temp = str(key).split(' ')
+                    first_name = temp[0]
+                    try:
+                        last_name = temp[1]
+                    except(IndexError):
+                        last_name = ''
+                    teachers = Teacher.objects.filter(from_organization=user.teacher.from_organization,
+                                                      user__first_name__contains=first_name,
+                                                      user__last_name__contains=last_name)
+                    students = Student.objects.filter(user__first_name__contains=first_name,
+                                                      user__last_name__contains=last_name,
+                                                      from_organization=user.teacher.from_organization)
+                    teachers = TeacherSerializer(teachers, many=True)
+                    students = StudentSerializer(students, many=True)
+
+                    return Response({"teacher": teachers.data, "student": students.data})
+
             if str(key).startswith('@'):
                 temp_key = str(key).replace('@','')
                 teachers = Teacher.objects.filter(user__username=temp_key, from_organization=user.organization)
@@ -55,7 +97,7 @@ def search(request):
                 students = Student.objects.filter(user__first_name__contains=first_name, user__last_name__contains=last_name, from_organization=user.organization)
                 teachers = TeacherSerializer(teachers, many=True)
                 students = StudentSerializer(students, many=True)
-                print(students.data)
+
                 return Response({"teacher": teachers.data, "student": students.data})
 
 

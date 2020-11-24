@@ -12,5 +12,8 @@ urlpatterns = [
     path('getstudentsteacher/', views.get_student_by_teacher),
     path('assignments', views.assignments),
     path('solutions/<int:id>', views.solutions),
+    path('schedule/', views.scheduleclass),
+    path('tls/', views.teachers_live_schedule),
+    path('sls/', views.students_live_schedule),
 
 ]

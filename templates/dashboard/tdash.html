@@ -8,7 +8,7 @@
 
 
 {% block body %}
-
+{% csrf_token %}
     <!-- Container for dashboard -->
     <div class="row m-0 p-0">
         <div class="col d-none d-lg-block " id="sidebar">
@@ -32,7 +32,10 @@
 
 
         <div class="col" id="c_container">
+
             <div id="canvas" >
+
+
                       <!-- code injection by JS //do not touch this div -->
             </div>
         </div>

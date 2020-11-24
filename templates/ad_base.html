@@ -35,11 +35,14 @@
 
             <div class="alert alert-primary text-center" role="alert">
               <h4 class="alert-heading">{{ organization }}</h4>
+            <hr>
               <p>{{ bio1 }}</p>
               <p>{{ bio2 }}</p>
               <p class="text-secondary">{{ phone }} | {{ email }}</p>
+                {% if admission_tag %}
               <hr>
               <p class="mb-0">{{ admission_tag }}</p>
+                {% endif %}
             </div>
             <table class="table table-striped">
               <thead>

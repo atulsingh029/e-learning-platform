@@ -64,6 +64,7 @@ class Solution(models.Model):
 
 
 class Slot(models.Model):
+    agenda = models.CharField(max_length=512, default="default", null=True, blank=True)
     date = models.DateField(null=True,blank=True)
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
