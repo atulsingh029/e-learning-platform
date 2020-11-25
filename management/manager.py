@@ -16,25 +16,25 @@ def student_username_generator(email):
 def send_rejection_mail_to_student(email,name, institute, reference):
     subject = 'Request Rejected'
     message = 'Hey '+name+',\nYour registration request with reference no "'+reference+ '" @'+institute+' is rejected, \n'+'Please contact the organization for more details.'
-    #mail([email,],subject,message)
+    mail([email,],subject,message)
 
 
 def send_confirmation_mail_to_student(email,name, username, institute, reference):
     subject = 'Request Accepted'
     message = 'Hey '+name+',\nYour registration request with reference no "'+reference+ '" @'+institute+' is accepted, welcome on board.\n'+'Your username for login is "'+username+'" and your password is same as you entered while registration.'
-    #mail([email,],subject,message)
+    mail([email,],subject,message)
 
 
 def send_direct_admission_notification(email,name,username,institute,pwd):
     subject = 'Welcome Onboard!'
     message = 'Hey ' + name + ',\nWelcome to ' + institute + '.\n' + 'Your username for login is "' + username + '" and your password is '+str(pwd)+'.'
-    # mail([email,],subject,message)
+    mail([email,],subject,message)
 
 
 def send_new_teacher_notification(email,name,institute,pwd):
     subject = 'Welcome Onboard!'
     message = 'Hey ' + name + ',\nWelcome to ' + institute + '.\n' + 'Your email : ' + email + ' \npassword : '+str(pwd)
-    # mail([email,],subject,message)
+    mail([email,],subject,message)
 
 
 def mail(emails, subject, message):

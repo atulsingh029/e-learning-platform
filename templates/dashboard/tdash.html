@@ -12,8 +12,10 @@
     <!-- Container for dashboard -->
     <div class="row m-0 p-0">
         <div class="col d-none d-lg-block " id="sidebar">
-        <div class="text-center d-none d-lg-block mt-3 m-2 rounded p-1" style="background-color: ghostwhite;height: 200px">
-             <img src="{{ owner.profile_pic }}" class="" style="height:195px;max-width: 275px" alt="{{ owner.title }}">
+        <div class="text-center d-none d-lg-block mt-4">
+             <img src="{{ owner.profile_pic }}" class="rounded-circle" height="100px" width="100px" alt="{{ owner.title }}">
+            <h2 class="display-4 p-1" style="font-size: 20px;color: ghostwhite">{{ owner.title }}</h2>
+            
         </div>
             <ul>
                 {% for li in options %}
@@ -21,7 +23,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="col  d-lg-none" id="sm-sidebar">
+        <div class="col-12  d-lg-none" id="sm-sidebar">
             <ul>
                 {% for li in options %}
                     <li><a href="{{ li.link }}" onclick="{{ li.method }}">{{ li.label }}</a></li>

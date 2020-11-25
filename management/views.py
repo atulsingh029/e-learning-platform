@@ -36,7 +36,7 @@ def dashboard(request):
                                 {'link': '#', 'method': 'listallteachers()', 'label': 'Teachers', 'icon': 'recent_actors'},
                                 {'link': '#', 'method': 'listallstudents()', 'label': 'Students', 'icon': 'groups'},
                                 {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary','icon': 'local_library'},
-                                {'link': '#', 'method': '', 'label': 'Email', 'icon': 'mail'},
+                                #{'link': '#', 'method': '', 'label': 'Email', 'icon': 'mail'},
 
                                  ]
             options_available = DashOption.objects.filter(account=user)

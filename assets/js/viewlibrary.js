@@ -33,7 +33,7 @@ function loadLibraryDashboard(){
                        
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a href="${o.file}"><span class="material-icons">get_app</span></a><</div>
+                        <div class="text-center"><a href="${o.file}"><span class="material-icons">get_app</span></a></div>
                     </div>
                 </div>
                     `;

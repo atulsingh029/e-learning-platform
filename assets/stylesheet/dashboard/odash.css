@@ -48,7 +48,7 @@
 }
 
 #sm-sidebar{
-    position: fixed;
+
 
 }
 
@@ -76,7 +76,7 @@
 
 @media (max-width: 991px) {
     #c_container{
-        margin: 75px 0px 0px 0px;
+        margin: 0px 0px 0px 0px;
     /*if user goes from large screen to mid or small with sidebar collapsed, there is ui problem*/
     }
     #canvas{

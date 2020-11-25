@@ -42,7 +42,3 @@ class CAStudent(admin.ModelAdmin):
 class CATeacher(admin.ModelAdmin):
     list_display = ('user','id')
 
-
-@admin.register(Advertisement)
-class CAAdvertisement(admin.ModelAdmin):
-    list_display = ('account','title')

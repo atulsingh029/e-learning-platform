@@ -28,7 +28,7 @@ def signup(request):
             message = 'Your One Time Password is ' + str(otp)
             data_transfer_key = email[0:4]+str(random.randrange(100000,999999))
             DATA_TRANSFER[data_transfer_key] = [otp, name, email, password]
-            #send_mail('Verify Your Account', message, 'atul.auth@gmail.com', [email, ], fail_silently=False)
+            send_mail('Verify Your Account', message, 'primestudies.glau@gmail.com', [email, ], fail_silently=False)
             return redirect('/verify?q=organization&dtk='+data_transfer_key )
         else:
             return redirect('/signup?q=passwdVDFailed')
@@ -110,7 +110,7 @@ def RegisterStudent(request, id, reference):
             message = 'Your One Time Password for registration @'+id+' is ' + str(otp)
             student_transfer_key = email[0:4]+str(random.randrange(1000000,9999999))
             STUDENT_APPLICATION[student_transfer_key] = [otp, first_name, last_name, email, password, phone, for_organization ,room]
-            #send_mail('Verify Your Account', message, 'atul.auth@gmail.com', [email, ], fail_silently=True)
+            send_mail('Verify Your Account', message, 'primestudies.glau@gmail.com', [email, ], fail_silently=True)
             return redirect('/verify?q=student&dtk='+student_transfer_key)
         else:
             return redirect('/r/'+id)
@@ -151,7 +151,7 @@ def Reg(request,mode,otp,dtk):
                 student.save()
                 subject = "Application Submission Successful"
                 message = "Hey " + STUDENT_APPLICATION[dtk][1] + ", \nYour application for registration @" + STUDENT_APPLICATION[dtk][6].username + ' is successful, you will be informed as soon as it is accepted by the organization.\nYour application reference number is ' + student.reference +'.\nThank You'
-                #send_mail(subject,message,'atul.auth@gmail.com',[STUDENT_APPLICATION[dtk][3], ], fail_silently=True)
+                send_mail(subject,message,'primestudies.glau@gmail.com',[STUDENT_APPLICATION[dtk][3], ], fail_silently=True)
                 STUDENT_APPLICATION.pop(dtk)
                 return 200
             else:
@@ -204,7 +204,7 @@ def complete_setup(request):
             forname = 'Complete Setup'
             text = ' >> <a href="/advertisement">Skip to advertisement setup</a>'
         form = CompleteSetup(initial={'name':user.first_name, 'phone':user.phone, 'bio':user.bio1, 'address':user.bio2, 'profile_pic':user.profile_pic})
-        context = {'form':form, 'pic': profile_pic, 'forname': forname, 'text': text}
+        context = {'form':form, 'pic': profile_pic, 'forname': forname,}
         return render(request, template_name='custom_user/setup.html', context=context)
 
 
