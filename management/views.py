@@ -31,7 +31,7 @@ def dashboard(request):
                                {'link': '#', 'method': 'listapplications()', 'label': 'Applications',
                                 'icon': 'group_add'},
                                 {'link':'#','method':'listallrooms()','label':'Rooms', 'icon':'class'},
-                                {'link': '#', 'method': 'timetablems()', 'label': 'TimeTable', 'icon': 'view_module'},
+                                #{'link': '#', 'method': 'timetablems()', 'label': 'TimeTable', 'icon': 'view_module'},
                                 {'link': '#', 'method': 'listallcourses()', 'label': 'Courses', 'icon': 'school'},
                                 {'link': '#', 'method': 'listallteachers()', 'label': 'Teachers', 'icon': 'recent_actors'},
                                 {'link': '#', 'method': 'listallstudents()', 'label': 'Students', 'icon': 'groups'},
