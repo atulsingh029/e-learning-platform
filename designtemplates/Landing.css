@@ -1,0 +1,257 @@
+body {
+    background-color: #fffffff;
+}
+/* .nav li{
+  display:inline-block;
+} */
+
+h1 {
+    font-size: 4em;
+    text-shadow: 12px 2px 10px black;
+}
+.h1-jumbo {
+    font-size: 4em;
+    text-shadow: 5px 2px 5px black;
+}
+#landing-header {
+    z-index: 1;
+    position: relative;
+    text-align: center;
+    padding-top: 40vh;
+}
+
+#mainnavbar{
+    z-index: 1;
+}
+#landing-header h1 {
+    color: #fff;
+}
+
+.slideshow {
+
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.slideshow li {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    opacity: 0;
+    z-index: 0;
+    animation: imageAnimation 50s linear infinite;
+}
+
+.slideshow li:nth-child(1) {
+    background-image: url(imgs/prime1.jpeg)
+}
+
+.slideshow li:nth-child(2) {
+    background-image: url(imgs/prime2.jpeg);
+    animation-delay: 2s;
+}
+
+.slideshow li:nth-child(3) {
+    background-image: url(imgs/prime3.jpeg);
+    animation-delay: 5s;
+}
+
+.slideshow li:nth-child(4) {
+    background-image: url(imgs/prime4.jpeg);
+    animation-delay: 10s;
+}
+
+.slideshow li:nth-child(5) {
+    background-image: url(imgs/prime5.jpeg);
+    animation-delay: 20s;
+}
+
+@keyframes imageAnimation {
+    0% {
+        opacity: 0;
+        animation-timing-function: ease-in;
+    }
+
+    10% {
+        opacity: 1;
+        animation-timing-function: ease-out;
+    }
+
+    20% {
+        opacity: 1
+    }
+
+    30% {
+        opacity: 0
+    }
+}
+
+/* Older browser support - .no-cssanimations class added by modernizr */
+.no-cssanimations .slideshow li {
+    opacity: 1;
+}
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+  
+
+.mySlides{
+    width: 1200px;
+    height: 400px;
+}
+
+.cardr{
+    border-radius: 100%;
+}
+
+.jumbo{
+    background-color: rgba(23, 23, 26, 0.363);
+}
+
+.footer {
+    background-color: grey;
+    height: 100px;
+    margin-top: 50px;
+  }
+
+  .carousel-indicators li{
+      height: 10px;
+      width: 10px;
+      border-radius: 100%;
+      margin: 1rem;
+  }
+  .mainCarousel .carousel-image{
+      height: 600px;
+      width: 100%;
+  }
+  .mainCarousel .card{
+    height: 600px;
+    width: 500px;
+}
+
+/* Slides */
+
+@media (max-width: 768px) {
+    .first-slide .carousel-inner .carousel-item>div {
+      display: none;
+    }
+
+    .first-slide .carousel-inner .carousel-item>div:first-child {
+      display: block;
+    }
+  }
+
+  .first-slide .carousel-inner .carousel-item.active,
+  .first-slide .carousel-inner .carousel-item-next,
+  .first-slide .carousel-inner .carousel-item-prev {
+    display: flex;
+  }
+
+  display 3 @media (min-width: 768px) {
+
+    .first-slide .carousel-inner .carousel-item-right.active,
+    .first-slide .carousel-inner .carousel-item-next {
+      transform: translateX(50%);
+    }
+
+    .first-slide .carousel-inner .carousel-item-left.active,
+    .first-slide .carousel-inner .carousel-item-prev {
+      transform: translateX(-50%);
+    }
+  }
+
+  .first-slide .carousel-inner .carousel-item-right,
+  .first-slide .carousel-inner .carousel-item-left {
+    transform: translateX(0);
+  }
+
+
+  @media (max-width: 768px) {
+    .second-slide .carousel-inner .carousel-item>div {
+      display: none;
+    }
+
+    .second-slide .carousel-inner .carousel-item>div:first-child {
+      display: block;
+    }
+  }
+
+  .second-slide .carousel-inner .carousel-item.active,
+  .second-slide .carousel-inner .carousel-item-next,
+  .second-slide .carousel-inner .carousel-item-prev {
+    display: flex;
+  }
+
+ 
+  @media (min-width: 768px) {
+
+    .second-slide .carousel-inner .carousel-item-right.active,
+    .second-slide .carousel-inner .carousel-item-next {
+      transform: translateX(50%);
+    }
+
+    .second-slide .carousel-inner .carousel-item-left.active,
+    .second-slide .carousel-inner .carousel-item-prev {
+      transform: translateX(-50%);
+    }
+  }
+
+
+  @media (min-width: 992px) {
+
+    .second-slide .carousel-inner .carousel-item-right.active,
+    .second-slide .carousel-inner .carousel-item-next {
+      transform: translateX(50%);
+    }
+
+    .second-slide .carousel-inner .carousel-item-left.active,
+    .second-slide .carousel-inner .carousel-item-prev {
+      transform: translateX(-50%);
+    }
+  }
+
+  .second-slide .carousel-inner .carousel-item-right,
+  .second-slide .carousel-inner .carousel-item-left {
+    transform: translateX(0);
+  }
+
+  .second-slide .sub-img {
+    height: 200px;
+    width: 150px;
+    background-color: aqua;
+    overflow: hidden;
+    background-image: url("https://i.hizliresim.com/mX07R4.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: fill;
+  }
+
+  .second-slide .sub-title {
+    height: 40px;
+    width: 150px;
+    background-color: black;
+    overflow: hidden;
+  }
+
+
+
+  .first-image {
+    height: 200px;
+    width: 180px;
+    border-radius: 50%;
+  }
+
+  /* Slides */
