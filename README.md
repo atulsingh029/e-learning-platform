@@ -1,4 +1,4 @@
 # e-learning-platform
 ## Project - LMS 
 ## Current Version : MVP
-E-Learning Platform for small to mid-sized educational institutes.
+E-Learning Platform, a Django based web app for small to mid-sized educational institutes.
