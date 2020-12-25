@@ -197,10 +197,12 @@ function opencourse(c_id) {
                                             <p>${l.l_name}</p>
                                             </button>
                                         </td>
+                                        <!--
                                         <td>
                                             <button class="btn btn-sm btn-outline-info" onclick="editlecture('${l}')">Edit</button>
                                             <button class="btn btn-sm btn-outline-danger" onclick="deletelecture('${l.id}')">Delete</button>
                                         </td>
+                                        -->
                                     </tr>
                                     `;
             }).join('')}  
