@@ -50,3 +50,4 @@ custom_user/migrations/0004_delete_session.py
 elibrary/migrations/0004_auto_20200903_2009.py
 elibrary/migrations/0005_stars.py
 management/migrations/0003_lecture_l_description.py
+management/migrations/0002_slot_agenda.py
