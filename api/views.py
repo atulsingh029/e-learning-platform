@@ -1,10 +1,7 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from elibrary.models import Library
 from management.views import *
 from custom_user.models import Account, Room, Organization
 from management.models import Course, Lecture, CourseResource
-
+from.manager import *
 
 
 # organization level apis
@@ -529,3 +526,189 @@ def get_teachers_course(request):
             c = Course.objects.filter(instructor=user.teacher)
             serialdata = CourseSerializer1(c,many=True)
             return Response(serialdata.data)
+
+
+# version 2.0.0
+
+user_get = {'read', 'delete', 'deactivate', 'logout'}
+user_post = {'update', 'add', 'login', 'student-login'}
+user_hybrid = {}
+
+room_get = {'remove', 'read', 'list'}
+room_post = {'add', 'update'}
+room_hybrid = {}
+
+course_get = {'remove', 'read', 'list'}
+course_post = {'add', 'update'}
+course_hybrid = {}
+
+lecture_get = {'remove', 'read', 'list'}
+lecture_post = {'add', 'update'}
+lecture_hybrid = {}
+
+library_get = {'removebook', 'readbook', 'searchbook', 'load'}
+library_post = {'addbook', 'updatebook'}
+library_hybrid = {}
+
+
+application_get = {'list', 'accept', 'reject'}
+application_post = {'post'}
+application_hybrid = {}
+
+
+@api_view(['GET'])
+def get_user(request, operation):
+    if operation in user_get:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['POST'])
+def post_user(request, operation):
+    if operation in user_post:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            if operation == 'login':
+                response = 'test'
+                return response
+            return Response(result)
+        else:
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['GET'])
+def get_room(request, operation):
+    if operation in room_get:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['POST'])
+def post_room(request, operation):
+    if operation in room_post:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['GET'])
+def get_course(request, operation):
+    if operation in course_get:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['POST'])
+def post_course(request, operation):
+    if operation in course_post:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['GET'])
+def get_lecture(request, operation):
+    if operation in lecture_get:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['POST'])
+def post_lecture(request, operation):
+    if operation in lecture_post:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['GET'])
+def get_library(request, operation):
+    if operation in library_get:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['POST'])
+def post_library(request, operation):
+    if operation in library_post:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['GET'])
+def get_application(request, operation):
+    if operation in application_get:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)
+
+
+@api_view(['POST'])
+def post_application(request, operation):
+    if operation in application_post:
+        result = request_authorizer(request)
+        if result == 'AnonymousUser':
+            return Response(result)
+        else:
+            # Method mapping
+            return Response(operation)
+    else:
+        return Response(404)

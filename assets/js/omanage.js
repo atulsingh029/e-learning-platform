@@ -5,6 +5,8 @@ function update_room(){
                         roomslist=data;
                     }});
 }
+
+
 function all_c() {
     return $.ajax({
         type: 'GET',

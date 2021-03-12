@@ -1,18 +1,21 @@
 from django.core.mail import send_mail
-from django.shortcuts import render,HttpResponse,redirect
-from django.contrib.auth.models import User
+from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth import authenticate
 from .models import ApplyForStudent, Account, Organization, Session, Advertisement
-from .forms import SignUp ,OTPForm, StudentRegister, SignIn, StudentSignIn, CompleteSetup
+from .forms import SignUp, OTPForm, StudentRegister, SignIn, StudentSignIn, CompleteSetup
 import random
-from django.contrib.auth import login,logout
+from django.contrib.auth import login, logout
 from management.models import Room
 from django.contrib.sessions.models import Session as SysSession
 from elibrary.models import Library
+import datetime
 
 
 DATA_TRANSFER = {}
 STUDENT_APPLICATION = {}
+
+def otp_cleaner():
+    pass
 
 
 def signup(request):
@@ -26,9 +29,9 @@ def signup(request):
             password = password1
             otp = generate_otp()
             message = 'Your One Time Password is ' + str(otp)
-            data_transfer_key = email[0:4]+str(random.randrange(100000,999999))
-            DATA_TRANSFER[data_transfer_key] = [otp, name, email, password]
-            send_mail('Verify Your Account', message, 'primestudies.glau@gmail.com', [email, ], fail_silently=False)
+            data_transfer_key = email[0:4]+str(random.randrange(100000, 999999))
+            DATA_TRANSFER[data_transfer_key] = [otp, name, email, password, datetime.datetime.now()+datetime.timedelta(seconds=30)]
+            #send_mail('Verify Your Account', message, 'primestudies.glau@gmail.com', [email, ], fail_silently=False)
             return redirect('/verify?q=organization&dtk='+data_transfer_key )
         else:
             return redirect('/signup?q=passwdVDFailed')
@@ -36,9 +39,9 @@ def signup(request):
     form = SignUp()
 
     context={
-        'formname':'Sign Up',
-        'form':form,
-        'page_info':page_info,
+        'formname': 'Sign Up',
+        'form': form,
+        'page_info': page_info,
 
     }
     return render(request,template_name='custom_user/forms.html',context=context)
@@ -71,7 +74,7 @@ def verify_otp(request):
         return HttpResponse('Error In Parsing URL : Try Again')
     if request.method == 'POST':
         user_otp = request.POST['otp']
-        response = Reg(request,mode,user_otp,dtk)
+        response = Reg(request, mode, user_otp, dtk)
         if response == 200:
             return HttpResponse("success!")
         elif response == '/dashboard':
@@ -110,7 +113,7 @@ def RegisterStudent(request, id, reference):
             message = 'Your One Time Password for registration @'+id+' is ' + str(otp)
             student_transfer_key = email[0:4]+str(random.randrange(1000000,9999999))
             STUDENT_APPLICATION[student_transfer_key] = [otp, first_name, last_name, email, password, phone, for_organization ,room]
-            send_mail('Verify Your Account', message, 'primestudies.glau@gmail.com', [email, ], fail_silently=True)
+            #send_mail('Verify Your Account', message, 'primestudies.glau@gmail.com', [email, ], fail_silently=True)
             return redirect('/verify?q=student&dtk='+student_transfer_key)
         else:
             return redirect('/r/'+id)
@@ -122,9 +125,9 @@ def RegisterStudent(request, id, reference):
 
 
 # This function is used for completing the registration once request is received at any respective view function
-def Reg(request,mode,otp,dtk):
+def Reg(request, mode, otp, dtk):
         if mode == 'organization':
-            if int(DATA_TRANSFER[dtk][0]) == int(otp):
+            if int(DATA_TRANSFER[dtk][0]) == int(otp) and datetime.datetime.now() < DATA_TRANSFER[dtk][4]:
                 username = generate_username(DATA_TRANSFER[dtk][2])
                 user = Account.objects.create_user(username=username, password=DATA_TRANSFER[dtk][3], first_name=DATA_TRANSFER[dtk][1],
                                                 email=DATA_TRANSFER[dtk][2], is_organization=True)
@@ -151,7 +154,7 @@ def Reg(request,mode,otp,dtk):
                 student.save()
                 subject = "Application Submission Successful"
                 message = "Hey " + STUDENT_APPLICATION[dtk][1] + ", \nYour application for registration @" + STUDENT_APPLICATION[dtk][6].username + ' is successful, you will be informed as soon as it is accepted by the organization.\nYour application reference number is ' + student.reference +'.\nThank You'
-                send_mail(subject,message,'primestudies.glau@gmail.com',[STUDENT_APPLICATION[dtk][3], ], fail_silently=True)
+                #send_mail(subject,message,'primestudies.glau@gmail.com',[STUDENT_APPLICATION[dtk][3], ], fail_silently=True)
                 STUDENT_APPLICATION.pop(dtk)
                 return 200
             else:
@@ -294,3 +297,9 @@ def testing(request):
     student = STUDENT_APPLICATION
     organization = DATA_TRANSFER
     return HttpResponse('Student Reg :'+str(student)+'<br> Organization : '+str(organization))
+
+
+# Version 2.0.0
+
+
+

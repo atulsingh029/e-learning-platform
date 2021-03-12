@@ -1,26 +1,20 @@
 from django.shortcuts import render, HttpResponse, redirect
-from custom_user.models import Room, ApplyForStudent, Student, Account, Teacher, Organization
-from management.models import Course, Lecture, CourseResource, DashOption, TimeTable, Assignment, Solution, Slot
+from management.models import TimeTable
 from api.serializers import *
 from .manager import *
 import random
 from .forms import AddNewTeacher, AddNewStudent, AddAssignment
-from .forms import EditRoom
 from rest_framework.decorators import api_view
 from api.serializers import AssignmentSerializer
 from rest_framework.response import Response
 import datetime
+from api.manager import request_authorizer
 
 
 def dashboard(request):
-    try:
-        message = request.GET['q']
-    except:
-        message =""
-    if request.user.is_authenticated:
-        user_model = request.user
-        user = Account.objects.get(username=user_model)
-        if user.is_organization:
+    user = request_authorizer(request)
+    if user:
+        if user.usertype == 'organization':
             profile_info = user
             try:
                 p_url = profile_info.profile_pic.url
@@ -39,14 +33,14 @@ def dashboard(request):
                                 #{'link': '#', 'method': '', 'label': 'Email', 'icon': 'mail'},
 
                                  ]
-            options_available = DashOption.objects.filter(account=user)
+            options_available = DashOption.objects.filter(account=user.id)
             extra_options = DashOptionSerializer(options_available,many=True).data
             options_available = default_options+extra_options
             nav_btns = [{'link':'/signout', 'label':'Sign Out'},]
 
             context = {
                 'pagetitle': 'PrimeStudies : Dashboard',
-                'u': user_model.first_name.capitalize(),
+                'u': user.first_name.capitalize(),
                 'navButtons' : nav_btns,
                 'options' : options_available,
                 'owner':{'coverpic':"https://atulsingh029.github.io/images/banner2.gif",'title':profile_info.first_name,
@@ -54,7 +48,7 @@ def dashboard(request):
                          , 'link':'/r/'+str(profile_info.id),'label':'Advertisement Page', 'profile_pic':p_url}
             }
             return render(request, template_name='dashboard/odash.html', context=context)
-        if user.is_student:
+        elif user.usertype == 'student':
             profile_info = user
             try:
                 p_url = profile_info.profile_pic.url
@@ -65,24 +59,24 @@ def dashboard(request):
                               {'link': '#', 'method': 'view_assignments()', 'label': 'Assignments', 'icon': 'work'},
                                {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary', 'icon': 'local_library'},
                                ]
-            options_available = DashOption.objects.filter(account=user)
+            options_available = DashOption.objects.filter(account=user.id)
             extra_options = DashOptionSerializer(options_available, many=True).data
             options_available = default_options + extra_options
             nav_btns = [{'link': '/signout', 'label': 'Sign Out'},]
-            org = user.student.from_organization.account
+            org = user.usertype_obj.from_organization.account
             context = {
                 'pagetitle': 'PrimeStudies : Dashboard',
-                'u': user_model.first_name.capitalize(),
+                'u': user.first_name.capitalize(),
                 'navButtons': nav_btns,
                 'options': options_available,
                 'owner': {'coverpic': "https://atulsingh029.github.io/images/banner2.gif",
                           'title': profile_info.first_name+' '+profile_info.last_name,
-                          'lead1': profile_info.bio1, 'room': profile_info.student.from_room.title
+                          'lead1': profile_info.bio1, 'room': profile_info.usertype_obj.from_room.title
                     , 'link': profile_info.url, 'label': 'Advertisement Page', 'profile_pic': p_url,
                           'organization':{'name':org.first_name,'bio1':org.bio2}}
             }
             return render(request, template_name='dashboard/sdash.html', context=context)
-        if user.is_teacher:
+        elif user.usertype == 'teacher':
             profile_info = user
             try:
                 p_url = profile_info.profile_pic.url
@@ -99,14 +93,14 @@ def dashboard(request):
                                {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary', 'icon': 'local_library'},
 
                                ]
-            options_available = DashOption.objects.filter(account=user)
+            options_available = DashOption.objects.filter(account=user.id)
             extra_options = DashOptionSerializer(options_available, many=True).data
             options_available = default_options + extra_options
             nav_btns = [{'link': '/signout', 'label': 'Sign Out'},]
 
             context = {
                 'pagetitle': 'PrimeStudies : Dashboard',
-                'u': user_model.first_name.capitalize(),
+                'u': user.first_name.capitalize(),
                 'navButtons': nav_btns,
                 'options': options_available,
                 'owner': {'coverpic': "https://atulsingh029.github.io/images/banner2.gif",
@@ -117,7 +111,6 @@ def dashboard(request):
             return render(request, template_name='dashboard/tdash.html', context=context)
     else:
         return redirect('/?status=youmustloginfirst')
-
 
 
 def add_new_teacher(request):
