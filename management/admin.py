@@ -38,3 +38,8 @@ class CAAssignment(admin.ModelAdmin):
 @admin.register(Solution)
 class CASolution(admin.ModelAdmin):
     list_display = ('uploader', 'solution_to')
+
+
+@admin.register(LiveSessionRequest)
+class CASolution(admin.ModelAdmin):
+    list_display = ('requester', 'for_course')

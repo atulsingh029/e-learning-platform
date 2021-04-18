@@ -1,5 +1,5 @@
 from django.db import models
-from custom_user.models import Room, Account, Teacher
+from custom_user.models import Room, Account, Teacher, Student
 
 
 class DashOption(models.Model):
@@ -63,18 +63,33 @@ class Solution(models.Model):
     remarks = models.CharField(max_length=512, null=True, blank=True)
 
 
+class LiveSessionRequest(models.Model):
+    requester = models.ForeignKey(Student, on_delete=models.CASCADE)
+    for_course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    for_teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    message = models.CharField(null=True, blank=True, max_length=2048)
+    status = models.CharField(max_length=50, choices=(('accepted', 'accepted'),('requested', 'requested'),('rejected', 'rejected')), default='requested')
+    scheduled_time = models.DateTimeField(null=True, blank=True)
+    webrtc_offer = models.CharField(max_length=500000, null=True, blank=True)
+    webrtc_answer = models.CharField(max_length=500000, null=True, blank=True)
+
+
 class Slot(models.Model):
     agenda = models.CharField(max_length=512, default="default", null=True, blank=True)
     date = models.DateField(null=True,blank=True)
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    day = models.CharField(max_length=100, choices=(('monday', 'monday'), ('tuesday', 'tuesday'),('wednesday', 'wednesday'), ('thursday', 'thursday'), ('friday', 'friday'), ('saturday', 'saturday'),('sunday', 'sunday')))
+    type = models.CharField(max_length=100, choices=(('rtc', 'rtc'), ('3rd party', '3rd party')))
     session_id = models.CharField(max_length=500, null=True, blank=True)
+    web_rtc_request = models.ForeignKey(LiveSessionRequest, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class TimeTable(models.Model):
     room = models.OneToOneField(Room, on_delete=models.CASCADE, null=True, blank=True)
     slot = models.ManyToManyField(Slot)
     status = models.CharField(max_length=100, choices=(('enable', 'enable'), ('disable', 'disable')))
+
+
+
 

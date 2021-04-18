@@ -1,8 +1,9 @@
 from management.views import *
 from custom_user.models import Account, Room, Organization
-from management.models import Course, Lecture, CourseResource
+from management.models import Course, Lecture, CourseResource, LiveSessionRequest
 from.manager import *
-
+import datetime
+from management.views import live_schedule
 
 # organization level apis
 @api_view(['POST'])
@@ -499,6 +500,22 @@ def view_student_room(request):
         return Response({'status': 'not allowed'})
 
 
+@api_view(['POST'])
+def request_live_session(request):
+    user = request_authorizer(request)
+    if user.usertype == 'student':
+        c_id = request.POST['c_id']
+        message = request.POST['message']
+        # ToDo : This method doesn't verify if request coming for live session for a particular course belong to him or not
+        teacher = Course.objects.get(c_id=c_id).instructor
+        lsr = LiveSessionRequest(for_course_id=c_id,message=message, requester=user.usertype_obj, for_teacher=teacher)
+        lsr.save()
+        return Response({"request": "submitted"})
+    else:
+        return Response({"status": "forbidden"})
+
+
+
 # library api
 
 @api_view(['GET'])
@@ -528,187 +545,64 @@ def get_teachers_course(request):
             return Response(serialdata.data)
 
 
-# version 2.0.0
-
-user_get = {'read', 'delete', 'deactivate', 'logout'}
-user_post = {'update', 'add', 'login', 'student-login'}
-user_hybrid = {}
-
-room_get = {'remove', 'read', 'list'}
-room_post = {'add', 'update'}
-room_hybrid = {}
-
-course_get = {'remove', 'read', 'list'}
-course_post = {'add', 'update'}
-course_hybrid = {}
-
-lecture_get = {'remove', 'read', 'list'}
-lecture_post = {'add', 'update'}
-lecture_hybrid = {}
-
-library_get = {'removebook', 'readbook', 'searchbook', 'load'}
-library_post = {'addbook', 'updatebook'}
-library_hybrid = {}
-
-
-application_get = {'list', 'accept', 'reject'}
-application_post = {'post'}
-application_hybrid = {}
+@api_view(['GET'])
+def get_live_session_requests(request):
+    user = request_authorizer(request)
+    if user.usertype == 'teacher':
+        live_requests = LiveSessionRequest.objects.filter(status='requested', for_teacher=user.usertype_obj)
+        data = LiveSessionSerializer(live_requests, many=True)
+        return Response(data.data)
 
 
 @api_view(['GET'])
-def get_user(request, operation):
-    if operation in user_get:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
+def live_session_request_status(request):
+    user = request_authorizer(request)
+    if user.usertype == 'student':
+        student = user.usertype_obj
+        live_request = LiveSessionRequest.objects.filter(requester=student)
+        data = LiveSessionSerializer(live_request,many=True)
+        return Response({'requests': data.data})
 
 
 @api_view(['POST'])
-def post_user(request, operation):
-    if operation in user_post:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            if operation == 'login':
-                response = 'test'
-                return response
-            return Response(result)
-        else:
-            return Response(operation)
-    else:
-        return Response(404)
+def live_session_scheduler(request):
+    user = request_authorizer(request)
+    if user.usertype == 'teacher':
+        if request.method == 'POST':
+            data = request.data
+            time = data[1]['value']
+            date = data[2]['value']
+            id = data[0]['value']
+            lsr = LiveSessionRequest.objects.get(id=id)
+            if date=='' or time == '':
+                return Response({'status':'Failed due to wrong input'})
+            dt=datetime.datetime.strptime(date+' '+time, '%Y-%m-%d %H:%M')
+            if dt <= datetime.datetime.now():
+                return Response({'status': 'Failed due to wrong input'})
+            lsr.scheduled_time = dt
+            response = live_schedule(user.usertype_obj, web_rtc_request=lsr)
+            if response == 'Slot Not Available' or response == 'invalid date':
+                return Response({'status':"failed due to invalid input"})
+            lsr.status='accepted'
+            lsr.save()
+            return Response({"status": "success"})
+
+
+@api_view(['POST'])
+def live_class_offer_setter(request,id):
+    user = request_authorizer(request)
+    if user.usertype=='teacher':
+        offer = request.data.get('offer')
+        lsr = LiveSessionRequest.objects.get(id=id)
+
+        lsr.webrtc_offer = offer.get('sdp')
+        lsr.save()
+        return Response({"status":'join offer sent'})
 
 
 @api_view(['GET'])
-def get_room(request, operation):
-    if operation in room_get:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
-
-
-@api_view(['POST'])
-def post_room(request, operation):
-    if operation in room_post:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
-
-
-@api_view(['GET'])
-def get_course(request, operation):
-    if operation in course_get:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
-
-
-@api_view(['POST'])
-def post_course(request, operation):
-    if operation in course_post:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
-
-
-@api_view(['GET'])
-def get_lecture(request, operation):
-    if operation in lecture_get:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
-
-
-@api_view(['POST'])
-def post_lecture(request, operation):
-    if operation in lecture_post:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
-
-
-@api_view(['GET'])
-def get_library(request, operation):
-    if operation in library_get:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
-
-
-@api_view(['POST'])
-def post_library(request, operation):
-    if operation in library_post:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
-
-
-@api_view(['GET'])
-def get_application(request, operation):
-    if operation in application_get:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
-
-
-@api_view(['POST'])
-def post_application(request, operation):
-    if operation in application_post:
-        result = request_authorizer(request)
-        if result == 'AnonymousUser':
-            return Response(result)
-        else:
-            # Method mapping
-            return Response(operation)
-    else:
-        return Response(404)
+def live_class_get_offer(request, id):
+    user = request_authorizer(request)
+    if user.usertype == 'student':
+        lsr = LiveSessionRequest.objects.get(id=id)
+        return Response(lsr.webrtc_offer)

@@ -29,20 +29,12 @@ urlpatterns = [
     path('addlecture/', add_lecture),
     path('editlecture/', edit_lecture),
     path('getteacherscourse', get_teachers_course),
-]
 
-# Version 2.0.0 Endpoints
-urlpatterns = urlpatterns + [
-    path('user/get/<str:operation>/', get_user),
-    path('user/post/<str:operation>/', post_user),
-    path('room/get/<str:operation>/', get_room),
-    path('room/post/<str:operation>/', post_room),
-    path('course/get/<str:operation>/', get_course),
-    path('course/post/<str:operation>/', post_course),
-    path('lecture/get/<str:operation>/', get_lecture),
-    path('lecture/post/<str:operation>/', post_lecture),
-    path('library/get/<str:operation>/', get_library),
-    path('library/post/<str:operation>/', post_library),
-    path('application/get/<str:operation>/', get_application),
-    path('application/post/<str:operation>/', post_application),
+    path('request_live_session/', request_live_session),
+    path('get_live_session_requests/', get_live_session_requests),
+    path('live_session_request_status/',live_session_request_status),
+    path('live_session_scheduler/', live_session_scheduler),
+    path('liveclass/offer/<str:id>', live_class_offer_setter),
+    path('live_class_get_offer/<str:id>', live_class_get_offer)
+
 ]

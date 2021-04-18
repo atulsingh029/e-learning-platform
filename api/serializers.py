@@ -2,7 +2,7 @@ from rest_framework import serializers
 from custom_user.models import ApplyForStudent, Room, Account, Student, Teacher
 from management.models import Course, Lecture, CourseResource, DashOption
 from elibrary.models import Book, BookReview, TextReviews
-from management.models import Assignment, Solution, Slot
+from management.models import Assignment, Solution, Slot, LiveSessionRequest
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -57,7 +57,7 @@ class CourseSerializer(serializers.ModelSerializer):
 class CourseSerializer1(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['c_id', 'c_name', 'c_description', 'for_organization', 'c_status']
+        fields = ['c_id', 'c_name', 'c_description', 'for_organization', 'c_status', 'instructor']
 
 
 class CourseResourceSerializer(serializers.ModelSerializer):
@@ -126,4 +126,12 @@ class SlotSerializer(serializers.ModelSerializer):
     course = CourseSerializer()
     class Meta:
         model = Slot
-        fields = ['id', 'course', 'start_time', 'session_id', 'agenda', 'date']
+        fields = ['id', 'course', 'start_time', 'session_id', 'agenda', 'date', 'web_rtc_request']
+
+
+class LiveSessionSerializer(serializers.ModelSerializer):
+    requester = StudentSerializer()
+    for_course = CourseSerializer()
+    class Meta:
+        model = LiveSessionRequest()
+        fields = [ 'requester', 'message', 'for_course','status', 'id', 'scheduled_time']

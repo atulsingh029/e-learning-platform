@@ -1,3 +1,26 @@
+let  modal_1 = `
+<!-- Modal -->
+<div class="modal fade" id="`;
+
+
+let  modal_2 =`" tabindex="-1" role="dialog" aria-labelledby="editor_modal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <p>Request A Live Session For This Course</p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">`;
+let modal_3 = `
+      </div>
+    </div>
+  </div>
+</div>`
+;
+
+
 function opencourse(c_id) {
     $.ajax({
         type: 'GET',
@@ -30,6 +53,22 @@ function opencourse(c_id) {
                         font-family: 'Nunito', sans-serif;
                     }
                 </style>
+                
+                ${modal_1}add_lecture${modal_2}
+                    <form enctype="multipart/form-data"  id="request_form" type="post">
+                        <input type="hidden" value="${c_id}" name="c_id">
+                        
+                      <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Message</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="message"></textarea>
+                      </div>
+                      <button type="button" onclick="send_live_class_request()" class="btn btn-sm btn-primary m-1">Request</button>
+                    </form>
+                ${modal_3}
+                
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_lecture">Request Live Session</button>
+                
+              
                 <div class="accordion col text-center text-dark" id="accordionE">
                     <div class="card border-0 m-0 p-0">
                         <div class="card-header" id="headingTwo" style="background-color: white">
@@ -89,11 +128,8 @@ function opencourse(c_id) {
                       border: none;
                     }
                     </style>
-                    
-                    
-                    
-                    
-                    <div class="contain mt-2 mb-2">
+   
+                    <div class="contain mt-2 mb-2"> 
                          <video id = "videoframe" class="responsive-iframe" controls autoplay> <source src="${firstlecture[0].video}" type="video/mp4"> </video>
                     </div>
                     <div class="p-0" id="lecturefooter">
@@ -142,4 +178,30 @@ function loadlecture(l, description, id, name) {
     <h5 class="ml-2">${name}</h5>
     <h6 class="ml-2">${description}</h6>
     `;
+}
+
+function send_live_class_request(){
+    let formData = new FormData();
+    var add = $('#request_form').serializeArray();
+    var c_id = add[0].value;
+    var message = add[1].value;
+    formData.append("message", message);
+    formData.append("c_id", c_id);
+    document.getElementById("request_form").reset();
+    $.ajax(
+        {
+            type: 'POST',
+            url: '/api/request_live_session/',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: { "x-csrftoken": csrftoken },
+            success: function (data) {
+                alert('Requested');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        }
+    );
 }

@@ -44,12 +44,22 @@ $.ajax({
                 <tbody>
                 
             ${data.map(function (obj) {
+                let link ;
+                let method;
+                if (obj.session_id == null){
+                     link = '#'
+                    method = "initiate_live_class"
+                }
+                else {
+                    link = obj.session_id;
+                    method = ''
+                }
                     return `
             <tr class="text-center row1">
                 <td>${obj.course.c_name}</td>
                 <td>${obj.start_time}</td>
                 <td>${obj.agenda}</td>
-                <td><a href="${obj.session_id}" target="_blank" class="btn btn-sm btn-info">Join</a> </td>
+                <td><a href="${link}" class="btn btn-sm btn-info" onclick="${method}(${obj.web_rtc_request})">Join</a> </td>
                
             </tr>`;
                 }).join('')}

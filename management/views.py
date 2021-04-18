@@ -58,6 +58,8 @@ def dashboard(request):
             default_options = [{'link': '', 'method': '', 'label': 'Dashboard', 'icon': 'dashboard'},
                               {'link': '#', 'method': 'view_assignments()', 'label': 'Assignments', 'icon': 'work'},
                                {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary', 'icon': 'local_library'},
+                               {'link': '#', 'method': 'live_session_request_status()', 'label': 'Live Request Status',
+                                'icon': 'videocam'},
                                ]
             options_available = DashOption.objects.filter(account=user.id)
             extra_options = DashOptionSerializer(options_available, many=True).data
@@ -86,8 +88,8 @@ def dashboard(request):
             default_options = [{'link': '', 'method': '', 'label': 'Dashboard', 'icon': 'dashboard'},
                                {'link': '/dashboard/assignwork', 'method': '', 'label': 'Assign Work', 'icon': 'work'},
                                {'link': '#', 'method': 'roomstudentsIni()', 'label': 'Students', 'icon': 'groups'},
-                               {'link': '#', 'method': 'scheduleclass()', 'label': 'Schedule Online Class',
-                                'icon': 'class'},
+                               #{'link': '#', 'method': 'scheduleclass()', 'label': 'Schedule Online Class',
+                                #'icon': 'class'},
 
                                {'link': '#', 'method': 'assignments()', 'label': 'Assignments', 'icon': 'assignment'},
                                {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary', 'icon': 'local_library'},
@@ -625,10 +627,39 @@ def students_live_schedule(request):
             tt = account[0].student.from_room.timetable
             s= Slot.objects.filter(timetable=tt)
             for i in s:
-
                     if str(i.date) == str(datetime.datetime.today())[0:10]:
-
                         slots.append(i)
-
             serialslot = SlotSerializer(slots, many=True)
             return Response(serialslot.data)
+
+
+def live_schedule(account, web_rtc_request):
+            agenda = web_rtc_request.message
+            stime = web_rtc_request.scheduled_time.time()
+
+            date = web_rtc_request.scheduled_time.date()
+
+            course = web_rtc_request.for_course
+            c = course
+            room = Room.objects.filter(course=c)
+            slots = []
+
+            if date < datetime.date.today():
+                return "Invalid Date"
+            for r in room:
+                s = TimeTable.objects.filter(room=r)
+                for tt in s:
+                    sl = Slot.objects.filter(timetable=tt, start_time=stime, date=date)
+                    for m in sl:
+                        slots.append(m)
+            if len(slots) != 0:
+                return "Slot Not Available"
+            else:
+                ns = Slot(agenda=agenda, start_time=stime, course=c, web_rtc_request=web_rtc_request, date=date, type='rtc')
+                ns.save()
+                for r in room:
+                    s = TimeTable.objects.filter(room=r)
+                    for x in s:
+                        x.slot.add(ns)
+                        x.save()
+                return "added"
