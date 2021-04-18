@@ -76,6 +76,7 @@ function add_student_to_stream(id){
             contentType:'application/json',
             success: function (data){
                 let ans = {'type':'answer', 'sdp':data.toString()}
+                console.log(ans)
                  localConnection.setRemoteDescription (ans).then(a=>console.log("done"))
             }
         }
