@@ -606,3 +606,22 @@ def live_class_get_offer(request, id):
     if user.usertype == 'student':
         lsr = LiveSessionRequest.objects.get(id=id)
         return Response(lsr.webrtc_offer)
+
+
+@api_view(['POST'])
+def save_answer(request, id):
+    user = request_authorizer(request)
+    if user.usertype == 'student':
+        answer = request.data.get('answer')
+        lsr = LiveSessionRequest.objects.get(id=id)
+        lsr.webrtc_answer = answer.get('sdp')
+        lsr.save()
+        return Response({"status": 'join answer saved'})
+
+
+@api_view(['GET'])
+def live_class_get_answer(request, id):
+    user = request_authorizer(request)
+    if user.usertype == 'teacher':
+        lsr = LiveSessionRequest.objects.get(id=id)
+        return Response(lsr.webrtc_answer)

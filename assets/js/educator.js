@@ -8,8 +8,8 @@ function initiate_live_class(id) {
         <video autoplay id="r-player"></video>
     `
     const ice_configurations = {
-        iceServers: [{ url: 'stun:stun.l.google.com:19302' },
-        { url: 'stun:stun1.l.google.com:19302' },
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' },
+
         ]
     };
     localConnection = new RTCPeerConnection(ice_configurations);
@@ -40,6 +40,7 @@ function initiate_live_class(id) {
 
         document.getElementById("wait").innerHTML = `
         <button class="btn btn-success btn-sm" onclick="send_offer_to_students(${id})">Start Class</button>
+        <button class="btn btn-success btn-sm" onclick="add_student_to_stream(${id})">Refresh If Student Not Visible</button>
         `
 }
 
@@ -57,7 +58,7 @@ function send_offer_to_students(id){
             headers: { "X-CSRFToken": csrftoken },
             success: function () {
                 alert("class began")
-                add_student_to_stream();
+                add_student_to_stream(id);
             },
             error : function (er){
                 alert("Error Occurred... Try Again")
@@ -67,8 +68,18 @@ function send_offer_to_students(id){
 }
 
 
-function add_student_to_stream(){
-
+function add_student_to_stream(id){
+    $.ajax(
+        {
+            type:'GET',
+            url:'/api/live_class_get_answer/'+id,
+            contentType:'application/json',
+            success: function (data){
+                let ans = {'type':'answer', 'sdp':data.toString()}
+                 localConnection.setRemoteDescription (ans).then(a=>console.log("done"))
+            }
+        }
+    );
 }
 
 

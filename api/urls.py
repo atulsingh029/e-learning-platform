@@ -35,6 +35,8 @@ urlpatterns = [
     path('live_session_request_status/',live_session_request_status),
     path('live_session_scheduler/', live_session_scheduler),
     path('liveclass/offer/<str:id>', live_class_offer_setter),
-    path('live_class_get_offer/<str:id>', live_class_get_offer)
+    path('live_class_get_offer/<str:id>', live_class_get_offer),
+    path('liveclass/answer/<str:id>', save_answer),
+    path('live_class_get_answer/<str:id>', live_class_get_answer)
 
 ]

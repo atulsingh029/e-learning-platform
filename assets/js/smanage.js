@@ -1,7 +1,7 @@
 document.getElementById("canvas").innerHTML="<div id='can1'></div>" +
     "<div id = 'can2'></div>";
-
-
+let candidates = [];
+let remoteConnection;
 $.ajax({
     type:'GET',
     url:"/dashboard/sls/",
@@ -238,14 +238,14 @@ function join_call(id){
                 if (data === ''){
                     alert("Your Teacher Has Not Start The Session Yet!")
                 }
-                student_side_web_rtc_initiator(data);
+                student_side_web_rtc_initiator(data,id);
             }
         }
     );
 }
-let test ;
 
-function student_side_web_rtc_initiator(offer){
+function student_side_web_rtc_initiator(offer,id){
+
     let canvas = document.getElementById("canvas");
     canvas.innerHTML = `
         <div id="wait"><h5>Please Wait While Class Is Being Setup</h5></div>
@@ -253,11 +253,11 @@ function student_side_web_rtc_initiator(offer){
         <video autoplay id="live_player"></video>
     `
     const ice_configurations = {
-        iceServers: [{ url: 'stun:stun.l.google.com:19302' },
-        { url: 'stun:stun1.l.google.com:19302' },
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' },
         ]
     };
-    const remoteConnection = new RTCPeerConnection(ice_configurations)
+
+    remoteConnection = new RTCPeerConnection(ice_configurations)
     navigator.mediaDevices.getUserMedia({
             video: true,
             audio:true,
@@ -267,8 +267,8 @@ function student_side_web_rtc_initiator(offer){
         });
     let off = {'type':'offer', 'sdp':offer.toString()}
     remoteConnection.onicecandidate = e =>  {
-    console.log(" NEW ice candidnate!! on localconnection reprinting SDP " )
-    console.log(JSON.stringify(remoteConnection.localDescription) )
+
+        candidates.push(remoteConnection.localDescription)
     }
 
     remoteConnection.ondatachannel = e => {
@@ -287,7 +287,33 @@ function student_side_web_rtc_initiator(offer){
     }
     remoteConnection.setRemoteDescription(off).then(a=>console.log("done"))
 
-    remoteConnection.createAnswer().then(a => remoteConnection.setLocalDescription(a)).then(a=>
-    console.log(JSON.stringify(remoteConnection.localDescription)))
+    remoteConnection.createAnswer().then(a => remoteConnection.setLocalDescription(a)).then( a => {
+
+        save_answer(id)
+        }
+    )
+
+
+}
+
+
+function save_answer(id){
+    let data = candidates[candidates.length-1]
+    console.log(data)
+    $.ajax(
+        {
+            type: 'POST',
+            url: '/api/liveclass/answer/'+id,
+            contentType: 'application/json',
+            data: JSON.stringify({"answer":remoteConnection.localDescription}),
+            headers: { "X-CSRFToken": csrftoken },
+            success: function () {
+
+            },
+            error : function (er){
+                alert("Error Occurred... Try Again")
+            }
+        }
+    );
 
 }
