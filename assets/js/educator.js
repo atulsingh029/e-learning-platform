@@ -10,6 +10,11 @@ function initiate_live_class(id) {
     const ice_configurations = {
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' },
 
+ {
+     url: 'turn:relay.backups.cz',
+     credential: 'webrtc',
+     username: 'webrtc'
+ },
         ]
     };
     localConnection = new RTCPeerConnection(ice_configurations);
