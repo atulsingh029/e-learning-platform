@@ -596,6 +596,7 @@ def live_class_offer_setter(request,id):
         lsr = LiveSessionRequest.objects.get(id=id)
 
         lsr.webrtc_offer = offer.get('sdp')
+        lsr.webrtc_answer =''
         lsr.save()
         return Response({"status":'join offer sent'})
 
