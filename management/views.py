@@ -18,6 +18,7 @@ def dashboard(request):
             profile_info = user
             try:
                 p_url = profile_info.profile_pic.url
+                #print(dir(profile_info.profile_pic))
             except:
                 p_url = '#'
 
@@ -82,18 +83,20 @@ def dashboard(request):
             profile_info = user
             try:
                 p_url = profile_info.profile_pic.url
+                #print(dir(profile_info.profile_pic))
             except:
                 p_url = '#'
 
             default_options = [{'link': '', 'method': '', 'label': 'Dashboard', 'icon': 'dashboard'},
                                {'link': '/dashboard/assignwork', 'method': '', 'label': 'Assign Work', 'icon': 'work'},
                                {'link': '#', 'method': 'roomstudentsIni()', 'label': 'Students', 'icon': 'groups'},
-                               #{'link': '#', 'method': 'scheduleclass()', 'label': 'Schedule Online Class',
-                                #'icon': 'class'},
+                               {'link': '#', 'method': 'scheduleclass()', 'label': 'Schedule Online Class',
+                                'icon': 'class'},
 
                                {'link': '#', 'method': 'assignments()', 'label': 'Assignments', 'icon': 'assignment'},
                                {'link': '#', 'method': 'loadLibraryDashboard()', 'label': 'eLibrary', 'icon': 'local_library'},
-
+			{'link': '#', 'method': 'get_all_live_session_requests()', 'label': 'Live Session  Requests',
+                                'icon': 'videocam'},
                                ]
             options_available = DashOption.objects.filter(account=user.id)
             extra_options = DashOptionSerializer(options_available, many=True).data
