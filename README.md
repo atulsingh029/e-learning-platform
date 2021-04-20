@@ -1,5 +1,5 @@
 # e-learning-platform
-## Project - LMS 
+
 ## Mini Project 2
 E-Learning Platform, a Django based web app for small to mid-sized educational institutes.
 Get all the project documentation (report, demo video, synopsis, etc.) :
